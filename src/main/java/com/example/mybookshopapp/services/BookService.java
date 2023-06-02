@@ -1,5 +1,6 @@
-package com.example.mybookshopapp.data;
+package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
