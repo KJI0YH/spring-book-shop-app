@@ -19,13 +19,13 @@ public class BookService {
     }
 
     public List<Book> getBooksData() {
-        List<Book> books = jdbcTemplate.query("SELECT * FROM books", (ResultSet rs, int rowNum) -> {
+        List<Book> books = jdbcTemplate.query("SELECT b.id, a.name as author_name, a.surname as author_surname, b.title, b.price, b.price_old FROM book AS b JOIN author AS a WHERE b.id = a.id", (ResultSet rs, int rowNum) -> {
             Book book = new Book();
             book.setId(rs.getInt("id"));;
-            book.setAuthor(rs.getString("author"));
+            book.setAuthor(rs.getString("author_name") + " " + rs.getString("author_surname"));
             book.setTitle(rs.getString("title"));
             book.setPrice(rs.getString("price"));
-            book.setPriceOld(rs.getString("priceOld"));
+            book.setPriceOld(rs.getString("price_old"));
             return book;
         });
         return new ArrayList<>(books);
