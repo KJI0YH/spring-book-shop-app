@@ -1,4 +1,4 @@
-package com.example.mybookshopapp.data;
+package com.example.mybookshopapp.dto;
 
 public class Book {
     private Integer id;
