@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.sql.ResultSet;
 import java.util.*;
 
+import static java.util.stream.Collectors.groupingBy;
+
 @Service
 public class AuthorService {
 
@@ -22,10 +24,15 @@ public class AuthorService {
         List<Author> authors = jdbcTemplate.query("SELECT * FROM author", (ResultSet rs, int rowNum) -> {
             Author author = new Author();
             author.setId(rs.getInt("id"));
-            author.setName(rs.getString("name"));
-            author.setSurname(rs.getString("surname"));
+            author.setFirstName(rs.getString("first_name"));
+            author.setLastName(rs.getString("last_name"));
             return author;
         });
-        return new ArrayList<>(authors);
+        return authors;
+    }
+
+    public Map<String, List<Author>> getAuthorsMap() {
+        List<Author> authors = getAuthorsData();
+        return authors.stream().collect(groupingBy((Author o) -> {return o.getLastName().toUpperCase().substring(0,1);}));
     }
 }

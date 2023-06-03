@@ -6,37 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
 
 @Controller
-@RequestMapping("/bookshop/authors")
 public class AuthorsPageController {
 
-    @Autowired
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
+    @Autowired
     public AuthorsPageController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
-    @GetMapping
-    public String authorsPage(Model model){
+    @ModelAttribute("authorsMap")
+    public Map<String, List<Author>> authorsMap(){
+        return authorService.getAuthorsMap();
+    }
 
-        List<Author> authors = authorService.getAuthorsData();
-
-        // Sort the authors
-        Collections.sort(authors);
-
-        // Group the authors by first letter of the surname
-        Map<Character, List<Author>> groupedAuthors = new HashMap<>();
-        for (Author author : authors) {
-            char firstLetter = author.getSurname().toUpperCase().charAt(0);
-            groupedAuthors.computeIfAbsent(firstLetter, k -> new ArrayList<>()).add(author);
-        }
-
-        model.addAttribute("authorData", groupedAuthors);
-        return "authors/index";
+    @GetMapping("/authors")
+    public String authorsPage(){
+        return "/authors/index";
     }
 }

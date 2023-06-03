@@ -2,8 +2,8 @@ package com.example.mybookshopapp.dto;
 
 public class Author implements Comparable<Author> {
     private Integer id;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
 
     public Integer getId() {
         return id;
@@ -13,27 +13,36 @@ public class Author implements Comparable<Author> {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
     public int compareTo(Author o) {
-        int result = surname.compareTo(o.getSurname());
+        int result = lastName.compareTo(o.getLastName());
         if (result == 0)
-            return name.compareTo(o.getName());
+            return firstName.compareTo(o.getFirstName());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", name='" + firstName + '\'' +
+                ", surname='" + lastName + '\'' +
+                '}';
     }
 }
