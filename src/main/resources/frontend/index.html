@@ -46,7 +46,7 @@
       <main class="Middle-main">
         <div class="Section">
           <div class="Section-header">
-            <h2 class="Section-title">Рекомендуемое
+            <h2 class="Section-title" th:text="#{main.recommended}">Рекомендуемое
             </h2>
           </div>
           <div class="Slider Slider_carousel">
@@ -77,12 +77,12 @@
               </div>
             </div>
             <div class="Slider-load">
-              <div class="Slider-load-text">Идет загрузка данных
+              <div class="Slider-load-text" th:text="#{main.loading}">Идет загрузка данных
               </div>
             </div>
           </div>
           <div class="Section-header">
-            <h2 class="Section-title">Новинки
+            <h2 class="Section-title" th:text="#{topbar.news}">Новинки
             </h2>
           </div>
           <div class="Slider Slider_carousel">
@@ -221,12 +221,12 @@
               </div>
             </div>
             <div class="Slider-load">
-              <div class="Slider-load-text">Идет загрузка данных
+              <div class="Slider-load-text" th:text="#{main.loading}">Идет загрузка данных
               </div>
             </div>
           </div>
           <div class="Section-header">
-            <h2 class="Section-title">Популярное
+            <h2 class="Section-title" th:text="#{topbar.popular}">Популярное
             </h2>
           </div>
           <div class="Slider Slider_carousel">
@@ -236,7 +236,7 @@
                   <div class="Card"><a class="Card-picture" href="/books/slug.html"><img src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
                       <div class="Card-sale">30% скидка
                       </div>
-                      <div class="Card-ribbon"><span class="Card-ribbonText">Бестселлер</span>
+                      <div class="Card-ribbon"><span class="Card-ribbonText" th:text="#{main.bestseller}">Бестселлер</span>
                       </div></a>
                     <div class="Card-content">
                       <strong class="Card-title"><a href="/books/slug.html">Техника</a>
@@ -357,12 +357,12 @@
               </div>
             </div>
             <div class="Slider-load">
-              <div class="Slider-load-text">Идет загрузка данных
+              <div class="Slider-load-text" th:text="#{main.loading}">Идет загрузка данных
               </div>
             </div>
           </div>
         </div>
-        <h2 class="Middle-title">Книги по тегам
+        <h2 class="Middle-title" th:text="#{main.booksByTags}">Книги по тегам
         </h2>
         <div class="Tags" id="tags">
           <div class="Tag Tag_xs"><a href="/tags/index.html">современная литература</a>
