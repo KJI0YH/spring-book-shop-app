@@ -9,7 +9,7 @@
 <!--[if IE 9]>
 <html class="ie9" lang="ru" xmlns:th="http://www.thymeleaf.org">
 <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="ru"> <!--<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
   <title>Тут название страницы написать</title>
   <meta name="description" content="Описание страницы">
@@ -30,6 +30,7 @@
   <script defer src="/assets/js/scripts.min.js?v=65675850"></script>
 </head>
 <body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
   <!--if lt IE 8
   p.error-browser
       | Ваш браузер&nbsp;
@@ -43,7 +44,7 @@
   <div class="Middle Middle_form">
     <div class="Middle-top">
       <div class="wrap">
-        <h1 class="Middle-title">Регистрация
+        <h1 class="Middle-title" th:text="#{signup.registration}">Регистрация
         </h1>
       </div>
     </div>
@@ -53,34 +54,34 @@
           <div class="Login-ins">
             <div class="Login-step">
               <div class="form-group">
-                <input class="form-input" id="name" name="name" type="text" placeholder="Введите Имя" data-validate="require"/>
+                <input class="form-input" id="name" name="name" type="text" th:placeholder="#{signup.enterName}" data-validate="require"/>
               </div>
               <div class="form-group form-group_row">
                 <div class="form-group">
-                  <input class="form-input form-input_phone" id="phone" name="phone" type="text" placeholder="Введите телефон" data-mask="+7 (999) 999-99-99" data-validate="require"/>
+                  <input class="form-input form-input_phone" id="phone" name="phone" type="text" th:placeholder="#{signup.enterMobile}" data-mask="+7 (999) 999-99-99" data-validate="require"/>
                 </div>
                 <div class="form-group form-group_key">
-                  <input class="form-input form-input_code" id="phoneCode" name="phoneCode" type="text" placeholder="Код из СМС" data-mask="999 999" data-validate="require key"/>
+                  <input class="form-input form-input_code" id="phoneCode" name="phoneCode" type="text" th:placeholder="#{signup.mobileCode}" data-mask="999 999" data-validate="require key"/>
                 </div>
                 <div class="form-group">
-                  <button class="btn btn_success btn_sm form-btn" type="button" name="submitPhone" disabled="disabled" id="submitPhone">Подтвердить
+                  <button class="btn btn_success btn_sm form-btn" type="button" name="submitPhone" disabled="disabled" id="submitPhone" th:text="#{signup.confirm}">Подтвердить
                   </button>
                 </div>
               </div>
               <div class="form-group form-group_row">
                 <div class="form-group">
-                  <input class="form-input form-input_mail" id="mail" name="mail" type="text" placeholder="Введите e-mail" data-validate="mail require"/>
+                  <input class="form-input form-input_mail" id="mail" name="mail" type="text" th:placeholder="#{signup.enterEmail}" data-validate="mail require"/>
                 </div>
                 <div class="form-group form-group_key">
-                  <input class="form-input form-input_code" id="mailCode" name="mailCode" type="text" placeholder="Код из письма" data-mask="999 999" data-validate="require key"/>
+                  <input class="form-input form-input_code" id="mailCode" name="mailCode" type="text" th:placeholder="#{signup.emailCode}" data-mask="999 999" data-validate="require key"/>
                 </div>
                 <div class="form-group">
-                  <button class="btn btn_success btn_sm form-btn" type="button" name="submitMail" disabled="disabled" id="submitMail">Подтвердить
+                  <button class="btn btn_success btn_sm form-btn" type="button" name="submitMail" disabled="disabled" id="submitMail" th:text="#{signup.confirm}">Подтвердить
                   </button>
                 </div>
               </div>
               <div class="form-group form-group_center">
-                <button class="btn btn_primary form-btn" type="button" name="registration" id="registration" disabled="disabled">Зарегистрироваться
+                <button class="btn btn_primary form-btn" type="button" name="registration" id="registration" disabled="disabled" th:text="#{signup.signup}">Зарегистрироваться
                 </button>
               </div>
             </div>
