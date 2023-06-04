@@ -30,6 +30,7 @@
   <script defer src="/assets/js/scripts.min.js?v=45035206"></script>
 </head>
 <body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
   <!--if lt IE 8
   p.error-browser
       | Ваш браузер&nbsp;
@@ -44,16 +45,16 @@
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html">Главная</a>
+          <li class="breadcrumbs-item"><a href="/index.html" th:text="#{topbar.main}">Главная</a>
           </li>
-          <li class="breadcrumbs-item"><a href="/genres/index.html">Книги</a>
+          <li class="breadcrumbs-item"><a href="/genres/index.html" th:text="#{main.books}">Книги</a>
           </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span>Популярное</span>
+          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{topbar.popular}">Популярное</span>
           </li>
         </ul>
         <div class="Section">
           <div class="Section-header">
-            <h1 class="Section-title">Популярное
+            <h1 class="Section-title" th:text="#{topbar.popular}">Популярное
             </h1>
           </div>
           <div th:replace="~{fragments/books_pool_fragment :: pool}">
