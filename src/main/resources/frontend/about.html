@@ -30,6 +30,7 @@
   <script defer src="/assets/js/scripts.min.js?v=74020866"></script>
 </head>
 <body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
   <!--if lt IE 8
   p.error-browser
       | Ваш браузер&nbsp;
@@ -44,12 +45,12 @@
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html">Главная</a>
+          <li class="breadcrumbs-item"><a href="/index.html" th:text="#{topbar.main}">Главная</a>
           </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span>О компании</span>
+          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{bottombar.about}">О компании</span>
           </li>
         </ul>
-        <h1 class="Middle-title">О компании
+        <h1 class="Middle-title" th:text="#{bottombar.about}">О компании
         </h1>
         <article class="Article">
           <div class="sdf">
