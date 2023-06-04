@@ -30,6 +30,7 @@
   <script defer src="/assets/js/scripts.min.js?v=52263780"></script>
 </head>
 <body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
   <!--if lt IE 8
   p.error-browser
       | Ваш браузер&nbsp;
@@ -43,7 +44,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <h1 class="Middle-title">Жанры
+        <h1 class="Middle-title" th:text="#{topbar.genres}">Жанры
         </h1>
         <div class="Section">
           <div class="Tags Tags_genres">
