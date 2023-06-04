@@ -4,8 +4,8 @@ public class Book {
     private Integer id;
     private String author;
     private String title;
-    private String price;
-    private String priceOld;
+    private Integer price;
+    private Integer discount;
 
     @Override
     public String toString() {
@@ -13,8 +13,8 @@ public class Book {
                 "id=" + id +
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
-                ", price='" + price + '\'' +
-                ", priceOld='" + priceOld + '\'' +
+                ", price=" + price +
+                ", discount=" + discount +
                 '}';
     }
 
@@ -42,19 +42,27 @@ public class Book {
         this.title = title;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public String getPriceOld() {
-        return priceOld;
+    public Integer getPrice(){
+        return price;
     }
 
-    public void setPriceOld(String priceOld) {
-        this.priceOld = priceOld;
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public Integer getPriceWithDiscount(){
+        if (discount == 0){
+            return price;
+        } else {
+            return price * discount / 100;
+        }
     }
 }
