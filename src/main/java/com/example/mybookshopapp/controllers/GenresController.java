@@ -4,14 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.logging.Logger;
-
 @Controller
-@RequestMapping("/bookshop/genres")
-public class GenresPageController {
+@RequestMapping("/genres")
+public class GenresController {
 
     @GetMapping
     public String genresPage(){
-        return "genres/index";
+        return "/genres/index";
     }
 }
