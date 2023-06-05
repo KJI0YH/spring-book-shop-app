@@ -1,0 +1,116 @@
+
+<!--END-->
+<!--END--><!DOCTYPE html><!--[if IE 7]>
+<html class="ie7" lang="ru">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="ru">
+<![endif]-->
+<!--[if IE 9]>
+<html class="ie9" lang="ru" xmlns:th="http://www.thymeleaf.org">
+<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru"> <!--<![endif]-->
+<head>
+  <title>Тут название страницы написать</title>
+  <meta name="description" content="Описание страницы">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <!--meta( http-equiv="cache-control" content="no-cache")-->
+  <!--meta( http-equiv="expires" content="0")-->
+  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+  <link href="favicon.ico" rel="shortcut icon">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=77124975">
+  <link rel="stylesheet" href="/assets/css/basic.min.css?v=77124975">
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=77124975"><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script defer src="/assets/js/scripts.min.js?v=77124975"></script>
+</head>
+<body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
+  <!--if lt IE 8
+  p.error-browser
+      | Ваш браузер&nbsp;
+      em устарел!&nbsp;
+      a(href="http://browsehappy.com/") Выберите новую версию
+          +s
+          | браузера здесь&nbsp;
+      | для правильного отображения сайта.
+  -->
+  <header th:replace="~{fragments/common_header_fragment :: headFragment}"></header>
+  <div class="Middle">
+    <div class="wrap">
+      <main class="Middle-main">
+        <ul class="breadcrumbs">
+          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+          </li>
+          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{bottombar.help}">Помощь</span>
+          </li>
+        </ul>
+        <h1 class="Middle-title" th:text="#{bottombar.help}">Помощь
+        </h1>
+        <div class="FAQ">
+          <strong class="FAQ-title" th:text="#{faq.faq}">Наиболее частые вопросы:
+          </strong>
+          <div class="HideBlock FAQ-block">
+            <header class="HideBlock-header HideBlock-trigger">
+              <strong class="HideBlock-title" th:text="#{faq.notFound}">Что делать, если я не нашел нужный товар
+              </strong>
+              <button class="HideBlock-btn" type="button">
+              </button>
+            </header>
+            <div class="HideBlock-content">
+              <p th:text="#{faq.notFoundAnswer}">Если вы ввели в строке поиска название товара и увидели сообщение «Простите, по вашему запросу товаров сейчас нет», это значит, что такого товара у нас в ассортименте пока нет.
+              </p>
+            </div>
+          </div>
+          <div class="HideBlock FAQ-block">
+            <header class="HideBlock-header HideBlock-trigger">
+              <strong class="HideBlock-title" th:text="#{faq.outOfStock}">Товара нет в наличии
+              </strong>
+              <button class="HideBlock-btn" type="button">
+              </button>
+            </header>
+            <div class="HideBlock-content">
+              <p th:text="#{faq.outOfStockAnswer}">Мы регулярно пополняем запасы товаров на складах. Чтобы узнать о поступлении товара, подпишитесь на уведомления, нажав кнопку Узнать о поступлении.
+              </p>
+            </div>
+          </div>
+          <div class="HideBlock FAQ-block">
+            <header class="HideBlock-header HideBlock-trigger">
+              <strong class="HideBlock-title" th:text="#{faq.tooHigh}">У товара слишком высокая цена
+              </strong>
+              <button class="HideBlock-btn" type="button">
+              </button>
+            </header>
+            <div class="HideBlock-content">
+              <p th:text="#{faq.tooHighAnswer}">Вы можете дождаться скидки на интересующий товар. Чтобы не пропустить снижение цены, нажмите кнопку Это дорого? на карточке товара. Когда цена снизится, мы пришлем вам уведомление.
+              </p>
+            </div>
+          </div>
+          <div class="HideBlock FAQ-block">
+            <header class="HideBlock-header HideBlock-trigger">
+              <strong class="HideBlock-title" th:text="#{faq.question}">У меня есть вопрос про товар продавца
+              </strong>
+              <button class="HideBlock-btn" type="button">
+              </button>
+            </header>
+            <div class="HideBlock-content">
+              <p th:text="#{faq.questionAnswer}">С некоторыми продавцами можно связаться через чат. Чтобы задать интересующий вас вопрос, на карточке товара под его фотографиями нажмите Спросить продавца о товаре, далее введите ваше сообщение и дождитесь ответа.
+              </p>
+            </div>
+          </div>
+          <div class="FAQ-footer">
+            <span class="FAQ-link" th:text="#{faq.alter}">Или</span><span>&#32;</span><a href="/contacts.html" th:href="@{/contacts}" th:text="#{faq.contactUs}">свяжитесь с нами</a>
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <footer th:replace="fragments/common_footer_fragment :: footFragment"></footer>
+  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+</body></html>

@@ -21,14 +21,13 @@ public class AuthorService {
     }
 
     public List<Author> getAuthorsData(){
-        List<Author> authors = jdbcTemplate.query("SELECT * FROM author", (ResultSet rs, int rowNum) -> {
-            Author author = new Author();
-            author.setId(rs.getInt("id"));
-            author.setFirstName(rs.getString("first_name"));
-            author.setLastName(rs.getString("last_name"));
-            return author;
+        return jdbcTemplate.query("SELECT * FROM author", (ResultSet rs, int rowNum) -> {
+            return Author.builder()
+                    .id(rs.getInt("id"))
+                    .firstName(rs.getString("first_name"))
+                    .lastName(rs.getString("last_name"))
+                    .build();
         });
-        return authors;
     }
 
     public Map<String, List<Author>> getAuthorsMap() {
