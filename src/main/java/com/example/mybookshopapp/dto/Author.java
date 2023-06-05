@@ -1,6 +1,9 @@
 package com.example.mybookshopapp.dto;
 
-public class Author implements Comparable<Author> {
+import lombok.Builder;
+
+@Builder
+public class Author {
     private Integer id;
     private String firstName;
     private String lastName;
@@ -27,14 +30,6 @@ public class Author implements Comparable<Author> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    @Override
-    public int compareTo(Author o) {
-        int result = lastName.compareTo(o.getLastName());
-        if (result == 0)
-            return firstName.compareTo(o.getFirstName());
-        return result;
     }
 
     @Override

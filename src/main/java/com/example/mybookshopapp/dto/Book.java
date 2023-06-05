@@ -1,5 +1,8 @@
 package com.example.mybookshopapp.dto;
 
+import lombok.Builder;
+
+@Builder
 public class Book {
     private Integer id;
     private String author;
