@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.dto.Author;
 import com.example.mybookshopapp.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,16 +21,27 @@ public class BookService {
     }
 
     public List<Book> getBooksData() {
-        List<Book> books = jdbcTemplate.query("SELECT b.id, b.title, b.price, b.discount, a.first_name, a.last_name FROM book AS b JOIN book2author AS b2a ON b2a.book_id = b.id JOIN author AS a ON b2a.author_id = a.id",
+        List<Book> books = jdbcTemplate.query("SELECT* FROM book",
                 (ResultSet rs, int rowNum) -> {
-                    return Book.builder()
-                            .id(rs.getInt("id"))
-                            .author(rs.getString("first_name") + " " + rs.getString("last_name"))
-                            .title(rs.getString("title"))
-                            .price(rs.getInt("price"))
-                            .discount(rs.getInt("discount"))
-                            .build();
+            Book book = new Book();
+            book.setId(rs.getInt("id"));
+            book.setAuthor(getAuthorById(rs.getString("author_id")));
+            book.setTitle(rs.getString("title"));
+            book.setPrice(rs.getInt("price"));
+            book.setDiscount(rs.getInt("discount"));
+            return book;
         });
         return new ArrayList<>(books);
+    }
+
+    private String getAuthorById(String authorId) {
+        List<Author> authors = jdbcTemplate.query("SELECT * FROM author WHERE author.id = " + authorId, (ResultSet rs, int rowNum) -> {
+            Author author = new Author();
+            author.setId(rs.getInt("id"));
+            author.setFirstName(rs.getString("first_name"));
+            author.setLastName(rs.getString("last_name"));
+            return author;
+        });
+        return authors.get(0).toString();
     }
 }

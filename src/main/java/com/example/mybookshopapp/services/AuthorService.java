@@ -22,11 +22,11 @@ public class AuthorService {
 
     public List<Author> getAuthorsData(){
         return jdbcTemplate.query("SELECT * FROM author", (ResultSet rs, int rowNum) -> {
-            return Author.builder()
-                    .id(rs.getInt("id"))
-                    .firstName(rs.getString("first_name"))
-                    .lastName(rs.getString("last_name"))
-                    .build();
+            Author author = new Author();
+            author.setId(rs.getInt("id"));
+            author.setFirstName(rs.getString("first_name"));
+            author.setLastName(rs.getString("last_name"));
+            return author;
         });
     }
 

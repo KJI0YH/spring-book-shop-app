@@ -1,12 +1,35 @@
 package com.example.mybookshopapp.dto;
 
-import lombok.Builder;
+import jakarta.persistence.*;
 
-@Builder
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "author")
 public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
+
+    @OneToMany
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private List<Book> bookList = new ArrayList<>();
+
+    public List<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public Author() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -34,10 +57,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", name='" + firstName + '\'' +
-                ", surname='" + lastName + '\'' +
-                '}';
+        return firstName + " " + lastName;
     }
 }

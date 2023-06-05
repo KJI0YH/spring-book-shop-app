@@ -1,24 +1,24 @@
 package com.example.mybookshopapp.dto;
 
-import lombok.Builder;
+import jakarta.persistence.*;
 
-@Builder
+@Entity
+@Table(name = "book")
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Transient
     private String author;
+
     private String title;
     private Integer price;
     private Integer discount;
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", price=" + price +
-                ", discount=" + discount +
-                '}';
+    public Book() {
+
     }
 
     public Integer getId() {
