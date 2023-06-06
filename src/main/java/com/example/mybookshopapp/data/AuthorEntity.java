@@ -2,6 +2,8 @@ package com.example.mybookshopapp.data;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "author")
 public class AuthorEntity {
@@ -25,8 +27,19 @@ public class AuthorEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+   private List<Book2AuthorEntity> book2AuthorList;
+
     public AuthorEntity() {
 
+    }
+
+    public List<Book2AuthorEntity> getBook2AuthorList() {
+        return book2AuthorList;
+    }
+
+    public void setBook2AuthorList(List<Book2AuthorEntity> book2AuthorList) {
+        this.book2AuthorList = book2AuthorList;
     }
 
     public Integer getId() {

@@ -10,14 +10,16 @@ public class Book2AuthorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int bookId;
-
-    @Column(columnDefinition = "INT NOT NULL")
-    private int authorId;
-
     @Column(columnDefinition = "INT NOT NULL DEFAULT 0")
     private int sortIndex;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private AuthorEntity author;
 
     public int getId() {
         return id;
@@ -27,20 +29,20 @@ public class Book2AuthorEntity {
         this.id = id;
     }
 
-    public int getBookId() {
-        return bookId;
+    public BookEntity getBook() {
+        return book;
     }
 
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
+    public void setBook(BookEntity book) {
+        this.book = book;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public AuthorEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public void setAuthor(AuthorEntity author) {
+        this.author = author;
     }
 
     public int getSortIndex() {

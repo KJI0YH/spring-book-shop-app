@@ -3,7 +3,7 @@ package com.example.mybookshopapp.data;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -37,6 +37,17 @@ public class BookEntity {
 
     @Column(columnDefinition = "SMALLINT NOT NULL DEFAULT 0")
     private Integer discount;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<Book2AuthorEntity> book2authorList;
+
+    public List<Book2AuthorEntity> getBook2authorList() {
+        return book2authorList;
+    }
+
+    public void setBook2authorList(List<Book2AuthorEntity> authorList) {
+        this.book2authorList = authorList;
+    }
 
     public BookEntity() {
 

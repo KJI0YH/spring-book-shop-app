@@ -10,7 +10,7 @@
             <strong class="Card-title">
                 <a href="#" th:text="${book.title}">Техника</a>
             </strong>
-            <div class="Card-description" th:text="${book.author}">Кондратенко Александр Петрович
+            <div class="Card-description" th:each="book2author: ${book.book2authorList}" th:if="${book2author != null}" th:text="${book2author.author.firstName + ' ' + book2author.author.lastName}">Кондратенко Александр Петрович
             </div>
             <div class="Card-cost" th:if="${book.discount == 0}">
                 <span class="Card-price" th:text="${'$' + book.price}">₽190.00</span>
