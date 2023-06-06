@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.data.AuthorRepository;
 import com.example.mybookshopapp.dto.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,21 +14,15 @@ import static java.util.stream.Collectors.groupingBy;
 @Service
 public class AuthorService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final AuthorRepository authorRepository;
 
     @Autowired
-    public AuthorService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     public List<Author> getAuthorsData(){
-        return jdbcTemplate.query("SELECT * FROM author", (ResultSet rs, int rowNum) -> {
-            Author author = new Author();
-            author.setId(rs.getInt("id"));
-            author.setFirstName(rs.getString("first_name"));
-            author.setLastName(rs.getString("last_name"));
-            return author;
-        });
+        return authorRepository.findAll();
     }
 
     public Map<String, List<Author>> getAuthorsMap() {
