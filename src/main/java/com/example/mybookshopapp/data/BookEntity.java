@@ -54,11 +54,7 @@ public class BookEntity {
     }
 
     public Integer getPriceWithDiscount(){
-        if (discount == 0){
-            return price;
-        } else {
-            return price * discount / 100;
-        }
+        return Math.toIntExact(Math.round(price * (1 - discount / 100.0)));
     }
 
     public Integer getId() {
