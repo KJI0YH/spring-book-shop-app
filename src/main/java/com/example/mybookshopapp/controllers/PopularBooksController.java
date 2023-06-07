@@ -1,6 +1,6 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.dto.Book;
+import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class PopularBooksController {
     }
 
     @ModelAttribute("booksList")
-    public List<Book> booksList() {
+    public List<BookEntity> booksList() {
         // TODO: bookservice.getPopularBooksData();
         return bookService.getBooksData();
     }
