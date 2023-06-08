@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,7 +31,16 @@ public class BookEntity {
     private Integer discount;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Book2AuthorEntity> book2authorList;
+
+    @ManyToMany
+    @JoinTable(name = "book2author",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    @JsonIgnore
+    private List<AuthorEntity> authorList;
 
     public Integer getPriceWithDiscount(){
         return Math.toIntExact(Math.round(price * (1 - discount / 100.0)));
