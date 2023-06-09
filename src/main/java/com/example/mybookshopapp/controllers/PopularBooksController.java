@@ -29,8 +29,7 @@ public class PopularBooksController {
 
     @ModelAttribute("booksList")
     public List<BookEntity> booksList() {
-        // TODO: bookservice.getPopularBooksData();
-        return bookService.getBooksData();
+        return bookService.getPageOfPopularBooks(0, 20).getContent();
     }
 
     @GetMapping("/popular")

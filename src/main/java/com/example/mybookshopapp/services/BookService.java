@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.ContentHandler;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,10 +43,6 @@ public class BookService {
         return bookRepository.getBestsellers();
     }
 
-    public List<BookEntity> getRecents(LocalDate from, LocalDate to){
-        return bookRepository.getRecents(from, to);
-    }
-
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPage);
@@ -54,5 +51,15 @@ public class BookService {
     public Page<BookEntity> getPageOfSearchResultBooks(String searchWord, Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBookEntitiesByTitleContainingIgnoreCase(searchWord, nextPage);
+    }
+
+    public Page<BookEntity> getPageOfRecentBooks(LocalDate from, LocalDate to, Integer offset, Integer limit) {
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBooksByPubDateBetween(from, to, nextPage);
+    }
+
+    public Page<BookEntity> getPageOfPopularBooks(Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findAll(nextPage);
     }
 }

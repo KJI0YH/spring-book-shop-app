@@ -30,6 +30,8 @@ public class BookEntity {
 
     private Integer discount;
 
+    private String description;
+
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Book2AuthorEntity> book2authorList;

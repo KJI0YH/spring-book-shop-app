@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -29,8 +30,7 @@ public class RecentBooksController {
 
     @ModelAttribute("booksList")
     public List<BookEntity> booksList(){
-        // TODO bookService.getRecentBooksData();
-        return bookService.getBooksData();
+        return bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20).getContent();
     }
 
     @GetMapping("/recent")

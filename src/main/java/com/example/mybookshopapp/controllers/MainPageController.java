@@ -10,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Book;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,6 +30,16 @@ public class MainPageController {
         return bookService.getPageOfRecommendedBooks(0, 6).getContent();
     }
 
+    @ModelAttribute("recentBooks")
+    public List<BookEntity> recentBooks(){
+        return bookService.getPageOfRecentBooks(null, null, 0, 6).getContent();
+    }
+
+    @ModelAttribute("popularBooks")
+    public List<BookEntity> popularBooks(){
+        return bookService.getPageOfPopularBooks(0, 6).getContent();
+    }
+
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto(){
         return new SearchWordDto();
@@ -41,12 +53,6 @@ public class MainPageController {
     @GetMapping("/")
     public String mainPage(Model model){
         return "index";
-    }
-
-    @GetMapping("/books/recommended")
-    @ResponseBody
-    public BooksPageDto getBooksPage(@RequestParam("offset")Integer offset, @RequestParam("limit")Integer limit){
-        return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit).getContent());
     }
 
     @GetMapping(value = {"/search", "/search/{searchWord}"})

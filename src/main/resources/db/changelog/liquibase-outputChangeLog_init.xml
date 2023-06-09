@@ -1,8 +1,8 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="aliak (generated)" id="1686133679044-1">
+    <changeSet author="aliak (generated)" id="1686342489220-1">
         <createTable tableName="author">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="author_pkey"/>
             </column>
             <column name="description" type="TEXT"/>
@@ -18,12 +18,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-2">
+    <changeSet author="aliak (generated)" id="1686342489220-2">
         <createTable tableName="balance_transaction">
             <column name="book_id" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="balance_transaction_pkey"/>
             </column>
             <column name="user_id" type="INTEGER">
@@ -40,12 +40,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-3">
+    <changeSet author="aliak (generated)" id="1686342489220-3">
         <createTable tableName="book">
             <column defaultValueNumeric="0" name="discount" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book_pkey"/>
             </column>
             <column name="is_bestseller" type="SMALLINT">
@@ -64,13 +64,14 @@
             <column name="title" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="description" type="TEXT"/>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-4">
+    <changeSet author="aliak (generated)" id="1686342489220-4">
         <createTable tableName="book2author">
             <column name="author_id" type="INTEGER"/>
             <column name="book_id" type="INTEGER"/>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book2author_pkey"/>
             </column>
             <column defaultValueNumeric="0" name="sort_index" type="INTEGER">
@@ -78,7 +79,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-5">
+    <changeSet author="aliak (generated)" id="1686342489220-5">
         <createTable tableName="book2genre">
             <column name="book_id" type="INTEGER">
                 <constraints nullable="false"/>
@@ -86,17 +87,17 @@
             <column name="genre_id" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book2genre_pkey"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-6">
+    <changeSet author="aliak (generated)" id="1686342489220-6">
         <createTable tableName="book2user">
             <column name="book_id" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book2user_pkey"/>
             </column>
             <column name="type_id" type="INTEGER">
@@ -110,9 +111,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-7">
+    <changeSet author="aliak (generated)" id="1686342489220-7">
         <createTable tableName="book2user_type">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book2user_type_pkey"/>
             </column>
             <column name="code" type="VARCHAR(255)">
@@ -123,9 +124,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-8">
+    <changeSet author="aliak (generated)" id="1686342489220-8">
         <createTable tableName="book_file">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book_file_pkey"/>
             </column>
             <column name="type_id" type="INTEGER">
@@ -139,9 +140,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-9">
+    <changeSet author="aliak (generated)" id="1686342489220-9">
         <createTable tableName="book_file_type">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book_file_type_pkey"/>
             </column>
             <column name="description" type="TEXT"/>
@@ -150,12 +151,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-10">
+    <changeSet author="aliak (generated)" id="1686342489220-10">
         <createTable tableName="book_review">
             <column name="book_id" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book_review_pkey"/>
             </column>
             <column name="user_id" type="INTEGER">
@@ -169,9 +170,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-11">
+    <changeSet author="aliak (generated)" id="1686342489220-11">
         <createTable tableName="book_review_like">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="book_review_like_pkey"/>
             </column>
             <column name="review_id" type="INTEGER">
@@ -188,9 +189,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-12">
+    <changeSet author="aliak (generated)" id="1686342489220-12">
         <createTable tableName="document">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="document_pkey"/>
             </column>
             <column defaultValueNumeric="0" name="sort_index" type="INTEGER">
@@ -207,9 +208,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-13">
+    <changeSet author="aliak (generated)" id="1686342489220-13">
         <createTable tableName="faq">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="faq_pkey"/>
             </column>
             <column defaultValueNumeric="0" name="sort_index" type="INTEGER">
@@ -223,7 +224,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-14">
+    <changeSet author="aliak (generated)" id="1686342489220-14">
         <createTable tableName="file_download">
             <column name="book_id" type="INTEGER">
                 <constraints nullable="false"/>
@@ -231,7 +232,7 @@
             <column defaultValueNumeric="1" name="count" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="file_download_pkey"/>
             </column>
             <column name="user_id" type="INTEGER">
@@ -239,9 +240,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-15">
+    <changeSet author="aliak (generated)" id="1686342489220-15">
         <createTable tableName="genre">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="genre_pkey"/>
             </column>
             <column name="parent_id" type="INTEGER"/>
@@ -253,9 +254,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-16">
+    <changeSet author="aliak (generated)" id="1686342489220-16">
         <createTable tableName="message">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="message_pkey"/>
             </column>
             <column name="user_id" type="INTEGER"/>
@@ -272,13 +273,13 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-17">
+    <changeSet author="aliak (generated)" id="1686342489220-17">
         <createTable tableName="user_contact">
             <column name="approved" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
             <column name="code_trials" type="INTEGER"/>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="user_contact_pkey"/>
             </column>
             <column name="type" type="SMALLINT"/>
@@ -294,12 +295,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-18">
+    <changeSet author="aliak (generated)" id="1686342489220-18">
         <createTable tableName="users">
             <column name="balance" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="users_pkey"/>
             </column>
             <column name="reg_time" type="TIMESTAMP WITHOUT TIME ZONE">
@@ -313,10 +314,10 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-19">
+    <changeSet author="aliak (generated)" id="1686342489220-19">
         <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2author" constraintName="fkafij5snytuqywyya5gj5r30l3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="book" validate="true"/>
     </changeSet>
-    <changeSet author="aliak (generated)" id="1686133679044-20">
+    <changeSet author="aliak (generated)" id="1686342489220-20">
         <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="book2author" constraintName="fkcdamvjmc66dxs94gpco2g5yyb" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="author" validate="true"/>
     </changeSet>
 </databaseChangeLog>
