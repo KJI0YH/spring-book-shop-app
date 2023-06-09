@@ -2,6 +2,7 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.data.BookEntity;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,5 +49,10 @@ public class BookService {
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPage);
+    }
+
+    public Page<BookEntity> getPageOfSearchResultBooks(String searchWord, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBookEntitiesByTitleContainingIgnoreCase(searchWord, nextPage);
     }
 }
