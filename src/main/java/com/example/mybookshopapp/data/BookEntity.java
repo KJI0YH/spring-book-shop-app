@@ -42,7 +42,17 @@ public class BookEntity {
     @JsonIgnore
     private List<AuthorEntity> authorList;
 
-    public Integer getPriceWithDiscount(){
+    @Transient
+    private Integer discountPrice;
+
+    public Integer getDiscountPrice(){
         return Math.toIntExact(Math.round(price * (1 - discount / 100.0)));
+    }
+
+    @Transient
+    private List<String> authors;
+
+    public List<String> getAuthors(){
+        return authorList.stream().map(AuthorEntity::toString).toList();
     }
 }

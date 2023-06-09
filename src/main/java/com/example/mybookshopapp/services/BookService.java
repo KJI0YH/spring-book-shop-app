@@ -3,6 +3,9 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.data.BookEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,5 +43,10 @@ public class BookService {
 
     public List<BookEntity> getRecents(LocalDate from, LocalDate to){
         return bookRepository.getRecents(from, to);
+    }
+
+    public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findAll(nextPage);
     }
 }
