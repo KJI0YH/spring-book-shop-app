@@ -24,17 +24,17 @@ public class RecentBooksController {
     }
 
     @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
+    public SearchWordDto searchWordDto() {
         return new SearchWordDto();
     }
 
     @ModelAttribute("booksList")
-    public List<BookEntity> booksList(){
+    public List<BookEntity> booksList() {
         return bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20).getContent();
     }
 
     @GetMapping("/recent")
-    public String recentBooksPage(){
+    public String recentBooksPage() {
         return "/books/recent";
     }
 }
