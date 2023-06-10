@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.example.mybookshopapp.services.BooksRatingAndPopularityService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -56,5 +57,19 @@ public class BookEntity {
 
     public List<String> getAuthors(){
         return authorList.stream().map(AuthorEntity::toString).toList();
+    }
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Book2UserEntity> book2userList;
+
+    @Transient
+    @JsonIgnore
+    private Double popularity;
+
+    @PostLoad
+    private void calculatePopularity(){
+        BooksRatingAndPopularityService calculator = new BooksRatingAndPopularityService();
+        popularity = calculator.getPopularity(this);
     }
 }

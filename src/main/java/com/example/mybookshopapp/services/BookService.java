@@ -30,22 +30,6 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<BookEntity> getBooksByTitle(String title){
-        return bookRepository.findBookEntitiesByTitleContainingIgnoreCase(title);
-    }
-
-    public List<BookEntity> getBooksByPriceBetween(Integer min, Integer max){
-        return bookRepository.findBookEntitiesByPriceBetween(min, max);
-    }
-
-    public List<BookEntity> getBooksByPrice(Integer price){
-        return bookRepository.findBookEntitiesByPriceIs(price);
-    }
-
-    public List<BookEntity> getBestsellers(){
-        return bookRepository.getBestsellers();
-    }
-
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPage);
@@ -63,6 +47,6 @@ public class BookService {
 
     public Page<BookEntity> getPageOfPopularBooks(Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findAll(nextPage);
+        return bookRepository.findPopularBooks(nextPage);
     }
 }

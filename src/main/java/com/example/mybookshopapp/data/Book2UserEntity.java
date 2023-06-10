@@ -16,9 +16,15 @@ public class Book2UserEntity {
 
     private LocalDateTime time;
 
-    private int typeId;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
 
-    private int bookId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private Book2UserTypeEntity type;
 }
