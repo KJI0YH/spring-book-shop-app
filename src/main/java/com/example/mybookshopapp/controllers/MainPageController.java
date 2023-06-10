@@ -1,9 +1,13 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.data.TagEntity;
 import com.example.mybookshopapp.dto.BooksPageDto;
 import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.dto.TagDto;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.TagService;
+import com.example.mybookshopapp.services.TagsPopularityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +20,14 @@ import java.util.List;
 public class MainPageController {
 
     private final BookService bookService;
+    private final TagService tagService;
+    private final TagsPopularityService tagsPopularityService;
 
     @Autowired
-    public MainPageController(BookService bookService) {
+    public MainPageController(BookService bookService, TagService tagService, TagsPopularityService tagsPopularityService) {
         this.bookService = bookService;
+        this.tagService = tagService;
+        this.tagsPopularityService = tagsPopularityService;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -45,6 +53,16 @@ public class MainPageController {
     @ModelAttribute("searchResults")
     public List<BookEntity> searchResults() {
         return new ArrayList<>();
+    }
+
+    @ModelAttribute("tags")
+    public List<TagDto> tags() {
+        List<TagEntity> tagEntities = tagService.getAllTags();
+        List<TagDto> tagDtos = new ArrayList<TagDto>();
+        for (TagEntity tagEntity : tagEntities){
+            tagDtos.add(new TagDto(tagEntity, tagsPopularityService.getPopularityTag(tagEntity)));
+        }
+        return  tagDtos;
     }
 
     @GetMapping("/")

@@ -38,4 +38,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
         return new PageImpl<>(popularBooks, pageable, allBooks.size());
     }
+
+    @Query(value = "select b.* from book as b join book2tag as b2t on b2t.book_id = b.id where b2t.tag_id = ?1 order by b.pub_date desc", nativeQuery = true)
+    Page<BookEntity> findBooksByTag(Integer tagID, Pageable pageable);
 }

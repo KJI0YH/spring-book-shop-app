@@ -5,13 +5,7 @@ import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.DateResolverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.util.Date;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/books")
@@ -44,5 +38,12 @@ public class BooksRestApiController {
     public ResponseEntity<BooksPageDto> getPopularBooksPage(@RequestParam("offset") Integer offset,
                                                             @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent()));
+    }
+
+    @GetMapping("/tag/{tagId}")
+    public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagId") Integer tagId,
+                                                          @RequestParam("offset") Integer offset,
+                                                          @RequestParam("limit") Integer limit) {
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTag(tagId, offset, limit).getContent()));
     }
 }

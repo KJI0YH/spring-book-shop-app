@@ -63,6 +63,10 @@ public class BookEntity {
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
 
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Book2TagEntity> book2tagList;
+
     @Transient
     @JsonIgnore
     private Double popularity;
