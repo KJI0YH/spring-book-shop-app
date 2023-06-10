@@ -69,8 +69,10 @@
               </div>
             </form>
           </div>
-          <div th:replace="~{fragments/books_pool_fragment :: pool}">
-        </div>
+          <div th:replace="~{fragments/books_pool_fragment :: pool}"></div>
+          <div class="Cards-footer Cards-footer_center">
+            <a class="btn btn_primary" href="#" data-refreshshow="recent" data-refreshoffset="0" data-refreshlimit="20" th:text="#{main.showMore}">Показать еще</a>
+          </div>
       </main>
     </div>
   </div>
