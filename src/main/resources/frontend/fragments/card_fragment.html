@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div class="Card" th:fragment="card">
+<div class="Card" th:fragment="card(book)">
     <a class="Card-picture" href="/books/slug.html" th:href="${book.slug}">
         <img src="/assets/img/content/main/card.jpg" th:src="${book.image}" alt="card.jpg"/>
         <div class="Card-sale" th:if="${book.discount != 0}" th:text="#{main.sale(${book.discount})}">30% скидка
@@ -12,9 +12,10 @@
     </a>
     <div class="Card-content">
         <strong class="Card-title">
-            <a href="/books/slug.html" th:href="${book.slug}" th:text="${book.title}">Техника</a>
+            <a href="/books/slug.html" th:href="${'/books/' + book.slug}" th:text="${book.title}">Техника</a>
         </strong>
-        <div class="Card-description" th:text="${book.authors}">Кондратенко Александр Петрович
+        <div class="Card-description" th:each="author : ${book.authorList}">
+            <a th:text="${author}" th:href="${'/authors/' + author.slug}">Кондратенко Александр Петрович</a>
         </div>
         <div class="Card-cost">
             <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="${book.price}">₽500.00</span>

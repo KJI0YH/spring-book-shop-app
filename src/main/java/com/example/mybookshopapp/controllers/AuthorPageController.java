@@ -7,32 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.*;
-
 @Controller
-public class AuthorsController {
+@RequestMapping("authors/{id}")
+public class AuthorPageController {
 
     private final AuthorService authorService;
 
     @Autowired
-    public AuthorsController(AuthorService authorService) {
+    public AuthorPageController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
     @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
+    public SearchWordDto searchWordDto() {
         return new SearchWordDto();
     }
 
-    @ModelAttribute("authorsMap")
-    public Map<String, List<AuthorEntity>> authorsMap(){
-        return authorService.getAuthorsMap();
+    @ModelAttribute("author")
+    public AuthorEntity author(@PathVariable("id") Integer id) {
+        return authorService.getAuthorById(id).orElseGet(AuthorEntity::new);
     }
 
-    @GetMapping("/authors")
-    public String authorsPage(){
-        return "/authors/index";
+    @GetMapping
+    public String authorPage() {
+        return "/authors/slug";
     }
 }

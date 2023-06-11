@@ -53,4 +53,11 @@ public class BooksRestApiController {
                                                             @RequestParam("limit") Integer limit){
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenre(genreId, offset, limit).getContent()));
     }
+
+    @GetMapping("author/{authorId}")
+    public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorId") Integer authorId,
+                                                               @RequestParam("offset") Integer offset,
+                                                               @RequestParam("limit") Integer limit){
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorId(authorId, offset, limit).getContent()));
+    }
 }
