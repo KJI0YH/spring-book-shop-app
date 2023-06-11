@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="genre(genre)">
+  <th:block th:if="${#lists.isEmpty(genre.children)}">
+    <div th:replace="~{fragments/tag_fragment :: tag(${child})}"></div>
+  </th:block>
+  <th:block th:unless="${#lists.isEmpty(genre.children)}">
+    <div class="Tags">
+      <div class="Tags-title">
+        <div th:replace="~{fragments/tag_fragment :: tag(${genre})}"></div>
+      </div>
+      <th:block th:each="child : ${genre.children}">
+        <div th:replace="~{fragments/genre_fragment :: genre(${child})}"></div>
+      </th:block>
+    </div>
+  </th:block>
+</th:block>
+</body>
+</html>

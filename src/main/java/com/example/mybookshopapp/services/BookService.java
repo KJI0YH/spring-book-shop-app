@@ -49,4 +49,9 @@ public class BookService {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBooksByTag(tagId, nextPage);
     }
+
+    public Page<BookEntity> getPageOfBooksByGenre(Integer genreId, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBooksByGenre(genreId, nextPage);
+    }
 }

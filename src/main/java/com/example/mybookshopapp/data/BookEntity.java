@@ -67,6 +67,14 @@ public class BookEntity {
     @JsonIgnore
     private List<Book2TagEntity> book2tagList;
 
+    @ManyToMany
+    @JoinTable(name = "book2genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    @JsonIgnore
+    private List<GenreEntity> genreList;
+
     @Transient
     @JsonIgnore
     private Double popularity;

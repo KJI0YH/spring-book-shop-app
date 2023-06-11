@@ -1,0 +1,68 @@
+package com.example.mybookshopapp.controllers;
+
+import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.data.GenreEntity;
+import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.GenreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+@RequestMapping("/genres/{id}")
+public class GenreBooksController {
+
+    private final BookService bookService;
+    private final GenreService genreService;
+
+    @Autowired
+    public GenreBooksController(BookService bookService, GenreService genreService) {
+        this.bookService = bookService;
+        this.genreService = genreService;
+    }
+
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto(){
+        return new SearchWordDto();
+    }
+
+    @ModelAttribute("booksList")
+    public List<BookEntity> booksByGenreId(@PathVariable(value = "id") Integer id){
+        return bookService.getPageOfBooksByGenre(id, 0, 20).getContent();
+    }
+
+    @ModelAttribute("genre")
+    public GenreEntity genre(@PathVariable("id") Integer id){
+        Optional<GenreEntity> genreEntity = genreService.getGenreById(id);
+        return genreEntity.orElseGet(GenreEntity::new);
+    }
+
+    @ModelAttribute("breadcrumbs")
+    public List<GenreEntity> breadcrumbs(@PathVariable("id") Integer id){
+        Optional<GenreEntity> genreEntity = genreService.getGenreById(id);
+        List<GenreEntity> breadcrumbs = new ArrayList<>();
+
+        GenreEntity genre = genreEntity.orElseGet(GenreEntity::new);
+        while (genre.getParent() != null){
+            breadcrumbs.add(genre.getParent());
+            genre = genre.getParent();
+        }
+        Collections.reverse(breadcrumbs);
+        return breadcrumbs;
+    }
+
+    @GetMapping
+    public String genrePage(@PathVariable("id") Integer id){
+        return "/genres/slug";
+    }
+}

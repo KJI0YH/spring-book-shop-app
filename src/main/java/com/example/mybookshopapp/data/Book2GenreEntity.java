@@ -12,7 +12,11 @@ public class Book2GenreEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int bookId;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
 
-    private int genreId;
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private GenreEntity genre;
 }
