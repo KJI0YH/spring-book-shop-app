@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,10 +39,10 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     }
 
     @Query(value = "select b.* from book as b join book2tag as b2t on b2t.book_id = b.id where b2t.tag_id = ?1 order by b.pub_date desc", nativeQuery = true)
-    Page<BookEntity> findBooksByTag(Integer tagID, Pageable pageable);
+    Page<BookEntity> findBooksByTagId(Integer tagID, Pageable pageable);
 
     @Query(value = "select b.* from book as b join book2genre as b2g on b2g.book_id = b.id where b2g.genre_id = ?1 order by b.pub_date desc", nativeQuery = true)
-    Page<BookEntity> findBooksByGenre(Integer tagID, Pageable pageable);
+    Page<BookEntity> findBooksByGenreId(Integer tagID, Pageable pageable);
 
     @Query(value = "select b.* from book as b join book2author as b2a on b2a.book_id = b.id where b2a.author_id = ?1 order by b.pub_date desc", nativeQuery = true)
     Page<BookEntity> findBooksByAuthorId(Integer id, Pageable pageable);

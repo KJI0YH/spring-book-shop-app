@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/genres/{id}")
+@RequestMapping("/genres/{genreId}")
 public class GenreBooksController {
 
     private final BookService bookService;
@@ -37,19 +37,19 @@ public class GenreBooksController {
     }
 
     @ModelAttribute("booksList")
-    public List<BookEntity> booksByGenreId(@PathVariable(value = "id") Integer id){
-        return bookService.getPageOfBooksByGenre(id, 0, 20).getContent();
+    public List<BookEntity> booksByGenreId(@PathVariable(value = "genreId") Integer genreId){
+        return bookService.getPageOfBooksByGenreId(genreId, 0, 20).getContent();
     }
 
     @ModelAttribute("genre")
-    public GenreEntity genre(@PathVariable("id") Integer id){
-        Optional<GenreEntity> genreEntity = genreService.getGenreById(id);
+    public GenreEntity genre(@PathVariable("genreId") Integer genreId){
+        Optional<GenreEntity> genreEntity = genreService.getGenreById(genreId);
         return genreEntity.orElseGet(GenreEntity::new);
     }
 
     @ModelAttribute("breadcrumbs")
-    public List<GenreEntity> breadcrumbs(@PathVariable("id") Integer id){
-        Optional<GenreEntity> genreEntity = genreService.getGenreById(id);
+    public List<GenreEntity> breadcrumbs(@PathVariable("genreId") Integer genreId){
+        Optional<GenreEntity> genreEntity = genreService.getGenreById(genreId);
         List<GenreEntity> breadcrumbs = new ArrayList<>();
 
         GenreEntity genre = genreEntity.orElseGet(GenreEntity::new);
@@ -62,7 +62,7 @@ public class GenreBooksController {
     }
 
     @GetMapping
-    public String genrePage(@PathVariable("id") Integer id){
+    public String genrePage(){
         return "/genres/slug";
     }
 }

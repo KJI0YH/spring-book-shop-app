@@ -44,14 +44,14 @@ public class BooksRestApiController {
     public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagId") Integer tagId,
                                                           @RequestParam("offset") Integer offset,
                                                           @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTag(tagId, offset, limit).getContent()));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagId(tagId, offset, limit).getContent()));
     }
 
     @GetMapping("/genre/{genreId}")
     public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreId") Integer genreId,
                                                             @RequestParam("offset") Integer offset,
                                                             @RequestParam("limit") Integer limit){
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenre(genreId, offset, limit).getContent()));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreId(genreId, offset, limit).getContent()));
     }
 
     @GetMapping("author/{authorId}")

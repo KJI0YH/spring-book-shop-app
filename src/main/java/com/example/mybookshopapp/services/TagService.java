@@ -29,11 +29,6 @@ public class TagService {
         return tagRepository.findById(id);
     }
 
-    public Page<TagEntity> getPageOfTags(Integer offset, Integer limit){
-        Pageable nextPage = PageRequest.of(offset, limit);
-        return tagRepository.findAll(nextPage);
-    }
-
     public Integer getMaxPopularityTagCount(){
         return tagRepository.findMaxTagCount();
     }
