@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.HTML;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,10 @@ public class TagService {
 
     public Optional<TagEntity> getTagById(Integer id){
         return tagRepository.findById(id);
+    }
+
+    public TagEntity getTagBySlug(String slug){
+        return tagRepository.findTagEntityBySlug(slug);
     }
 
     public Integer getMaxPopularityTagCount(){

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/books/author/{id}")
+@RequestMapping("/books/author/{authorSlug}")
 public class AuthorBooksController {
 
     private final BookService bookService;
@@ -33,13 +33,13 @@ public class AuthorBooksController {
     }
 
     @ModelAttribute("booksList")
-    public List<BookEntity> authorBooks(@PathVariable("id") Integer id) {
-        return bookService.getPageOfBooksByAuthorId(id, 0, 20).getContent();
+    public List<BookEntity> authorBooks(@PathVariable("authorSlug") String authorSlug) {
+        return bookService.getPageOfBooksByAuthorSlug(authorSlug, 0, 20).getContent();
     }
 
     @ModelAttribute("author")
-    public AuthorEntity author(@PathVariable("id") Integer id) {
-        return authorService.getAuthorById(id).orElseGet(AuthorEntity::new);
+    public AuthorEntity author(@PathVariable("authorSlug") String authorSlug) {
+        return authorService.getAuthorBySlug(authorSlug);
     }
 
     @GetMapping

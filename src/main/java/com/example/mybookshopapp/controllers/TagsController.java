@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/tags/{tagId}")
+@RequestMapping("/tags/{tagSlug}")
 public class TagsController {
 
     private final BookService bookService;
@@ -35,14 +35,13 @@ public class TagsController {
     }
 
     @ModelAttribute("booksList")
-    public List<BookEntity> booksByTag(@PathVariable("tagId") Integer tagId) {
-        return bookService.getPageOfBooksByTagId(tagId, 0, 20).getContent();
+    public List<BookEntity> booksByTag(@PathVariable("tagSlug") String tagSlug) {
+        return bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20).getContent();
     }
 
     @ModelAttribute("tag")
-    public TagEntity tag(@PathVariable("tagId") Integer tagId){
-        Optional<TagEntity> tagEntity = tagService.getTagById(tagId);
-        return tagEntity.orElseGet(TagEntity::new);
+    public TagEntity tag(@PathVariable("tagSlug") String tagSlug){
+        return tagService.getTagBySlug(tagSlug);
     }
 
     @GetMapping

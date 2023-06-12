@@ -45,19 +45,19 @@ public class BookService {
         return bookRepository.findPopularBooks(nextPage);
     }
 
-    public Page<BookEntity> getPageOfBooksByTagId(Integer tagId, Integer offset, Integer limit) {
+    public Page<BookEntity> getPageOfBooksByTagSlug(String tagSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBooksByTagId(tagId, nextPage);
+        return bookRepository.findBooksByTagSlug(tagSlug, nextPage);
     }
 
-    public Page<BookEntity> getPageOfBooksByGenreId(Integer genreId, Integer offset, Integer limit){
+    public Page<BookEntity> getPageOfBooksByGenreSlug(String genreSlug, Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBooksByGenreId(genreId, nextPage);
+        return bookRepository.findBooksByGenreSlug(genreSlug, nextPage);
     }
 
-    public Page<BookEntity> getPageOfBooksByAuthorId(Integer authorId, Integer offset, Integer limit) {
+    public Page<BookEntity> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBooksByAuthorId(authorId, nextPage);
+        return bookRepository.findBooksByAuthorSlug(authorSlug, nextPage);
     }
 
     public BookEntity getBookBySlug(String slug){

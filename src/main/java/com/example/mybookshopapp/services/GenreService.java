@@ -25,4 +25,8 @@ public class GenreService {
     public Optional<GenreEntity> getGenreById(Integer genreId){
         return genreRepository.findById(genreId);
     }
+
+    public GenreEntity getGenreBySlug(String slug){
+        return genreRepository.findGenreEntityBySlug(slug);
+    }
 }
