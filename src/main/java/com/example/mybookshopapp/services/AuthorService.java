@@ -36,4 +36,8 @@ public class AuthorService {
     public Optional<AuthorEntity> getAuthorById(Integer id){
         return authorRepository.findById(id);
     }
+
+    public AuthorEntity getAuthorBySlug(String slug){
+        return authorRepository.findAuthorEntityBySlug(slug);
+    }
 }

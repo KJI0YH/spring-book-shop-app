@@ -8,4 +8,6 @@ import java.util.List;
 public interface GenreRepository extends JpaRepository<GenreEntity, Integer> {
 
     List<GenreEntity> findGenreEntityByParentIdIsNull();
+
+    GenreEntity findGenreEntityBySlug(String slug);
 }

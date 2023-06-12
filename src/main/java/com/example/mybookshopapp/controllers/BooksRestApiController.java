@@ -40,24 +40,24 @@ public class BooksRestApiController {
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent()));
     }
 
-    @GetMapping("/tag/{tagId}")
-    public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagId") Integer tagId,
+    @GetMapping("/tag/{tagSlug}")
+    public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagSlug") String tagSlug,
                                                           @RequestParam("offset") Integer offset,
                                                           @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagId(tagId, offset, limit).getContent()));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagSlug(tagSlug, offset, limit).getContent()));
     }
 
-    @GetMapping("/genre/{genreId}")
-    public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreId") Integer genreId,
+    @GetMapping("/genre/{genreSlug}")
+    public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreSlug") String genreSlug,
                                                             @RequestParam("offset") Integer offset,
                                                             @RequestParam("limit") Integer limit){
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreId(genreId, offset, limit).getContent()));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreSlug(genreSlug, offset, limit).getContent()));
     }
 
-    @GetMapping("author/{authorId}")
-    public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorId") Integer authorId,
+    @GetMapping("author/{authorSlug}")
+    public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorSlug") String authroSlug,
                                                                @RequestParam("offset") Integer offset,
                                                                @RequestParam("limit") Integer limit){
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorId(authorId, offset, limit).getContent()));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorSlug(authroSlug, offset, limit).getContent()));
     }
 }

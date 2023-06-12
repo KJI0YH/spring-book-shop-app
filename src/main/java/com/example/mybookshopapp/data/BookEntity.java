@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,10 +34,6 @@ public class BookEntity {
 
     private String description;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Book2AuthorEntity> book2authorList;
-
     @ManyToMany
     @JoinTable(name = "book2author",
         joinColumns = @JoinColumn(name = "book_id"),
@@ -63,9 +60,18 @@ public class BookEntity {
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "book2user",
+    joinColumns = @JoinColumn(name = "book_id"),
+    inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
-    private List<Book2TagEntity> book2tagList;
+    private List<UserEntity> userList;
+
+    @ManyToMany
+    @JoinTable(name = "book2tag",
+    joinColumns = @JoinColumn(name = "book_id"),
+    inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<TagEntity> tagList;
 
     @ManyToMany
     @JoinTable(name = "book2genre",
@@ -74,6 +80,9 @@ public class BookEntity {
     )
     @JsonIgnore
     private List<GenreEntity> genreList;
+
+    @OneToMany(mappedBy = "book")
+    private List<BookFileEntity> bookFileList = new ArrayList<>();
 
     @Transient
     @JsonIgnore
