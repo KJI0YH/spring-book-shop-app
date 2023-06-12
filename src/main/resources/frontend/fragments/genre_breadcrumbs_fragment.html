@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<li class="breadcrumbs-item" th:fragment="genre_breadcrumbs(genre)">
+    <a href="/genres/index.html" th:text="${genre.name}">Легкое чтение</a>
+    <th:block th:if="${genre.parent}">
+        <li th:replace="~{fragments/genre_breadcrumbs_fragment :: genre_breadcrumbs(${genre.parent})}"></li>
+    </th:block>
+</li>
+</body>
+</html>

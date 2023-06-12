@@ -25,6 +25,15 @@ public class AuthorService {
 
     public Map<String, List<AuthorEntity>> getAuthorsMap() {
         List<AuthorEntity> authors = getAuthorsData();
-        return authors.stream().collect(groupingBy((AuthorEntity o) -> o.getLastName().toUpperCase().substring(0,1)));
+        Map<String, List<AuthorEntity>> authorsMap = authors.stream().collect(groupingBy((AuthorEntity o) -> o.getLastName().toUpperCase().substring(0,1)));
+
+        // Sort each group by last name
+        authorsMap.values().forEach(group -> group.sort(Comparator.comparing(AuthorEntity::getLastName)));
+
+        return authorsMap;
+    }
+
+    public Optional<AuthorEntity> getAuthorById(Integer id){
+        return authorRepository.findById(id);
     }
 }

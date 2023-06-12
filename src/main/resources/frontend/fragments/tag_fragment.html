@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="Tag" th:fragment="tag(genre)">
+    <a th:href="@{/genres/{slug}(slug=${genre.slug})}">
+        <span th:text="${genre.name}"></span>
+        <span class="undefined-amount" th:text="${'(' + genre.bookList.size() + ')'}"></span>
+    </a>
+</div>
+</body>
+</html>

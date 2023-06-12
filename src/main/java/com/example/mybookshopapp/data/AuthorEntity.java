@@ -25,7 +25,10 @@ public class AuthorEntity {
     private String description;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-   private List<Book2AuthorEntity> book2AuthorList;
+    private List<Book2AuthorEntity> book2AuthorList;
+
+    @ManyToMany(mappedBy = "authorList")
+    private List<BookEntity> bookList;
 
     @Override
     public String toString() {

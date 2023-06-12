@@ -12,8 +12,8 @@
                     </div>
                     <div class="Header-search">
                         <div class="search">
-                            <form class="form form_search" action="#" method="post" data-searchlimit="20">
-                                <input class="search-input" id="query" name="query" type="text" th:placeholder="#{topbar.searchPlaceholder}" value=""/>
+                            <form class="form form_search" action="#" method="post" data-searchlimit="20" th:object="${searchWordDto}">
+                                <input class="search-input" id="query" name="query" type="text" th:placeholder="#{topbar.searchPlaceholder}" th:field="*{example}" value=""/>
                                 <button class="search-button" type="submit" name="search" id="search" th:text="#{topbar.search}">Поиск
                                 </button>
                             </form>

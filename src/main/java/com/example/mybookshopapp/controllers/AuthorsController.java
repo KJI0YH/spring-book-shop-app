@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.AuthorEntity;
+import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.*;
 
 @Controller
-@RequestMapping("/authors")
 public class AuthorsController {
 
     private final AuthorService authorService;
@@ -21,12 +21,17 @@ public class AuthorsController {
         this.authorService = authorService;
     }
 
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto(){
+        return new SearchWordDto();
+    }
+
     @ModelAttribute("authorsMap")
     public Map<String, List<AuthorEntity>> authorsMap(){
         return authorService.getAuthorsMap();
     }
 
-    @GetMapping
+    @GetMapping("/authors")
     public String authorsPage(){
         return "/authors/index";
     }
