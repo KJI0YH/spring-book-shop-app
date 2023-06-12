@@ -7,14 +7,20 @@ import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.ResourceStorage;
 import io.swagger.v3.oas.annotations.media.Content;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 @Controller
-@RequestMapping("/books/{bookSlug}")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -33,17 +39,13 @@ public class BookController {
         return new SearchWordDto();
     }
 
-    @ModelAttribute("book")
-    public BookEntity book(@PathVariable("bookSlug") String slug){
-        return bookService.getBookBySlug(slug);
-    }
-
-    @GetMapping
-    public String getBookPage(){
+    @GetMapping("/{bookSlug}")
+    public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
+        model.addAttribute("book", bookService.getBookBySlug(bookSlug));
         return "/books/slug";
     }
 
-    @PostMapping("/img/save")
+    @PostMapping("/{bookSlug}/img/save")
     public String saveNewBookImage(@PathVariable("bookSlug") String bookSlug,
                                    @RequestParam("file")MultipartFile file) throws IOException {
 
@@ -53,5 +55,21 @@ public class BookController {
         bookRepository.save(bookToUpdate);
 
         return ("redirect:/books/" + bookSlug);
+    }
+
+    @GetMapping("/download/{bookFileHash}")
+    public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws IOException {
+        Path path = storage.getBookFilePath(hash);
+
+        MediaType mediaType = storage.getBookFileMime(hash);
+
+        byte[] data = storage.getBookFileByteArray(hash);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
+                .contentType(mediaType)
+                .contentLength(data.length)
+                .body(new ByteArrayResource(data));
+
     }
 }

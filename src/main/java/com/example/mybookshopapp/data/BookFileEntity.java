@@ -17,4 +17,12 @@ public class BookFileEntity {
     private int typeId;
 
     private String path;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    private BookEntity book;
+
+    public String getBookFileExtensionString(){
+        return BookFileType.getExtensionStringByTypeId(typeId);
+    }
 }

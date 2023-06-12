@@ -5,5 +5,6 @@
 
     <include file="/db/changelog/liquibase-outputChangeLog_init.xml"/>
     <include file="/db/changelog/add-tags.xml"/>
+    <include file="/db/changelog/add-bookFile-book_id-col.xml"/>
 
 </databaseChangeLog>

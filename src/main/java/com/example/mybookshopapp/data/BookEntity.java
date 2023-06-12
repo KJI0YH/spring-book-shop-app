@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -79,6 +80,9 @@ public class BookEntity {
     )
     @JsonIgnore
     private List<GenreEntity> genreList;
+
+    @OneToMany(mappedBy = "book")
+    private List<BookFileEntity> bookFileList = new ArrayList<>();
 
     @Transient
     @JsonIgnore
