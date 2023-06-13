@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("authors/{id}")
+@RequestMapping("authors/{authorSlug}")
 public class AuthorPageController {
 
     private final AuthorService authorService;
@@ -27,8 +27,8 @@ public class AuthorPageController {
     }
 
     @ModelAttribute("author")
-    public AuthorEntity author(@PathVariable("id") Integer id) {
-        return authorService.getAuthorById(id).orElseGet(AuthorEntity::new);
+    public AuthorEntity author(@PathVariable("authorSlug") String authorSlug) {
+        return authorService.getAuthorBySlug(authorSlug);
     }
 
     @GetMapping
