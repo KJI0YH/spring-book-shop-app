@@ -27,7 +27,7 @@
     <link href="/assets/css/basic.min.css?v=87821122" rel="stylesheet">
     <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="/assets/css/extra.min.css?v=87821122" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/DownloadBookWindowStyle.css">
+    <link href="/assets/css/DownloadBookWindowStyle.css" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script defer src="/assets/js/scripts.min.js?v=87821122"></script>
@@ -438,12 +438,19 @@ p.error-browser
                                 </button>
                             </div>
                             <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline" data-alttext="В корзине" data-bookid="[1111]"
-                                        data-btnradio="buyblock" data-btntype="check" data-check="false"
-                                        data-sendstatus="CART"><span class="btn-icon"><img
-                                        alt="shopping-basket.svg"
-                                        src="/assets/img/icons/shopping-basket.svg"/></span><span class="btn-content"
-                                                                                th:text="#{book.buy}">Купить</span>
+                                <button class="btn btn_primary btn_outline"
+                                        data-alttext="В корзине"
+                                        data-bookid="[1111]" th:attr="data-bookid=${'cart/add/' + book.slug}"
+                                        data-btnradio="buyblock"
+                                        data-btntype="check"
+                                        data-check="false"
+                                        data-sendstatus="CART">
+                                    <span class="btn-icon"><img
+                                            alt="shopping-basket.svg"
+                                            src="/assets/img/icons/shopping-basket.svg"/>
+                                    </span>
+                                    <span class="btn-content"
+                                          th:text="#{book.buy}">Купить</span>
                                 </button>
                             </div>
                         </div>
@@ -452,8 +459,9 @@ p.error-browser
                             <!--    +Amount._product-->
                             <div class="ProductCard-cartElement"><a class="btn btn_primary btn_outline" href="#"><span
                                     class="btn-icon"><img alt="download.svg"
-                                                          src="/assets/img/icons/download.svg"/></span><span class="btn-content"
-                                                                                           th:text="#{book.download}">Скачать</span></a>
+                                                          src="/assets/img/icons/download.svg"/></span><span
+                                    class="btn-content"
+                                    th:text="#{book.download}">Скачать</span></a>
                             </div>
                             <div class="ProductCard-cartElement">
                                 <button class="btn btn_primary btn_outline" data-alttext="Вернуть из архива"
@@ -468,7 +476,8 @@ p.error-browser
                         <div id="myPopup">
                             <p>Ссылки для скачивания</p>
                             <div th:each="bookFile : ${book.bookFileList}">
-                                <a href="#" th:href="${'/books/download/' + bookFile.hash}" th:text="${bookFile.getBookFileExtensionString()}"></a>
+                                <a href="#" th:href="${'/books/download/' + bookFile.hash}"
+                                   th:text="${bookFile.getBookFileExtensionString()}"></a>
                             </div>
                             <span class="close" id="myPopup__close">x</span>
                         </div>
@@ -661,9 +670,11 @@ p.error-browser
                                                     class="btn-content">50</span>
                                             </button>
                                         </div>
-                                        <button class="Spoiler-trigger btn btn_primary btn_nr" data-hidetext="Показать отзыв полностью"
+                                        <button class="Spoiler-trigger btn btn_primary btn_nr"
+                                                data-hidetext="Показать отзыв полностью"
                                                 data-showtext="Свернуть отзыв"
-                                                th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}" type="button">
+                                                th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
+                                                type="button">
                                         </button>
                                     </div>
                                 </div>
