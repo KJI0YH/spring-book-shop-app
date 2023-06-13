@@ -430,17 +430,20 @@ p.error-browser
                             <!--+div.-cartElement.-cartElement_amount-->
                             <!--    +Amount._product-->
                             <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline" data-alttext="Отложена" data-bookid="[1111]"
+                                <button class="btn btn_primary btn_outline" data-alttext="Отложена"
+                                        data-bookid="[1111]" th:attr="data-bookid=${'[' + book.id + ']'}"
                                         data-btnradio="buyblock" data-btntype="check" data-check="false"
-                                        data-sendstatus="KEPT"><span class="btn-icon"><img
-                                        alt="heart.svg" src="/assets/img/icons/heart.svg"/></span><span
-                                        class="btn-content" th:text="#{book.postpone}">Отложить</span>
+                                        data-sendstatus="KEPT">
+                                    <span class="btn-icon">
+                                        <img alt="heart.svg" src="/assets/img/icons/heart.svg"/>
+                                    </span>
+                                    <span class="btn-content" th:text="#{book.postpone}">Отложить</span>
                                 </button>
                             </div>
                             <div class="ProductCard-cartElement">
                                 <button class="btn btn_primary btn_outline"
                                         data-alttext="В корзине"
-                                        data-bookid="[1111]" th:attr="data-bookid=${'cart/add/' + book.slug}"
+                                        data-bookid="[1111]" th:attr="data-bookid=${'[' + book.id + ']'}"
                                         data-btnradio="buyblock"
                                         data-btntype="check"
                                         data-check="false"
@@ -457,18 +460,23 @@ p.error-browser
                         <div class="ProductCard-cart">
                             <!--+div.-cartElement.-cartElement_amount-->
                             <!--    +Amount._product-->
-                            <div class="ProductCard-cartElement"><a class="btn btn_primary btn_outline" href="#"><span
-                                    class="btn-icon"><img alt="download.svg"
-                                                          src="/assets/img/icons/download.svg"/></span><span
-                                    class="btn-content"
+                            <div class="ProductCard-cartElement">
+                                <a class="btn btn_primary btn_outline" href="#">
+                                    <span class="btn-icon">
+                                        <img alt="download.svg" src="/assets/img/icons/download.svg"/>
+                                    </span>
+                                    <span class="btn-content"
                                     th:text="#{book.download}">Скачать</span></a>
                             </div>
                             <div class="ProductCard-cartElement">
                                 <button class="btn btn_primary btn_outline" data-alttext="Вернуть из архива"
-                                        data-bookid="[1111]" data-btnradio="buyblock" data-btntype="check"
-                                        data-check="false" data-sendstatus="ARCHIVED"><span class="btn-icon"><img
-                                        alt="archive.svg" src="/assets/img/icons/archive.svg"/></span><span
-                                        class="btn-content" th:text="#{book.archive}">В архив</span>
+                                        data-bookid="[1111]" th:attr="data-bookid=${book.id}"
+                                        data-btnradio="buyblock" data-btntype="check"
+                                        data-check="false" data-sendstatus="ARCHIVED">
+                                    <span class="btn-icon">
+                                        <img alt="archive.svg" src="/assets/img/icons/archive.svg"/>
+                                    </span>
+                                    <span class="btn-content" th:text="#{book.archive}">В архив</span>
                                 </button>
                             </div>
                         </div>

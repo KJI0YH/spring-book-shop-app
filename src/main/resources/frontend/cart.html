@@ -52,7 +52,7 @@ p.error-browser
                 <div class="Cart-product" th:each="book : ${bookCart}">
                     <div class="Cart-block Cart-block_row">
                         <div class="Cart-block Cart-block_pict">
-                            <a class="Cart-pict" href="#">
+                            <a class="Cart-pict" href="#" th:href="${'/books/' + book.slug}">
                                 <img alt="card.jpg" class="Cart-img" src="/assets/img/content/main/card.jpg"
                                      th:src="${book.image}"/>
                             </a>
@@ -113,7 +113,7 @@ p.error-browser
                                 <div class="Cart-buttons">
                                     <div class="Cart-btn">
                                         <button class="btn btn_primary btn_outline"
-                                                data-bookid="[1122]"
+                                                data-bookid="[1122]" th:attr="data-bookid=${'[' + book.id + ']'}"
                                                 data-sendstatus="KEPT">
                                             <span class="btn-icon">
                                                 <img alt="heart.svg" src="/assets/img/icons/heart.svg"/>
@@ -123,7 +123,7 @@ p.error-browser
                                     </div>
                                     <div class="Cart-btn">
                                         <button class="btn btn_danger btn_outline"
-                                                data-bookid="[1122]" th:attr="data-bookid=${'cart/remove/' + book.slug}"
+                                                data-bookid="[1122]" th:attr="data-bookid=${'[' + book.id + ']'}"
                                                 data-sendstatus="UNLINK">
                                             <span class="btn-icon">
                                                 <img alt="trash.svg" src="/assets/img/icons/trash.svg"/>

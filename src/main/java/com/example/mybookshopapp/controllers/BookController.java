@@ -47,7 +47,7 @@ public class BookController {
 
     @PostMapping("/{bookSlug}/img/save")
     public String saveNewBookImage(@PathVariable("bookSlug") String bookSlug,
-                                   @RequestParam("file")MultipartFile file) throws IOException {
+                                   @RequestParam("file") MultipartFile file) throws IOException {
 
         String savePath = storage.saveNewBookImage(file, bookSlug);
         BookEntity bookToUpdate = bookService.getBookBySlug(bookSlug);
