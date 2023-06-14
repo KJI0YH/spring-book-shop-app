@@ -42,4 +42,19 @@ public class BookRateReviewController {
         return mapper.writeValueAsString(object);
     }
 
+    @PostMapping("/bookReview")
+    public String bookReview(HttpServletRequest request,
+                             HttpServletResponse response){
+
+        //TODO add review for authorize users
+        return "";
+    }
+
+    @PostMapping("/rateBookReview")
+    public String rateBookReview(HttpServletRequest request,
+                                 HttpServletResponse response){
+
+        //TODO add (dis)likes for reviews for authorize users
+        return "";
+    }
 }

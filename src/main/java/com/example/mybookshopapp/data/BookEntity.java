@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -71,6 +72,7 @@ public class BookEntity {
     @JoinTable(name = "book2tag",
     joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JsonIgnore
     private List<TagEntity> tagList;
 
     @ManyToMany
@@ -81,7 +83,8 @@ public class BookEntity {
     @JsonIgnore
     private List<GenreEntity> genreList;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<BookFileEntity> bookFileList = new ArrayList<>();
 
     @Transient
@@ -92,9 +95,19 @@ public class BookEntity {
     private void calculatePopularity(){
         BooksRatingAndPopularityService calculator = new BooksRatingAndPopularityService();
         popularity = calculator.getPopularity(this);
+        sortedReviewList = reviewList.stream().sorted(Comparator.comparing(BookReviewEntity::getPopularityValue).reversed()).toList();
     }
 
     @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private BookRateEntity rate;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<BookReviewEntity> reviewList  = new ArrayList<>();
+
+    @Transient
+    @JsonIgnore
+    private List<BookReviewEntity> sortedReviewList;
 }

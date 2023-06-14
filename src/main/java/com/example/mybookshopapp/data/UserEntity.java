@@ -27,4 +27,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookReviewEntity> reviewList;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookReviewLikeEntity> reviewLikeList;
 }

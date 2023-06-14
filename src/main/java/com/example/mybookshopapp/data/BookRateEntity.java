@@ -9,7 +9,6 @@ import lombok.Data;
 public class BookRateEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     private Integer bookId;
 
@@ -30,7 +29,6 @@ public class BookRateEntity {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "book_id")
     private BookEntity book;
 
     public Integer getValuesCount(){
