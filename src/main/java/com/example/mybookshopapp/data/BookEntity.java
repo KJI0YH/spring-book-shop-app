@@ -93,4 +93,8 @@ public class BookEntity {
         BooksRatingAndPopularityService calculator = new BooksRatingAndPopularityService();
         popularity = calculator.getPopularity(this);
     }
+
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private BookRateEntity rate;
 }

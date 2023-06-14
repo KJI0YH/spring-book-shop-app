@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="aliak" id="add-book_rate-table">
+        <createTable tableName="book_rate">
+            <column name="book_id" autoIncrement="false" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="book_id_pkey"/>
+            </column>
+            <column name="value_1" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="value_2" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="value_3" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="value_4" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="value_5" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addDefaultValue tableName="book_rate" columnName="value_1" defaultValue="0"/>
+        <addDefaultValue tableName="book_rate" columnName="value_2" defaultValue="0"/>
+        <addDefaultValue tableName="book_rate" columnName="value_3" defaultValue="0"/>
+        <addDefaultValue tableName="book_rate" columnName="value_4" defaultValue="0"/>
+        <addDefaultValue tableName="book_rate" columnName="value_5" defaultValue="0"/>
+    </changeSet>
+</databaseChangeLog>
