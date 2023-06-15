@@ -1,76 +1,53 @@
 package com.example.mybookshopapp.controllers;
 
+import com.example.mybookshopapp.dto.BookCookieStoreDto;
+import com.example.mybookshopapp.services.BookStatusService;
+import com.example.mybookshopapp.services.CartService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api")
 public class BookStatusController {
 
+    private final CartService cartService;
+    private final BookStatusService bookStatusService;
+
+    @Autowired
+    public BookStatusController(CartService cartService, BookStatusService bookStatusService) {
+        this.cartService = cartService;
+        this.bookStatusService = bookStatusService;
+    }
+
     @PostMapping("/changeBookStatus")
     @ResponseBody
     public String handleChangeBookStatus(HttpServletRequest request,
                                          HttpServletResponse response,
-                                         @CookieValue(value = "cartContents", required = false) String cartContents ,
+                                         @CookieValue(value = "cartContents", required = false) String cartContents,
                                          @CookieValue(value = "postponedContents", required = false) String postponedContents) throws JsonProcessingException {
 
         //TODO: change status for registered users in db
 
-        Map<String, String[]> params =  request.getParameterMap();
+        Map<String, String[]> params = request.getParameterMap();
 
         String status = request.getParameter("status");
         String[] booksIds = params.get("booksIds[]");
 
-        ArrayList<String> cartBooks = new ArrayList<>();
-        if (cartContents != null && !cartContents.equals("")){
-            cartBooks = new ArrayList<>(Arrays.asList(cartContents.split("/")));
-        }
-
-        ArrayList<String> postponedBooks = new ArrayList<>();
-        if (postponedContents != null && !postponedContents.equals("")){
-            postponedBooks = new ArrayList<>(Arrays.asList(postponedContents.split("/")));
-        }
-
-        switch (status){
-            case "KEPT":
-                for (String id: booksIds){
-                    if (!postponedBooks.contains(id)){
-                        postponedBooks.add(id);
-                    }
-                    cartBooks.remove(id);
-                }
-                break;
-            case "CART":
-                for (String id: booksIds){
-                    if (!cartBooks.contains(id)){
-                        cartBooks.add(id);
-                    }
-                    postponedBooks.remove(id);
-                }
-                break;
-            case "UNLINK":
-                for (String id: booksIds) {
-                    cartBooks.remove(id);
-                    postponedBooks.remove(id);
-                }
-                break;
-        }
-
-        Cookie cartCookie = new Cookie("cartContents", String.join("/", cartBooks));
-        cartCookie.setPath("/");
-        response.addCookie(cartCookie);
-
-        Cookie postponedCookie = new Cookie("postponedContents", String.join("/", postponedBooks));
-        postponedCookie.setPath("/");
-        response.addCookie(postponedCookie);
+        BookCookieStoreDto bookCookieStore = bookStatusService.changeBookCookiesStatus(status, cartContents, postponedContents, booksIds);
+        response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getCartContents(), "cartContents"));
+        response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getPostponedContents(), "postponedContents"));
 
         Map<String, Object> object = new HashMap<>();
         object.put("result", true);

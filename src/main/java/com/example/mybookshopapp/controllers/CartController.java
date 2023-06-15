@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -42,8 +43,8 @@ public class CartController {
             model.addAttribute("isCartEmpty", true);
         } else {
             model.addAttribute("isCartEmpty", false);
-            Integer[] cookieIds = cartService.getCookiesIds(cartContents);
-            List<BookEntity> booksFromCookiesIds = bookRepository.findBookEntitiesByIdIn(cookieIds);
+            String[] cookieIds = cartService.getCookiesIds(cartContents);
+            List<BookEntity> booksFromCookiesIds = bookRepository.findBookEntitiesByIdIn(Arrays.stream(cookieIds).map(Integer::valueOf).toArray(Integer[]::new));
             model.addAttribute("bookCart", booksFromCookiesIds);
         }
         return "cart";
