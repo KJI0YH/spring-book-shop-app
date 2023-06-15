@@ -29,6 +29,5 @@ public class BookRateService {
             default -> {
             }
         }
-        bookRateRepository.save(bookRateEntity);
     }
 }
