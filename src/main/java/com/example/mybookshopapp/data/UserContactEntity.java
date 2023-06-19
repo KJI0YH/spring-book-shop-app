@@ -14,8 +14,6 @@ public class UserContactEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int userId;
-
     private ContactType type;
 
     private short approved;
@@ -27,4 +25,8 @@ public class UserContactEntity {
     private LocalDateTime codeTime;
 
     private String contact;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
 }

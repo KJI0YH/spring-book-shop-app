@@ -7,5 +7,6 @@
     <include file="/db/changelog/add-tags.xml"/>
     <include file="/db/changelog/add-bookFile-book_id-col.xml"/>
     <include file="/db/changelog/add-book_rate-table.xml"/>
+    <include file="/db/changelog/add-user-passwordHash.xml"/>
 
 </databaseChangeLog>

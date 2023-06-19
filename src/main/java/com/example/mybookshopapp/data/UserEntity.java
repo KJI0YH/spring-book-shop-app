@@ -15,14 +15,18 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String hash;
-
     private LocalDateTime regTime;
-
     private int balance;
-
     private String name;
+
+    @Column(name = "password_hash")
+    private String password;
+    private String email;
+    private String phone;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserContactEntity> contactList;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
