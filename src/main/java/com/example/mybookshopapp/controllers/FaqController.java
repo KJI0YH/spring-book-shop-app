@@ -17,6 +17,6 @@ public class FaqController {
 
     @GetMapping
     public String faqPage(){
-        return "/faq";
+        return "faq";
     }
 }

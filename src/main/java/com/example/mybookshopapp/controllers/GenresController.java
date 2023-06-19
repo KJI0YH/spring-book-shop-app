@@ -41,6 +41,6 @@ public class GenresController {
 
     @GetMapping
     public String genresPage(){
-        return "/genres/index";
+        return "genres/index";
     }
 }

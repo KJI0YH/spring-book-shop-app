@@ -42,7 +42,7 @@ public class BookController {
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
         model.addAttribute("book", bookService.getBookBySlug(bookSlug));
-        return "/books/slug";
+        return "books/slug";
     }
 
     @PostMapping("/{bookSlug}/img/save")

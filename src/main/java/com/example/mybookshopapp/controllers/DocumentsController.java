@@ -17,6 +17,6 @@ public class DocumentsController {
 
     @GetMapping
     public String documentPage(){
-        return "/documents/index";
+        return "documents/index";
     }
 }
