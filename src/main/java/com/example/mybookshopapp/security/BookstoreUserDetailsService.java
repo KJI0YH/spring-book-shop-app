@@ -18,8 +18,8 @@ public class BookstoreUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findUserEntityByName(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findUserEntityByEmail(email);
         if (userEntity != null){
             return new BookstoreUserDetails(userEntity);
         } else {

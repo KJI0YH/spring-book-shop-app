@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class BookstoreUserRegister {
 
@@ -31,6 +33,8 @@ public class BookstoreUserRegister {
             user.setEmail(registrationForm.getEmail());
             user.setPhone(registrationForm.getPhone());
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+            user.setRegTime(LocalDateTime.now());
+            user.setHash("hash");
             userRepository.save(user);
         }
     }
