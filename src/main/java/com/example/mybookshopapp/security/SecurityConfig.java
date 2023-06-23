@@ -60,8 +60,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/my/**").hasAnyRole("USER")
-                .requestMatchers("/profile/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/my/**").authenticated()
+                .requestMatchers("/profile/**").authenticated()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/signin").permitAll()
                 .anyRequest().permitAll()
@@ -69,7 +69,9 @@ public class SecurityConfig {
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token")
                 .and().httpBasic()
                 .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().oauth2Login()
+                .and().oauth2Client();
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -92,6 +92,11 @@
 			<artifactId>jaxb-api-osgi</artifactId>
 			<version>2.2.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+			<version>3.0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
