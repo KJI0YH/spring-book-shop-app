@@ -94,6 +94,6 @@ public class AuthUserController {
 //            cookie.setMaxAge(0);
 //        }
 //
-//        return "redirect:/";
+//        return "redirect:/signin";
 //    }
 }
