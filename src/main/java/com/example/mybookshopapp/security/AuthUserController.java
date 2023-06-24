@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,7 +55,7 @@ public class AuthUserController {
     }
 
     @PostMapping("/reg")
-    public String handleUserRegistration(RegistrationForm registrationForm, Model model) {
+    public String handleUserRegistration(RegistrationForm registrationForm, Model model) throws UserAlreadyExistException {
         userRegister.registerNewUser(registrationForm);
         model.addAttribute("regOk", true);
         return "signin";

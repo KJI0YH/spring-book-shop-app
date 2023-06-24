@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +31,7 @@ public class BookstoreUserRegister {
         this.jwtUtil = jwtUtil;
     }
 
-    public void registerNewUser(RegistrationForm registrationForm) {
+    public void registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException {
 
         if (userRepository.findUserEntityByEmail(registrationForm.getEmail()) == null) {
             UserEntity user = new UserEntity();
@@ -41,6 +42,8 @@ public class BookstoreUserRegister {
             user.setRegTime(LocalDateTime.now());
             user.setHash("hash");
             userRepository.save(user);
+        } else {
+            throw new UserAlreadyExistException("User with email " + registrationForm.getEmail() + " already exists");
         }
     }
 
