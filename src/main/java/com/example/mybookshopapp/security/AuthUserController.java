@@ -27,6 +27,11 @@ public class AuthUserController {
         return new SearchWordDto();
     }
 
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
+    }
+
     @GetMapping("/signin")
     public String handleSignin() {
         return "signin";
@@ -76,24 +81,13 @@ public class AuthUserController {
         return "my";
     }
 
-    @GetMapping("/profile")
-    public String handleProfile(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUser());
-        return "profile";
+    @GetMapping("/myarchive")
+    public String handleMyArchive(){
+        return "myarchive";
     }
 
-//    @GetMapping("/logout")
-//    public String handleLogout(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        SecurityContextHolder.clearContext();
-//        if (session != null) {
-//            session.invalidate();
-//        }
-//
-//        for (Cookie cookie : request.getCookies()) {
-//            cookie.setMaxAge(0);
-//        }
-//
-//        return "redirect:/signin";
-//    }
+    @GetMapping("/profile")
+    public String handleProfile() {
+        return "profile";
+    }
 }

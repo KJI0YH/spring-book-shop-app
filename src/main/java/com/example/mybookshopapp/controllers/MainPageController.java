@@ -2,9 +2,9 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.TagEntity;
-import com.example.mybookshopapp.dto.BooksPageDto;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.dto.TagDto;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.TagService;
 import com.example.mybookshopapp.services.TagsPopularityService;
@@ -22,12 +22,14 @@ public class MainPageController {
     private final BookService bookService;
     private final TagService tagService;
     private final TagsPopularityService tagsPopularityService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public MainPageController(BookService bookService, TagService tagService, TagsPopularityService tagsPopularityService) {
+    public MainPageController(BookService bookService, TagService tagService, TagsPopularityService tagsPopularityService, BookstoreUserRegister userRegister) {
         this.bookService = bookService;
         this.tagService = tagService;
         this.tagsPopularityService = tagsPopularityService;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -48,6 +50,11 @@ public class MainPageController {
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto() {
         return new SearchWordDto();
+    }
+
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute("searchResults")

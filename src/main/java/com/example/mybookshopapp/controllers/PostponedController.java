@@ -3,6 +3,7 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +21,22 @@ import java.util.List;
 public class PostponedController {
 
     private final BookRepository bookRepository;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public PostponedController(BookRepository bookRepository) {
+    public PostponedController(BookRepository bookRepository, BookstoreUserRegister userRegister) {
         this.bookRepository = bookRepository;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto(){
         return new SearchWordDto();
+    }
+
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute(name = "bookKept")

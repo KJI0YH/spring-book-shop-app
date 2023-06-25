@@ -69,8 +69,11 @@ public class BookstoreUserRegister {
     }
 
     public Object getCurrentUser() {
-        BookstoreUserDetails userDetails =
-                (BookstoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUserEntity();
+        try {
+            BookstoreUserDetails userDetails = (BookstoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return userDetails.getUserEntity();
+        } catch (ClassCastException e){
+            return null;
+        }
     }
 }

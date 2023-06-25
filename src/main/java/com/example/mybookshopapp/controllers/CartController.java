@@ -3,6 +3,7 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,13 @@ public class CartController {
 
     private final BookRepository bookRepository;
     private final CartService cartService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public CartController(BookRepository bookRepository, CartService cartService) {
+    public CartController(BookRepository bookRepository, CartService cartService, BookstoreUserRegister userRegister) {
         this.bookRepository = bookRepository;
         this.cartService = cartService;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("searchWordDto")
@@ -34,6 +37,11 @@ public class CartController {
     @ModelAttribute(name = "bookCart")
     public List<BookEntity> bookCart() {
         return new ArrayList<>();
+    }
+
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
     }
 
     @GetMapping
