@@ -32,7 +32,8 @@ public class UserEntity {
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name = "review_id")
     private List<BookReviewEntity> reviewList;
 
     @OneToMany(mappedBy = "user")

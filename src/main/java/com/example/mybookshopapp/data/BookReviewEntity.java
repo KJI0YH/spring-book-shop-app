@@ -15,26 +15,13 @@ public class BookReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private LocalDateTime time;
-
-    public String getTimeString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        return time.format(formatter);
-    }
-
     private String text;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
-    private BookEntity book;
+    private Integer bookId;
+    private Integer userId;
 
     @OneToMany(mappedBy = "review")
     private List<BookReviewLikeEntity> reviewLikeList;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity user;
 
     public Long getLikesCount(){
         return reviewLikeList.stream()

@@ -464,7 +464,7 @@
             <strong class="Comments-title">Написать отзыв
             </strong>
             <div class="Comments-addComment">
-              <form class="form" action="#" method="post" data-bookid="1111">
+              <form class="form" action="#" method="post" data-bookid="1111" th:attr="data-bookid=${book.id}">
                 <div class="form-group">
                   <textarea class="form-textarea Comments-review" name="review" id="review" placeholder="Текст отзыва" data-validate="require"></textarea>
                 </div>
