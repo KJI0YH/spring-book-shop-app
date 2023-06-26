@@ -8,26 +8,29 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Data
-public class ApiResponse<T> {
+public class ApiResponse {
     private HttpStatus status;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timeStamp;
+    private Boolean result;
+    private String error;
 
-    private String message;
-    private String debugMessage;
-    private Collection<T> data;
 
     public ApiResponse() {
         this.timeStamp = LocalDateTime.now();
     }
 
-    public ApiResponse(HttpStatus status, String message, Throwable ex) {
+    public ApiResponse(HttpStatus status, Boolean result) {
         this();
         this.status = status;
-        this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
+        this.result = result;
     }
 
-
+    public ApiResponse(HttpStatus status, Boolean result, String error) {
+        this();
+        this.status = status;
+        this.result = result;
+        this.error = error;
+    }
 }

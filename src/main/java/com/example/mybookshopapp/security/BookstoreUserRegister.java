@@ -41,6 +41,7 @@ public class BookstoreUserRegister {
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             user.setRegTime(LocalDateTime.now());
             user.setHash("hash");
+            user.setBalance(0);
             userRepository.save(user);
         } else {
             throw new UserAlreadyExistException("User with email " + registrationForm.getEmail() + " already exists");
