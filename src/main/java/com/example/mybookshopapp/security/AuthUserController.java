@@ -81,7 +81,7 @@ public class AuthUserController {
         return "my";
     }
 
-    @GetMapping("/myarchive")
+    @GetMapping("/my/archive")
     public String handleMyArchive(){
         return "myarchive";
     }

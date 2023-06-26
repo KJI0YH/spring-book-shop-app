@@ -14,10 +14,10 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String hash;
     private LocalDateTime regTime;
-    private int balance;
+    private Integer balance;
     private String name;
 
     @Column(name = "password_hash")

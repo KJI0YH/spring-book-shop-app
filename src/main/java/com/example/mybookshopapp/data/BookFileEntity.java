@@ -10,12 +10,9 @@ public class BookFileEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Integer id;
     private String hash;
-
-    private int typeId;
-
+    private Integer typeId;
     private String path;
 
     @ManyToOne

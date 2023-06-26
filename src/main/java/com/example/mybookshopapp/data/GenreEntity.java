@@ -3,6 +3,7 @@ package com.example.mybookshopapp.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -13,13 +14,11 @@ public class GenreEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "parent_id", insertable = false, updatable = false)
     private Integer parentId;
-
     private String slug;
-
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,5 +31,6 @@ public class GenreEntity {
     private List<Book2GenreEntity> book2genreList;
 
     @ManyToMany(mappedBy = "genreList")
+    @ToString.Exclude
     private List<BookEntity> bookList;
 }

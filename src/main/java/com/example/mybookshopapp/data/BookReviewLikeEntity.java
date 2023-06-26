@@ -12,11 +12,9 @@ public class BookReviewLikeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Integer id;
     private LocalDateTime time;
-
-    private short value;
+    private Integer value;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", referencedColumnName = "id")

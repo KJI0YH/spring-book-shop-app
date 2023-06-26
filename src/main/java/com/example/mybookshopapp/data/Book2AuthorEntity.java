@@ -10,9 +10,8 @@ public class Book2AuthorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private int sortIndex;
+    private Integer id;
+    private Integer sortIndex;
 
     @ManyToOne
     @JoinColumn(name = "book_id")

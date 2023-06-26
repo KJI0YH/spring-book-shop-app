@@ -48,8 +48,14 @@ public class BookController {
 
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
-        model.addAttribute("book", bookService.getBookBySlug(bookSlug));
-        return "/books/slug";
+        BookEntity book = bookService.getBookBySlug(bookSlug);
+        model.addAttribute("book", book);
+
+        if (userRegister.getCurrentUser() == null){
+            return "/books/slug";
+        } else {
+            return "/books/slugmy";
+        }
     }
 
     @PostMapping("/{bookSlug}/img/save")

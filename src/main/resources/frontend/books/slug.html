@@ -82,7 +82,7 @@ p.error-browser
                                 <button class="trigger trigger_dropdown" type="button">
                                     <div class="Rating Rating_noStyleLink"><span class="Rating-stars"><span
                                             class="Rating-star"
-                                            th:class="${book.rate.getAverageValue() >= 1 ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+                                            >
                           <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
                             <g>
                               <g>
@@ -91,7 +91,7 @@ p.error-browser
                               </g>
                             </g>
                           </svg></span><span class="Rating-star"
-                                             th:class="${book.rate.getAverageValue() >= 2 ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+                                             >
                           <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
                             <g>
                               <g>
@@ -100,7 +100,7 @@ p.error-browser
                               </g>
                             </g>
                           </svg></span><span class="Rating-star"
-                                             th:class="${book.rate.getAverageValue() >= 3 ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+                                             >
                           <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
                             <g>
                               <g>
@@ -109,7 +109,7 @@ p.error-browser
                               </g>
                             </g>
                           </svg></span><span class="Rating-star"
-                                             th:class="${book.rate.getAverageValue() >= 4 ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+                                             >
                           <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
                             <g>
                               <g>
@@ -118,7 +118,7 @@ p.error-browser
                               </g>
                             </g>
                           </svg></span><span class="Rating-star"
-                                             th:class="${book.rate.getAverageValue() >= 5 ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+                                             >
                           <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
                             <g>
                               <g>
@@ -127,7 +127,7 @@ p.error-browser
                               </g>
                             </g>
                           </svg></span></span><span class="Rating-title"
-                                                    th:text="${'(' + book.rate.getValuesCount() + ')'}">(567)</span>
+                                                    th:text="${'(' + '234' + ')'}">(567)</span>
                                     </div>
                                     <div class="modal modal_compression modal_dropdown">
                                         <div class="modal-window"><a class="modal-close"
@@ -176,7 +176,7 @@ p.error-browser
                                     </g>
                                   </g>
                                 </svg></span></span><span class="Rating-title"
-                                                          th:text="${book.rate.value5}">1</span></span><br><span
+                                                          >1</span></span><br><span
                                                     class="Rating"><span class="Rating-stars"><span
                                                     class="Rating-star Rating-star_view">
                                 <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
@@ -219,7 +219,7 @@ p.error-browser
                                     </g>
                                   </g>
                                 </svg></span></span><span class="Rating-title"
-                                                          th:text="${book.rate.value4}">4</span></span><br><span
+                                                          >4</span></span><br><span
                                                     class="Rating"><span class="Rating-stars"><span
                                                     class="Rating-star Rating-star_view">
                                 <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
@@ -262,7 +262,7 @@ p.error-browser
                                     </g>
                                   </g>
                                 </svg></span></span><span class="Rating-title"
-                                                          th:text="${book.rate.value3}">0</span></span><br><span
+                                                          >0</span></span><br><span
                                                     class="Rating"><span class="Rating-stars"><span
                                                     class="Rating-star Rating-star_view">
                                 <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
@@ -305,7 +305,7 @@ p.error-browser
                                     </g>
                                   </g>
                                 </svg></span></span><span class="Rating-title"
-                                                          th:text="${book.rate.value2}">10</span></span><br><span
+                                                          >10</span></span><br><span
                                                     class="Rating"><span
                                                     class="Rating-stars"><span class="Rating-star Rating-star_view">
                                 <svg height="18" viewBox="0 0 19 18" width="19" xmlns="http://www.w3.org/2000/svg">
@@ -348,7 +348,7 @@ p.error-browser
                                     </g>
                                   </g>
                                 </svg></span></span><span class="Rating-title"
-                                                          th:text="${book.rate.value1}">3</span></span>
+                                                          >3</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -408,7 +408,7 @@ p.error-browser
                             <div class="ProductCard-tags"><span class="ProductCard-titleProp" th:text="#{book.tags}">Тэги:</span>
                                 <th:block th:each="tag : ${book.tagList}">
                                     <a href="/tags/" th:href="${'/tags/' + tag.slug}"
-                                       th:text="${tag.title}">Современные</a>&#32;
+                                       th:text="${tag.name}">Современные</a>&#32;
                                 </th:block>
                             </div>
                             <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
@@ -514,11 +514,11 @@ p.error-browser
                 <div class="Product-comments">
                     <div class="Product-comments-header">
                         <h3 class="Product-comments-title" th:text="#{book.reviews}">Отзывы
-                        </h3><span class="Product-comments-amount" th:text="#{book.review(${book.reviewList.size()})}">567 отзывов</span>
+                        </h3><span class="Product-comments-amount" th:text="#{book.review(${567})}">567 отзывов</span>
                     </div>
                 </div>
                 <div class="Comments">
-                    <div class="Comment" th:each="review : ${book.sortedReviewList}">
+                    <div class="Comment" >
                         <div class="Comment-column Comment-column_pict">
                             <div class="Comment-avatar">
                             </div>
@@ -527,7 +527,7 @@ p.error-browser
                             <header class="Comment-header">
                                 <div>
                                     <strong class="Comment-title">
-                                        <span th:text="${review.user.name}">Александр Кузнецов</span>
+                                        <span >Александр Кузнецов</span>
                                         <span class="Comment-rating">
                                             <span class="Rating Rating_comment">
                                                 <span class="Rating-stars">
@@ -591,67 +591,67 @@ p.error-browser
                                         </span>
                                     </strong>
                                     <span class="Comment-date"
-                                          th:text="${review.getTimeString()}">17.04.2020 16:40</span>
+                                          >17.04.2020 16:40</span>
                                 </div>
                             </header>
                             <div class="Comment-content">
-                                <th:block th:if="${review.text.length() >= 400}">
-                                    <div class="Spoiler">
-                                        <div class="Spoiler-visible">
-                                            <p th:text="${review.text.substring(0, 400)}"></p>
-                                        </div>
-                                        <div class="Spoiler-hide">
-                                            <p th:text="${review.text.substring(400)}"></p>
-                                        </div>
-                                        <div class="Comment-footer">
-                                            <div class="Comment-appeal">
-                                                <button class="btn btn_white btn_like" data-btnradio="one1"
-                                                        data-btntype="check" data-check="false"
-                                                        data-likeid="333" th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getLikesCount()}">500</span>
-                                                </button>
-                                                <button class="btn btn_white btn_dislike" data-btnradio="one1"
-                                                        data-btntype="check" data-check="false"
-                                                        data-likeid="333" th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="dislike.svg"
-                                                             src="/assets/img/icons/comment/dislike.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getDislikesCount()}">50</span>
-                                                </button>
-                                            </div>
-                                            <button class="Spoiler-trigger btn btn_primary btn_nr"
-                                                    data-hidetext="Показать отзыв полностью"
-                                                    data-showtext="Свернуть отзыв"
-                                                    th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
-                                                    type="button">
-                                            </button>
-                                        </div>
-                                    </div>
-                                </th:block>
-                                <p th:text="${review.text}" th:unless="${review.text.length() >= 400}"></p>
-                                <div class="Comment-footer" th:unless="${review.text.length() >= 400}">
+<!--                                <th:block th:if="${review.text.length() >= 400}">-->
+<!--                                    <div class="Spoiler">-->
+<!--                                        <div class="Spoiler-visible">-->
+<!--                                            <p th:text="${review.text.substring(0, 400)}"></p>-->
+<!--                                        </div>-->
+<!--                                        <div class="Spoiler-hide">-->
+<!--                                            <p th:text="${review.text.substring(400)}"></p>-->
+<!--                                        </div>-->
+<!--                                        <div class="Comment-footer">-->
+<!--                                            <div class="Comment-appeal">-->
+<!--                                                <button class="btn btn_white btn_like" data-btnradio="one1"-->
+<!--                                                        data-btntype="check" data-check="false"-->
+<!--                                                        data-likeid="333" th:attr="data-likeid=${review.id}">-->
+<!--                                                    <span class="btn-icon">-->
+<!--                                                        <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>-->
+<!--                                                    </span>-->
+<!--                                                    <span class="btn-content"-->
+<!--                                                          th:text="${review.getLikesCount()}">500</span>-->
+<!--                                                </button>-->
+<!--                                                <button class="btn btn_white btn_dislike" data-btnradio="one1"-->
+<!--                                                        data-btntype="check" data-check="false"-->
+<!--                                                        data-likeid="333" th:attr="data-likeid=${review.id}">-->
+<!--                                                    <span class="btn-icon">-->
+<!--                                                        <img alt="dislike.svg"-->
+<!--                                                             src="/assets/img/icons/comment/dislike.svg"/>-->
+<!--                                                    </span>-->
+<!--                                                    <span class="btn-content"-->
+<!--                                                          th:text="${review.getDislikesCount()}">50</span>-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                            <button class="Spoiler-trigger btn btn_primary btn_nr"-->
+<!--                                                    data-hidetext="Показать отзыв полностью"-->
+<!--                                                    data-showtext="Свернуть отзыв"-->
+<!--                                                    th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"-->
+<!--                                                    type="button">-->
+<!--                                            </button>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </th:block>-->
+                                <p ></p>
+                                <div class="Comment-footer">
                                     <div class="Comment-appeal">
                                         <button class="btn btn_white btn_like" data-btnradio="two2" data-btntype="check"
                                                 data-check="false"
-                                                data-likeid="1111" th:attr="data-likeid=${review.id}">
+                                                data-likeid="1111" >
                                             <span class="btn-icon">
                                                 <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
                                             </span>
-                                            <span class="btn-content" th:text="${review.getLikesCount()}">200</span>
+                                            <span class="btn-content" >200</span>
                                         </button>
                                         <button class="btn btn_white btn_dislike" data-btnradio="two2"
                                                 data-btntype="check" data-check="false"
-                                                data-likeid="1111" th:attr="data-likeid=${review.id}">
+                                                data-likeid="1111" >
                                             <span class="btn-icon">
                                                 <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
                                             </span>
-                                            <span class="btn-content" th:text="${review.getDislikesCount()}">100</span>
+                                            <span class="btn-content" >100</span>
                                         </button>
                                     </div>
                                 </div>
