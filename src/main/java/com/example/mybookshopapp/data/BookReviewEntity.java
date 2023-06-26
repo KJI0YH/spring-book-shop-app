@@ -2,6 +2,7 @@ package com.example.mybookshopapp.data;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,10 +18,17 @@ public class BookReviewEntity {
     private Integer id;
     private LocalDateTime time;
     private String text;
-    private Integer bookId;
-    private Integer userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private BookEntity book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private UserEntity user;
 
     @OneToMany(mappedBy = "review")
+    @ToString.Exclude
     private List<BookReviewLikeEntity> reviewLikeList;
 
     public Long getLikesCount(){

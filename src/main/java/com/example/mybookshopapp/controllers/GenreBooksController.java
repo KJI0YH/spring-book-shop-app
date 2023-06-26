@@ -57,7 +57,7 @@ public class GenreBooksController {
         GenreEntity genre = genreService.getGenreBySlug(genreSlug);
         List<GenreEntity> breadcrumbs = new ArrayList<>();
 
-        while (genre.getParent() != null){
+        while (genre != null && genre.getParent() != null){
             breadcrumbs.add(genre.getParent());
             genre = genre.getParent();
         }

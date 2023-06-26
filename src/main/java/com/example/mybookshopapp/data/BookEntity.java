@@ -8,7 +8,6 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -95,15 +94,20 @@ public class BookEntity {
 //        sortedReviewList = reviewList.stream().sorted(Comparator.comparing(BookReviewEntity::getPopularityValue).reversed()).toList();
     }
 
-//    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
-//    @PrimaryKeyJoinColumn
-//    @JsonIgnore
-//    private BookRateEntity rate;
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ToString.Exclude
+    private List<BookReviewEntity> reviewList;
 
-//    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private List<BookReviewEntity> reviewList  = new ArrayList<>();
-//
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<BookRateEntity> rateList;
+
+    public Long getRateCount(Integer rateValue){
+        return rateList.stream().filter(rate -> rate.getRate().equals(rateValue)).count();
+    }
+
 //    @Transient
 //    @JsonIgnore
 //    private List<BookReviewEntity> sortedReviewList;

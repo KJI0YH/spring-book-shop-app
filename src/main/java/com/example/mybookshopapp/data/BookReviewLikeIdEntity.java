@@ -3,15 +3,16 @@ package com.example.mybookshopapp.data;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Data
 @Embeddable
-public class BookRateIdEntity implements Serializable {
+@Data
+public class BookReviewLikeIdEntity implements Serializable {
 
-    @Column(name = "book_id")
-    private Integer bookId;
+    @Column(name = "review_id")
+    private Integer reviewId;
 
     @Column(name = "user_id")
     private Integer userId;

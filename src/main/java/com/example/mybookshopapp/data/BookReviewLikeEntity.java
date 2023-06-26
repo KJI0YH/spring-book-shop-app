@@ -2,6 +2,7 @@ package com.example.mybookshopapp.data;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -10,17 +11,18 @@ import java.time.LocalDateTime;
 @Data
 public class BookReviewLikeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @EmbeddedId
+    private BookReviewLikeIdEntity id;
     private LocalDateTime time;
     private Integer value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @JoinColumn(name = "review_id", referencedColumnName = "id", updatable = false, insertable = false)
     private BookReviewEntity review;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, insertable = false)
     private UserEntity user;
 }

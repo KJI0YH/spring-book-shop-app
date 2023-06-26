@@ -35,7 +35,4 @@ public class UserEntity {
     @OneToMany
     @JoinColumn(name = "review_id")
     private List<BookReviewEntity> reviewList;
-
-    @OneToMany(mappedBy = "user")
-    private List<BookReviewLikeEntity> reviewLikeList;
 }

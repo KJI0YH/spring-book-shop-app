@@ -22,12 +22,15 @@ public class GenreEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private GenreEntity parent;
 
     @OneToMany(mappedBy = "parent")
+    @ToString.Exclude
     private List<GenreEntity> children;
 
     @OneToMany(mappedBy = "genre", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Book2GenreEntity> book2genreList;
 
     @ManyToMany(mappedBy = "genreList")

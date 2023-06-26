@@ -49,7 +49,9 @@ public class BookController {
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
         BookEntity book = bookService.getBookBySlug(bookSlug);
-        model.addAttribute("book", book);
+        if (book != null){
+            model.addAttribute("book", book);
+        }
 
         if (userRegister.getCurrentUser() == null){
             return "/books/slug";
