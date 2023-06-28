@@ -55,9 +55,13 @@
         <div class="Product">
           <div class="ProductCard">
             <div class="ProductCard-look">
-              <div class="ProductCard-photo">
-                <img src="/assets/img/content/main/card.jpg" th:src="${book.image}" alt="card.jpg"/>
-              </div>
+              <form action="#" enctype="multipart/form-data" id="imgForm" method="POST"
+                    th:action="${'/books/'+ book.slug +'/img/save'}">
+                <div class="ProductCard-photo" id="uploadButton">
+                  <img alt="card.jpg" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
+                </div>
+                <input id="dialog" name="file" style="display: none" type="file"/>
+              </form>
             </div>
             <div class="ProductCard-desc">
               <div class="ProductCard-header">
@@ -355,7 +359,8 @@
           <div class="Product-comments">
             <div class="Product-comments-header">
               <h3 class="Product-comments-title" th:text="#{book.reviews}">Отзывы
-              </h3><span class="Rating">
+              </h3>
+              <span class="Rating">
               <span class="Rating-stars">
                 <span class="Rating-star Rating-star_view">
                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
@@ -527,4 +532,5 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="/assets/js/UploadNewBookImageScript.js"></script>
   <script src="/assets/js/DownloadBookWindowScript.js"></script>
-</body></html>
+</body>
+</html>

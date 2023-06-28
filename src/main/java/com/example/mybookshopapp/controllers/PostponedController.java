@@ -1,9 +1,11 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +22,12 @@ import java.util.List;
 @RequestMapping("/postponed")
 public class PostponedController {
 
-    private final BookRepository bookRepository;
+    private final BookService bookService;
     private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public PostponedController(BookRepository bookRepository, BookstoreUserRegister userRegister) {
-        this.bookRepository = bookRepository;
+    public PostponedController(BookService bookService, BookstoreUserRegister userRegister) {
+        this.bookService = bookService;
         this.userRegister = userRegister;
     }
 
@@ -50,8 +52,22 @@ public class PostponedController {
     }
 
     @GetMapping
-    public String postponedPage(@CookieValue("postponedContents") String postponedContents,
+    public String postponedPage(@CookieValue(value = "postponedContents", required = false) String postponedContents,
                                 Model model){
+
+        // Authorized user
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            List<BookEntity> booksInPostponed = bookService.getBooksByUserStatus(user.getId(), "KEPT");
+
+            if (booksInPostponed.size() > 0){
+                model.addAttribute("isPostponedEmpty", false);
+            } else {
+                model.addAttribute("isPostponedEmpty", true);
+            }
+            model.addAttribute("bookKept", booksInPostponed);
+            return "postponed";
+        }
 
         if (postponedContents == null || postponedContents.equals("")) {
             model.addAttribute("isPostponedEmpty", true);
@@ -63,7 +79,7 @@ public class PostponedController {
             Integer[] cookieIds = Arrays.stream(postponedItems)
                     .map(Integer::valueOf)
                     .toArray(Integer[]::new);
-            List<BookEntity> booksFromCookiesIds = bookRepository.findBookEntitiesByIdIn(cookieIds);
+            List<BookEntity> booksFromCookiesIds = bookService.getBooksByIds(cookieIds);
             model.addAttribute("bookKept", booksFromCookiesIds);
             model.addAttribute("bookKeptString", String.join(",", postponedItems));
         }

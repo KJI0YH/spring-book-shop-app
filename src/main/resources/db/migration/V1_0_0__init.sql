@@ -137,12 +137,11 @@ INSERT INTO book2user_type (code, name) VALUES ('ARCHIVED', 'ARCHIVED');
 
 CREATE TABLE IF NOT EXISTS book2user
 (
-    id SERIAL NOT NULL,
-    time TIMESTAMP NOT NULL,
-    type_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    PRIMARY KEY (id),
+    time TIMESTAMP NOT NULL,
+    type_id INTEGER NOT NULL,
+    PRIMARY KEY (book_id, user_id),
     CONSTRAINT type_id_fkey FOREIGN KEY (type_id)
         REFERENCES book2user_type (id)
         ON UPDATE CASCADE
