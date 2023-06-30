@@ -14,10 +14,10 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String hash;
     private LocalDateTime regTime;
-    private int balance;
+    private Integer balance;
     private String name;
 
     @Column(name = "password_hash")
@@ -32,9 +32,7 @@ public class UserEntity {
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name = "review_id")
     private List<BookReviewEntity> reviewList;
-
-    @OneToMany(mappedBy = "user")
-    private List<BookReviewLikeEntity> reviewLikeList;
 }

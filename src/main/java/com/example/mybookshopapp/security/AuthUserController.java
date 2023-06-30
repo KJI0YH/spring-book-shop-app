@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,11 @@ public class AuthUserController {
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto(){
         return new SearchWordDto();
+    }
+
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
     }
 
     @GetMapping("/signin")
@@ -54,7 +60,7 @@ public class AuthUserController {
     }
 
     @PostMapping("/reg")
-    public String handleUserRegistration(RegistrationForm registrationForm, Model model) {
+    public String handleUserRegistration(RegistrationForm registrationForm, Model model) throws UserAlreadyExistException {
         userRegister.registerNewUser(registrationForm);
         model.addAttribute("regOk", true);
         return "signin";
@@ -75,24 +81,13 @@ public class AuthUserController {
         return "my";
     }
 
-    @GetMapping("/profile")
-    public String handleProfile(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUser());
-        return "profile";
+    @GetMapping("/my/archive")
+    public String handleMyArchive(){
+        return "myarchive";
     }
 
-//    @GetMapping("/logout")
-//    public String handleLogout(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        SecurityContextHolder.clearContext();
-//        if (session != null) {
-//            session.invalidate();
-//        }
-//
-//        for (Cookie cookie : request.getCookies()) {
-//            cookie.setMaxAge(0);
-//        }
-//
-//        return "redirect:/";
-//    }
+    @GetMapping("/profile")
+    public String handleProfile() {
+        return "profile";
+    }
 }

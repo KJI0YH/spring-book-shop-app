@@ -114,7 +114,7 @@
         </h2>
         <div class="Tags" id="tags">
           <div class="Tag Tag_xs" th:class="${'Tag ' + tag.popularity}" th:each="tag : ${tags}">
-            <a th:href="@{'/tags/' + ${tag.tag.slug}}" href="/tags/index.html" th:text="${tag.tag.title}">современная литература</a>
+            <a th:href="@{'/tags/' + ${tag.tag.slug}}" href="/tags/index.html" th:text="${tag.tag.name}">современная литература</a>
           </div>
         </div>
       </main>

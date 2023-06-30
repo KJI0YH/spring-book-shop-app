@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import io.swagger.models.auth.In;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,16 +13,11 @@ public class BalanceTransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private int userId;
-
+    private Integer id;
+    private Integer userId;
     private LocalDateTime time;
-
-    private int value;
-
-    private int bookId;
-
+    private Integer value;
+    private Integer bookId;
     private String description;
 }
 

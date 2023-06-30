@@ -10,18 +10,16 @@ import java.time.LocalDateTime;
 @Data
 public class Book2UserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    @EmbeddedId
+    private Book2UserIdEntity id;
     private LocalDateTime time;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", updatable = false, insertable = false)
     private BookEntity book;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", updatable = false, insertable = false)
     private UserEntity user;
 
     @ManyToOne

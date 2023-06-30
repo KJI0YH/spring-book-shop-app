@@ -10,11 +10,8 @@ public class FileDownloadEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private int userId;
-
-    private int bookId;
-
-    private int count;
+    private Integer id;
+    private Integer userId;
+    private Integer bookId;
+    private Integer count;
 }

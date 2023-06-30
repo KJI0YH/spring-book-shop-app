@@ -1,6 +1,8 @@
 package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.data.Book2UserTypeEntity;
 import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.repositories.Book2UserTypeRepository;
 import com.example.mybookshopapp.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,16 +11,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final Book2UserTypeRepository book2UserTypeRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, Book2UserTypeRepository book2UserTypeRepository) {
         this.bookRepository = bookRepository;
+        this.book2UserTypeRepository = book2UserTypeRepository;
     }
 
     public List<BookEntity> getBooksData() {
@@ -62,5 +67,17 @@ public class BookService {
 
     public BookEntity getBookBySlug(String slug){
         return bookRepository.findBookEntityBySlug(slug);
+    }
+
+    public List<BookEntity> getBooksByUserStatus(Integer userId, String status){
+        Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
+        if (book2UserType != null){
+            return bookRepository.findBooksByUserType(userId, book2UserType.getId());
+        }
+        return new ArrayList<>();
+    }
+
+    public List<BookEntity> getBooksByIds(Integer[] bookIds){
+        return bookRepository.findBookEntitiesByIdIn(bookIds);
     }
 }

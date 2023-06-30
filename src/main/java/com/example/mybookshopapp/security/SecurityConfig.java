@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.security.jwt.JWTRequestFilter;
+import com.example.mybookshopapp.security.jwt.JwtBlackListLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +24,13 @@ public class SecurityConfig {
 
     private final BookstoreUserDetailsService userDetailsService;
     private final JWTRequestFilter filter;
+    private final JwtBlackListLogoutHandler logoutHandler;
 
     @Autowired
-    public SecurityConfig(BookstoreUserDetailsService userDetailsService, JWTRequestFilter filter) {
+    public SecurityConfig(BookstoreUserDetailsService userDetailsService, JWTRequestFilter filter, JwtBlackListLogoutHandler logoutHandler) {
         this.userDetailsService = userDetailsService;
         this.filter = filter;
+        this.logoutHandler = logoutHandler;
     }
 
     @Bean
@@ -66,7 +69,7 @@ public class SecurityConfig {
                 .requestMatchers("/signin").permitAll()
                 .anyRequest().permitAll()
                 .and().formLogin().loginPage("/signin").failureUrl("/signin")
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token")
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token").addLogoutHandler(logoutHandler)
                 .and().httpBasic()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

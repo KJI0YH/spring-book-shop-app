@@ -1,21 +1,21 @@
 package com.example.mybookshopapp.controllers;
 
+import com.example.mybookshopapp.data.ApiResponse;
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.BookCookieStoreDto;
+import com.example.mybookshopapp.dto.BookStatusDto;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookStatusService;
 import com.example.mybookshopapp.services.CartService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -24,35 +24,43 @@ public class BookStatusController {
 
     private final CartService cartService;
     private final BookStatusService bookStatusService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public BookStatusController(CartService cartService, BookStatusService bookStatusService) {
+    public BookStatusController(CartService cartService, BookStatusService bookStatusService, BookstoreUserRegister userRegister) {
         this.cartService = cartService;
         this.bookStatusService = bookStatusService;
+        this.userRegister = userRegister;
     }
 
     @PostMapping("/changeBookStatus")
     @ResponseBody
-    public String handleChangeBookStatus(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         @CookieValue(value = "cartContents", required = false) String cartContents,
-                                         @CookieValue(value = "postponedContents", required = false) String postponedContents) throws JsonProcessingException {
+    public ResponseEntity<ApiResponse> handleChangeBookStatus(@RequestBody BookStatusDto bookStatusDto,
+                                                              HttpServletResponse response,
+                                                              @CookieValue(value = "cartContents", required = false) String cartContents,
+                                                              @CookieValue(value = "postponedContents", required = false) String postponedContents) throws JsonProcessingException {
 
-        //TODO: change status for registered users in db
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
 
-        Map<String, String[]> params = request.getParameterMap();
+        // Unauthorized user, store data in cookies
+        if (user == null){
+            BookCookieStoreDto bookCookieStore = bookStatusService.changeBookCookiesStatus(bookStatusDto.getStatus(), cartContents, postponedContents, bookStatusDto.getBooksIds());
+            response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getCartContents(), "cartContents"));
+            response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getPostponedContents(), "postponedContents"));
 
-        String status = request.getParameter("status");
-        String[] booksIds = params.get("booksIds[]");
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
 
-        BookCookieStoreDto bookCookieStore = bookStatusService.changeBookCookiesStatus(status, cartContents, postponedContents, booksIds);
-        response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getCartContents(), "cartContents"));
-        response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getPostponedContents(), "postponedContents"));
-
-        Map<String, Object> object = new HashMap<>();
-        object.put("result", true);
-
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
+            // Authorized user, store data in database
+        } else {
+            for (String id: bookStatusDto.getBooksIds()) {
+                try {
+                    bookStatusService.setStatus(Integer.valueOf(id), user.getId(), bookStatusDto.getStatus());
+                } catch (NumberFormatException e){
+                    //
+                }
+            }
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+        }
     }
 }
+
