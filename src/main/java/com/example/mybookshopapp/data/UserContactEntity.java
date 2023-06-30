@@ -12,19 +12,15 @@ public class UserContactEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private int userId;
-
+    private Integer id;
     private ContactType type;
-
-    private short approved;
-
+    private Integer approved;
     private String code;
-
-    private int codeTrials;
-
+    private Integer codeTrials;
     private LocalDateTime codeTime;
-
     private String contact;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
 }

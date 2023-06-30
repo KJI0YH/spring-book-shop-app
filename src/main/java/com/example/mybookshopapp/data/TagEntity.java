@@ -14,10 +14,8 @@ public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String slug;
-
-    private String title;
+    private String name;
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
     @JsonIgnore

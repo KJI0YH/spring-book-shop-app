@@ -42,6 +42,18 @@
                     </li>
                 </ul>
             </div>
+            <div class="row-block" th:if="${curUsr}">
+                <ul class="menu menu_vt Footer-menu">
+                    <li class="menu-item"><a class="menu-link" href="/my.html" th:href="@{/my}">Мои книги (55)</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="/cart.html" th:href="@{/cart}">Корзина (7)</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="/postponed.html" th:href="@{/postponed}">Отложено (2)</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="/profile.html" th:href="@{/profile}">Мой профиль</a>
+                    </li>
+                </ul>
+            </div>
             <div class="row-block">
                 <ul class="menu menu_vt Footer-menu">
                     <li class="menu-item"><a class="menu-link" href="/signin.html" th:href="@{/signin}" th:text="#{bottombar.signIn}">Войти</a>

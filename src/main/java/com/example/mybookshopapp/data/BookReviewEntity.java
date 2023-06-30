@@ -2,6 +2,7 @@ package com.example.mybookshopapp.data;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,27 +15,21 @@ public class BookReviewEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Integer id;
     private LocalDateTime time;
-
-    public String getTimeString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        return time.format(formatter);
-    }
-
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private BookEntity book;
 
-    @OneToMany(mappedBy = "review")
-    private List<BookReviewLikeEntity> reviewLikeList;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ToString.Exclude
     private UserEntity user;
+
+    @OneToMany(mappedBy = "review")
+    @ToString.Exclude
+    private List<BookReviewLikeEntity> reviewLikeList;
 
     public Long getLikesCount(){
         return reviewLikeList.stream()
