@@ -41,6 +41,6 @@ public class AuthorPageController {
 
     @GetMapping
     public String authorPage() {
-        return "/authors/slug";
+        return "authors/slug";
     }
 }

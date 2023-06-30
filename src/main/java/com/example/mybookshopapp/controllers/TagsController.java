@@ -52,6 +52,6 @@ public class TagsController {
 
     @GetMapping
     public String tagPage(){
-        return "/tags/index";
+        return "tags/index";
     }
 }

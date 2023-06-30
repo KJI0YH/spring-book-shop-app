@@ -42,6 +42,6 @@ public class PopularBooksController {
 
     @GetMapping("/popular")
     public String popularBooksPage(){
-        return "/books/popular";
+        return "books/popular";
     }
 }

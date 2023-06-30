@@ -81,6 +81,6 @@ public class MainPageController {
     public String getSearchResults(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto, Model model) {
         model.addAttribute("searchWordDto", searchWordDto);
         model.addAttribute("searchResults", bookService.getPageOfBooksByTitle(searchWordDto.getExample(), 0, 20).getContent());
-        return "/search/index";
+        return "search/index";
     }
 }

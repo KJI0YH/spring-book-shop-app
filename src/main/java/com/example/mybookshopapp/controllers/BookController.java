@@ -54,9 +54,9 @@ public class BookController {
         }
 
         if (userRegister.getCurrentUser() == null){
-            return "/books/slug";
+            return "books/slug";
         } else {
-            return "/books/slugmy";
+            return "books/slugmy";
         }
     }
 
