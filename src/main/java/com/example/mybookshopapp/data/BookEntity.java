@@ -4,10 +4,10 @@ import com.example.mybookshopapp.services.BooksRatingAndPopularityService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -18,21 +18,13 @@ public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private LocalDate pubDate;
-
-    private int isBestseller;
-
+    private boolean isBestseller;
     private String slug;
-
     private String title;
-
     private String image;
-
     private Integer price;
-
     private Integer discount;
-
     private String description;
 
     @ManyToMany
@@ -41,6 +33,7 @@ public class BookEntity {
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     @JsonIgnore
+    @ToString.Exclude
     private List<AuthorEntity> authorList;
 
     @Transient
@@ -61,11 +54,12 @@ public class BookEntity {
     @JsonIgnore
     private List<Book2UserEntity> book2userList;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book2user",
     joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
+    @ToString.Exclude
     private List<UserEntity> userList;
 
     @ManyToMany
@@ -73,6 +67,7 @@ public class BookEntity {
     joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnore
+    @ToString.Exclude
     private List<TagEntity> tagList;
 
     @ManyToMany
@@ -81,6 +76,7 @@ public class BookEntity {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     @JsonIgnore
+    @ToString.Exclude
     private List<GenreEntity> genreList;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
@@ -95,19 +91,24 @@ public class BookEntity {
     private void calculatePopularity(){
         BooksRatingAndPopularityService calculator = new BooksRatingAndPopularityService();
         popularity = calculator.getPopularity(this);
-        sortedReviewList = reviewList.stream().sorted(Comparator.comparing(BookReviewEntity::getPopularityValue).reversed()).toList();
+//        sortedReviewList = reviewList.stream().sorted(Comparator.comparing(BookReviewEntity::getPopularityValue).reversed()).toList();
     }
-
-    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    @JsonIgnore
-    private BookRateEntity rate;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<BookReviewEntity> reviewList  = new ArrayList<>();
+    @ToString.Exclude
+    private List<BookReviewEntity> reviewList;
 
-    @Transient
+    @OneToMany(mappedBy = "book")
     @JsonIgnore
-    private List<BookReviewEntity> sortedReviewList;
+    @ToString.Exclude
+    private List<BookRateEntity> rateList;
+
+    public Long getRateCount(Integer rateValue){
+        return rateList.stream().filter(rate -> rate.getRate().equals(rateValue)).count();
+    }
+
+//    @Transient
+//    @JsonIgnore
+//    private List<BookReviewEntity> sortedReviewList;
 }

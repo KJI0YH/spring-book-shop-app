@@ -3,9 +3,9 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.ResourceStorage;
-import io.swagger.v3.oas.annotations.media.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -26,12 +26,14 @@ public class BookController {
     private final BookService bookService;
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public BookController(BookService bookService, ResourceStorage storage, BookRepository bookRepository) {
+    public BookController(BookService bookService, ResourceStorage storage, BookRepository bookRepository, BookstoreUserRegister userRegister) {
         this.bookService = bookService;
         this.storage = storage;
         this.bookRepository = bookRepository;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("searchWordDto")
@@ -39,10 +41,23 @@ public class BookController {
         return new SearchWordDto();
     }
 
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
+    }
+
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
-        model.addAttribute("book", bookService.getBookBySlug(bookSlug));
-        return "books/slug";
+        BookEntity book = bookService.getBookBySlug(bookSlug);
+        if (book != null){
+            model.addAttribute("book", book);
+        }
+
+        if (userRegister.getCurrentUser() == null){
+            return "books/slug";
+        } else {
+            return "books/slugmy";
+        }
     }
 
     @PostMapping("/{bookSlug}/img/save")

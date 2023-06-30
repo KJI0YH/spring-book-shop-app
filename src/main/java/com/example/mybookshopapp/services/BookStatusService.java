@@ -1,10 +1,16 @@
 package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.data.Book2UserEntity;
+import com.example.mybookshopapp.data.Book2UserIdEntity;
+import com.example.mybookshopapp.data.Book2UserTypeEntity;
 import com.example.mybookshopapp.dto.BookCookieStoreDto;
+import com.example.mybookshopapp.repositories.Book2UserRepository;
+import com.example.mybookshopapp.repositories.Book2UserTypeRepository;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +19,14 @@ import java.util.List;
 public class BookStatusService {
 
     private final CartService cartService;
+    private final Book2UserRepository book2UserRepository;
+    private final Book2UserTypeRepository book2UserTypeRepository;
 
     @Autowired
-    public BookStatusService(CartService cartService) {
+    public BookStatusService(CartService cartService, Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository) {
         this.cartService = cartService;
+        this.book2UserRepository = book2UserRepository;
+        this.book2UserTypeRepository = book2UserTypeRepository;
     }
 
     public BookCookieStoreDto changeStatus(String status, List<String> cartBooks, List<String> postponedBooks, List<String> bookIds) {
@@ -90,5 +100,19 @@ public class BookStatusService {
         Cookie cookie = new Cookie(cookieName, String.join("/", bookIds));
         cookie.setPath("/");
         return cookie;
+    }
+
+    public void setStatus(Integer bookId, Integer userId, String status){
+        Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
+        if (book2UserType != null){
+            Book2UserIdEntity book2UserId = new Book2UserIdEntity();
+            book2UserId.setBookId(bookId);
+            book2UserId.setUserId(userId);
+            Book2UserEntity book2User = new Book2UserEntity();
+            book2User.setId(book2UserId);
+            book2User.setTime(LocalDateTime.now());
+            book2User.setType(book2UserType);
+            book2UserRepository.save(book2User);
+        }
     }
 }

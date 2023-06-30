@@ -2,6 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,15 +18,22 @@ import java.util.List;
 public class RecentBooksController {
 
     private final BookService bookService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public RecentBooksController(BookService bookService) {
+    public RecentBooksController(BookService bookService, BookstoreUserRegister userRegister) {
         this.bookService = bookService;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto() {
         return new SearchWordDto();
+    }
+
+    @ModelAttribute("curUsr")
+    public Object curUsr(){
+        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute("booksList")

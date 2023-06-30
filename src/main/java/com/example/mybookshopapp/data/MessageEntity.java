@@ -12,17 +12,11 @@ public class MessageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Integer id;
     private LocalDateTime time;
-
-    private int userId;
-
+    private Integer userId;
     private String email;
-
     private String name;
-
     private String subject;
-
     private String text;
 }
