@@ -1,6 +1,5 @@
 package com.example.mybookshopapp.data;
 
-import com.example.mybookshopapp.services.BooksRatingAndPopularityService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -83,16 +82,8 @@ public class BookEntity {
     @JsonIgnore
     private List<BookFileEntity> bookFileList = new ArrayList<>();
 
-    @Transient
     @JsonIgnore
-    private Double popularity;
-
-    @PostLoad
-    private void calculatePopularity(){
-        BooksRatingAndPopularityService calculator = new BooksRatingAndPopularityService();
-        popularity = calculator.getPopularity(this);
-//        sortedReviewList = reviewList.stream().sorted(Comparator.comparing(BookReviewEntity::getPopularityValue).reversed()).toList();
-    }
+    private Integer popularity;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -107,8 +98,4 @@ public class BookEntity {
     public Long getRateCount(Integer rateValue){
         return rateList.stream().filter(rate -> rate.getRate().equals(rateValue)).count();
     }
-
-//    @Transient
-//    @JsonIgnore
-//    private List<BookReviewEntity> sortedReviewList;
 }

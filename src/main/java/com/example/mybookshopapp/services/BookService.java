@@ -43,7 +43,7 @@ public class BookService {
 
     public Page<BookEntity> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findPopularBooks(nextPage);
+        return bookRepository.findAllByOrderByPopularityDesc(nextPage);
     }
 
     public Page<BookEntity> getPageOfBooksByTagSlug(String tagSlug, Integer offset, Integer limit) {
