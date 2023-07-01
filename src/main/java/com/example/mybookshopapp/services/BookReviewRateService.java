@@ -17,7 +17,7 @@ public class BookReviewRateService {
         this.bookReviewRateRepository = bookReviewRateRepository;
     }
 
-    public void rateReview(Integer reviewId, Integer userId, Integer value){
+    public void rateReview(Integer reviewId, Integer userId, Integer value) {
         BookReviewLikeIdEntity reviewLikeId = new BookReviewLikeIdEntity();
         reviewLikeId.setReviewId(reviewId);
         reviewLikeId.setUserId(userId);

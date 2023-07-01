@@ -69,6 +69,7 @@ public class PostponedController {
             return "postponed";
         }
 
+        // Unauthorized user
         if (postponedContents == null || postponedContents.equals("")) {
             model.addAttribute("isPostponedEmpty", true);
         } else {

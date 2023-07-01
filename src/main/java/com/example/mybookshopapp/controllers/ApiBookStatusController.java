@@ -8,7 +8,6 @@ import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookStatusService;
 import com.example.mybookshopapp.services.CartService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,18 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Controller
 @RequestMapping("/api")
-public class BookStatusController {
+public class ApiBookStatusController {
 
     private final CartService cartService;
     private final BookStatusService bookStatusService;
     private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public BookStatusController(CartService cartService, BookStatusService bookStatusService, BookstoreUserRegister userRegister) {
+    public ApiBookStatusController(CartService cartService, BookStatusService bookStatusService, BookstoreUserRegister userRegister) {
         this.cartService = cartService;
         this.bookStatusService = bookStatusService;
         this.userRegister = userRegister;

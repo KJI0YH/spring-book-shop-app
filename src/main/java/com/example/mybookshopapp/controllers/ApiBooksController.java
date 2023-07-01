@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/books")
-public class BooksRestApiController {
+public class ApiBooksController {
 
     private final BookService bookService;
     private final DateResolverService dateResolverService;
 
     @Autowired
-    public BooksRestApiController(BookService bookService, DateResolverService dateResolverService) {
+    public ApiBooksController(BookService bookService, DateResolverService dateResolverService) {
         this.bookService = bookService;
         this.dateResolverService = dateResolverService;
     }

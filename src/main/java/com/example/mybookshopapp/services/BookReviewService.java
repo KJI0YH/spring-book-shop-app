@@ -23,7 +23,7 @@ public class BookReviewService {
         this.bookRepository = bookRepository;
     }
 
-    public void reviewBook(Integer bookId, Integer userId, String text){
+    public void reviewBook(Integer bookId, Integer userId, String text) {
         BookReviewEntity bookReview = new BookReviewEntity();
         bookReview.setBook(bookRepository.findBookEntityById(bookId));
         bookReview.setUser(userRepository.findUserEntityById(userId));

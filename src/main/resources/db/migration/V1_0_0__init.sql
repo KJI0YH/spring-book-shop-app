@@ -134,6 +134,7 @@ INSERT INTO book2user_type (code, name) VALUES ('KEPT', 'KEPT');
 INSERT INTO book2user_type (code, name) VALUES ('CART', 'CART');
 INSERT INTO book2user_type (code, name) VALUES ('PAID', 'PAID');
 INSERT INTO book2user_type (code, name) VALUES ('ARCHIVED', 'ARCHIVED');
+INSERT INTO book2user_type (code, name) VALUES ('UNLINK', 'UNLINK');
 
 CREATE TABLE IF NOT EXISTS book2user
 (

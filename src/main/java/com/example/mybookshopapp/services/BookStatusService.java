@@ -18,13 +18,11 @@ import java.util.List;
 @Service
 public class BookStatusService {
 
-    private final CartService cartService;
     private final Book2UserRepository book2UserRepository;
     private final Book2UserTypeRepository book2UserTypeRepository;
 
     @Autowired
-    public BookStatusService(CartService cartService, Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository) {
-        this.cartService = cartService;
+    public BookStatusService(Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository) {
         this.book2UserRepository = book2UserRepository;
         this.book2UserTypeRepository = book2UserTypeRepository;
     }
@@ -51,7 +49,7 @@ public class BookStatusService {
             if (!postponedBooks.contains(bookId)) {
                 postponedBooks.add(bookId);
             }
-            if (cartBooks.contains(bookId)){
+            if (cartBooks.contains(bookId)) {
                 cartBooks.remove(bookId);
             }
         }
@@ -63,7 +61,7 @@ public class BookStatusService {
             if (!cartBooks.contains(bookId)) {
                 cartBooks.add(bookId);
             }
-            if (postponedBooks.contains(bookId)){
+            if (postponedBooks.contains(bookId)) {
                 postponedBooks.remove(bookId);
             }
         }
@@ -84,12 +82,12 @@ public class BookStatusService {
                                                       String[] bookIds) {
 
         ArrayList<String> cartBookIds = new ArrayList<>();
-        if (cartContents != null && !cartContents.equals("")){
+        if (cartContents != null && !cartContents.equals("")) {
             cartBookIds = new ArrayList<>(Arrays.asList(cartContents.split("/")));
         }
 
         ArrayList<String> postponedBookIds = new ArrayList<>();
-        if (postponedContents != null && !postponedContents.equals("")){
+        if (postponedContents != null && !postponedContents.equals("")) {
             postponedBookIds = new ArrayList<>(Arrays.asList(postponedContents.split("/")));
         }
 
@@ -102,17 +100,21 @@ public class BookStatusService {
         return cookie;
     }
 
-    public void setStatus(Integer bookId, Integer userId, String status){
+    public void setStatus(Integer bookId, Integer userId, String status) {
         Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
-        if (book2UserType != null){
-            Book2UserIdEntity book2UserId = new Book2UserIdEntity();
-            book2UserId.setBookId(bookId);
-            book2UserId.setUserId(userId);
-            Book2UserEntity book2User = new Book2UserEntity();
-            book2User.setId(book2UserId);
-            book2User.setTime(LocalDateTime.now());
-            book2User.setType(book2UserType);
-            book2UserRepository.save(book2User);
+        Book2UserIdEntity book2UserId = new Book2UserIdEntity();
+        book2UserId.setBookId(bookId);
+        book2UserId.setUserId(userId);
+        if (book2UserType != null) {
+            if (book2UserType.getCode().equals("UNLINK")) {
+                book2UserRepository.delete(book2UserRepository.findBook2UserEntityById(book2UserId));
+            } else {
+                Book2UserEntity book2User = new Book2UserEntity();
+                book2User.setId(book2UserId);
+                book2User.setTime(LocalDateTime.now());
+                book2User.setType(book2UserType);
+                book2UserRepository.save(book2User);
+            }
         }
     }
 }

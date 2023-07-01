@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class BookRateReviewController {
+public class ApiBookRateController {
 
     private final BookRateService bookRateService;
     private final BookReviewService bookReviewService;
@@ -25,7 +25,7 @@ public class BookRateReviewController {
     private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public BookRateReviewController(BookRateService bookRateService, BookReviewService bookReviewService, BookReviewRateService bookReviewRateService, BookstoreUserRegister userRegister) {
+    public ApiBookRateController(BookRateService bookRateService, BookReviewService bookReviewService, BookReviewRateService bookReviewRateService, BookstoreUserRegister userRegister) {
         this.bookRateService = bookRateService;
         this.bookReviewService = bookReviewService;
         this.bookReviewRateService = bookReviewRateService;

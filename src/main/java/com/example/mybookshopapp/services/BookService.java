@@ -26,10 +26,6 @@ public class BookService {
         this.book2UserTypeRepository = book2UserTypeRepository;
     }
 
-    public List<BookEntity> getBooksData() {
-        return bookRepository.findAll();
-    }
-
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPage);
@@ -55,7 +51,7 @@ public class BookService {
         return bookRepository.findBooksByTagSlug(tagSlug, nextPage);
     }
 
-    public Page<BookEntity> getPageOfBooksByGenreSlug(String genreSlug, Integer offset, Integer limit){
+    public Page<BookEntity> getPageOfBooksByGenreSlug(String genreSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBooksByGenreSlug(genreSlug, nextPage);
     }
@@ -65,19 +61,19 @@ public class BookService {
         return bookRepository.findBooksByAuthorSlug(authorSlug, nextPage);
     }
 
-    public BookEntity getBookBySlug(String slug){
+    public BookEntity getBookBySlug(String slug) {
         return bookRepository.findBookEntityBySlug(slug);
     }
 
-    public List<BookEntity> getBooksByUserStatus(Integer userId, String status){
+    public List<BookEntity> getBooksByUserStatus(Integer userId, String status) {
         Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
-        if (book2UserType != null){
+        if (book2UserType != null) {
             return bookRepository.findBooksByUserType(userId, book2UserType.getId());
         }
         return new ArrayList<>();
     }
 
-    public List<BookEntity> getBooksByIds(Integer[] bookIds){
+    public List<BookEntity> getBooksByIds(Integer[] bookIds) {
         return bookRepository.findBookEntitiesByIdIn(bookIds);
     }
 }

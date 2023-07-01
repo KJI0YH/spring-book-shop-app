@@ -3,18 +3,17 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.dto.BooksPageDto;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.services.BookService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/search")
-public class SearchRestApiController {
+public class ApiSearchController {
 
     private final BookService bookService;
 
     @Autowired
-    public SearchRestApiController(BookService bookService) {
+    public ApiSearchController(BookService bookService) {
         this.bookService = bookService;
     }
 

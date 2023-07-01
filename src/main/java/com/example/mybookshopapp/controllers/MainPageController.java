@@ -69,7 +69,7 @@ public class MainPageController {
         for (TagEntity tagEntity : tagEntities){
             tagDtos.add(new TagDto(tagEntity, tagsPopularityService.getPopularityTag(tagEntity)));
         }
-        return  tagDtos;
+        return tagDtos;
     }
 
     @GetMapping("/")

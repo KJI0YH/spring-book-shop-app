@@ -3,14 +3,9 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.TagEntity;
 import com.example.mybookshopapp.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.HTML;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TagService {
@@ -22,23 +17,19 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public List<TagEntity> getAllTags(){
+    public List<TagEntity> getAllTags() {
         return tagRepository.findAll();
     }
 
-    public Optional<TagEntity> getTagById(Integer id){
-        return tagRepository.findById(id);
-    }
-
-    public TagEntity getTagBySlug(String slug){
+    public TagEntity getTagBySlug(String slug) {
         return tagRepository.findTagEntityBySlug(slug);
     }
 
-    public Integer getMaxPopularityTagCount(){
+    public Integer getMaxPopularityTagCount() {
         return tagRepository.findMaxTagCount();
     }
 
-    public Integer getMinPopularityTagCount(){
+    public Integer getMinPopularityTagCount() {
         return tagRepository.findMinTagCount();
     }
 
