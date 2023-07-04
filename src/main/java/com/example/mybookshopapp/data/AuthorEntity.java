@@ -1,14 +1,16 @@
 package com.example.mybookshopapp.data;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "author")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthorEntity {
 
     @Id

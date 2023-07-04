@@ -1,0 +1,46 @@
+server:
+  port: 8085
+  servlet:
+    session:
+      tracking-modes: cookie
+
+auth:
+  secret: secret
+
+upload:
+  path: D:/Personal projects/JavaSpring/uploads/book-covers
+download:
+  path: D:/Personal projects/JavaSpring/downloads/book-files
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:latest:///book-shop-db-test
+    username: test
+    password: test
+  messages:
+    basename: lang.messages
+  web:
+    resources:
+      static-locations: classpath:/frontend/
+  thymeleaf:
+    prefix: classpath:/frontend/
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  security:
+    user:
+      name: root
+      password: root
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1037836045908-rnrkakvced2rm0obdq4kdj90obesjrev.apps.googleusercontent.com
+            client-secret: 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
+
+  flyway:
+    user: test
+    password: test
+    url: jdbc:tc:postgresql:latest:///book-shop-db-test
