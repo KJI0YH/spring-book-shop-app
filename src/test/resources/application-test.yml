@@ -26,7 +26,7 @@ spring:
     prefix: classpath:/frontend/
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   security:
@@ -39,8 +39,11 @@ spring:
           google:
             client-id: 1037836045908-rnrkakvced2rm0obdq4kdj90obesjrev.apps.googleusercontent.com
             client-secret: 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
-
   flyway:
     user: test
     password: test
     url: jdbc:tc:postgresql:latest:///book-shop-db-test
+#  sql:
+#    init:
+#      data-locations: classpath:/data.sql
+#      mode: always
