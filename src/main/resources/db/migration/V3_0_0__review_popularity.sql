@@ -39,6 +39,7 @@ BEGIN
             WHEN OLD.value = -1 THEN UPDATE book_review
                                       SET rating = rating + 2
                                       WHERE id = OLD.review_id;
+        ELSE
         END CASE;
     END IF;
     RETURN NEW;

@@ -41,6 +41,7 @@ BEGIN
         WHEN NEW.type_id = 1 THEN UPDATE book
                                   SET popularity = popularity - 4
                                   WHERE id = NEW.book_id;
+        ELSE
         END CASE;
 
     RETURN NEW;
@@ -65,6 +66,7 @@ BEGIN
             WHEN OLD.type_id = 1 THEN UPDATE book
                                           SET popularity = popularity - 4
                                           WHERE id = OLD.book_id;
+            ELSE
             END CASE;
 
         CASE
@@ -79,6 +81,7 @@ BEGIN
             WHEN NEW.type_id = 1 THEN UPDATE book
                                           SET popularity = popularity + 4
                                           WHERE id = NEW.book_id;
+            ELSE
             END CASE;
     END IF;
 
