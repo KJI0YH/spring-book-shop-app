@@ -78,6 +78,7 @@ class BookServiceTest extends SpringBootApplicationTest {
 
         Assertions.assertEquals(3, bookList.size());
 
+        // TODO fix lazy initialization
 //        for (BookEntity book : bookList) {
 //            Assertions.assertTrue(book.getGenreList().stream().anyMatch(g -> g.getSlug().equals("Slug-1")));
 //        }

@@ -41,7 +41,7 @@ public class BookstoreUserRegister {
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             user.setRegTime(LocalDateTime.now());
 
-            // Todo generate hash for user
+            // TODO generate hash for user
             user.setHash("hash");
             user.setBalance(0);
             userRepository.save(user);
