@@ -15,7 +15,8 @@ INSERT INTO book2user_type (id, code, name) VALUES (3, 'PAID', 'PAID');
 INSERT INTO book2user_type (id, code, name) VALUES (4, 'ARCHIVED', 'ARCHIVED');
 INSERT INTO book2user_type (id, code, name) VALUES (5, 'UNLINK', 'UNLINK');
 
-insert into users (id, hash, password_hash, reg_time, email, phone, name) values (1, 'hash', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'email@email.com', '+711111111111', 'name');
+insert into users (id, hash, password_hash, reg_time, email, phone, name) values (1, 'hash', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'email@email.com', '+711111111111', 'name1');
+insert into users (id, hash, password_hash, reg_time, email, phone, name) values (2, 'hash2', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'mail@mail.com', '+722222222222', 'name2');
 
 insert into book2user (book_id, user_id, time, type_id) VALUES (1, 1, now(), 1);
 insert into book2user (book_id, user_id, time, type_id) VALUES (2, 1, now(), 2);
@@ -32,4 +33,16 @@ insert into tag (id, slug, name) values (1, 'Slug-1', 'SlugOne');
 insert into book2tag (book_id, tag_id) VALUES (1, 1);
 insert into book2tag (book_id, tag_id) VALUES (2, 1);
 insert into book2tag (book_id, tag_id) VALUES (3, 1);
+
+insert into book_review (id, book_id, user_id, time, text) VALUES (1, 1, 1, now(), 'Review-1');
+insert into book_review (id, book_id, user_id, time, text) VALUES (2, 1, 2, now(), 'Review-2');
+insert into book_review (id, book_id, user_id, time, text) VALUES (3, 1, 1, now(), 'Review-3');
+
+insert into book_review_like (review_id, user_id, time, value) VALUES (1, 1, now(), 1);
+insert into book_review_like (review_id, user_id, time, value) VALUES (1, 2, now(), 1);
+insert into book_review_like (review_id, user_id, time, value) VALUES (2, 1, now(), 1);
+insert into book_review_like (review_id, user_id, time, value) VALUES (2, 2, now(), -1);
+insert into book_review_like (review_id, user_id, time, value) VALUES (3, 1, now(), -1);
+insert into book_review_like (review_id, user_id, time, value) VALUES (3, 2, now(), -1);
+
 
