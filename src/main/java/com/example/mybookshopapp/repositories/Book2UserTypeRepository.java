@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Book2UserTypeRepository extends JpaRepository<Book2UserTypeEntity, Integer> {
     Book2UserTypeEntity findBook2UserTypeEntityByCodeEqualsIgnoreCase(String code);
+
+    Book2UserTypeEntity findBook2UserTypeEntityById(Integer id);
 }

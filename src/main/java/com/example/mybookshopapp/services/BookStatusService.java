@@ -49,9 +49,7 @@ public class BookStatusService {
             if (!postponedBooks.contains(bookId)) {
                 postponedBooks.add(bookId);
             }
-            if (cartBooks.contains(bookId)) {
-                cartBooks.remove(bookId);
-            }
+            cartBooks.remove(bookId);
         }
         return new BookCookieStoreDto(cartBooks, postponedBooks);
     }
@@ -61,9 +59,7 @@ public class BookStatusService {
             if (!cartBooks.contains(bookId)) {
                 cartBooks.add(bookId);
             }
-            if (postponedBooks.contains(bookId)) {
-                postponedBooks.remove(bookId);
-            }
+            postponedBooks.remove(bookId);
         }
         return new BookCookieStoreDto(cartBooks, postponedBooks);
     }

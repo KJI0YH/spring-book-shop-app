@@ -25,7 +25,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     Page<BookEntity> findBooksByGenreSlug(String tagID, Pageable pageable);
 
     @Query(value = "select b.* from book as b join book2author as b2a on b2a.book_id = b.id join author as a on b2a.author_id = a.id where a.slug = ?1 order by b.pub_date desc", nativeQuery = true)
-    Page<BookEntity> findBooksByAuthorSlug(String id, Pageable pageable);
+    Page<BookEntity> findBooksByAuthorSlug(String authorSlug, Pageable pageable);
 
     BookEntity findBookEntityBySlug(String slug);
 

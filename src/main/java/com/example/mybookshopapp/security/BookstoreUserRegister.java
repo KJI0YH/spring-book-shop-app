@@ -40,6 +40,8 @@ public class BookstoreUserRegister {
             user.setPhone(registrationForm.getPhone());
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             user.setRegTime(LocalDateTime.now());
+
+            // TODO generate hash for user
             user.setHash("hash");
             user.setBalance(0);
             userRepository.save(user);

@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "book_review")
 @Data
-public class BookReviewEntity {
+public class BookReviewEntity implements Comparable<BookReviewEntity>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +45,10 @@ public class BookReviewEntity {
 
     public Long getPopularityValue(){
         return getLikesCount() - getDislikesCount();
+    }
+
+    @Override
+    public int compareTo(BookReviewEntity o) {
+        return this.getPopularityValue().compareTo(o.getPopularityValue());
     }
 }
