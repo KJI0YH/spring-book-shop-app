@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/postponed")
@@ -58,6 +59,8 @@ public class PostponedController {
         // Authorized user
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user != null){
+
+            // Get postponed books from database
             List<BookEntity> booksInPostponed = bookService.getBooksByUserStatus(user.getId(), "KEPT");
 
             if (booksInPostponed.size() > 0){
@@ -66,6 +69,7 @@ public class PostponedController {
                 model.addAttribute("isPostponedEmpty", true);
             }
             model.addAttribute("bookKept", booksInPostponed);
+            model.addAttribute("bookKeptString", booksInPostponed.stream().map(book -> book.getId().toString()).collect(Collectors.joining(",")));
             return "postponed";
         }
 
@@ -74,6 +78,8 @@ public class PostponedController {
             model.addAttribute("isPostponedEmpty", true);
         } else {
             model.addAttribute("isPostponedEmpty", false);
+
+            // Get postponed books from cookie
             postponedContents = postponedContents.startsWith("/") ? postponedContents.substring(1) : postponedContents;
             postponedContents = postponedContents.endsWith("/") ? postponedContents.substring(0, postponedContents.length() - 1) : postponedContents;
             String[] postponedItems = postponedContents.split("/");
