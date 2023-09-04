@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION update_popularity_insert()
 $$
 BEGIN
     CASE
-        WHEN NEW.type_id = 3 THEN UPDATE book
+        WHEN NEW.type_id IN(3, 4) THEN UPDATE book
                                   SET popularity = popularity + 10
                                   WHERE id = NEW.book_id;
 
@@ -18,6 +18,7 @@ BEGIN
         WHEN NEW.type_id = 1 THEN UPDATE book
                                   SET popularity = popularity + 4
                                   WHERE id = NEW.book_id;
+        ELSE
         END CASE;
 
     RETURN NEW;
@@ -30,7 +31,7 @@ CREATE OR REPLACE FUNCTION update_popularity_delete()
 $$
 BEGIN
     CASE
-        WHEN NEW.type_id = 3 THEN UPDATE book
+        WHEN NEW.type_id IN(3, 4) THEN UPDATE book
                                   SET popularity = popularity - 10
                                   WHERE id = NEW.book_id;
 
@@ -55,7 +56,7 @@ $$
 BEGIN
     IF OLD.type_id <> NEW.type_id THEN
         CASE
-            WHEN OLD.type_id = 3 THEN UPDATE book
+            WHEN OLD.type_id IN(3, 4) THEN UPDATE book
                                          SET popularity = popularity - 10
                                          WHERE id = OLD.book_id;
 
@@ -70,7 +71,7 @@ BEGIN
             END CASE;
 
         CASE
-            WHEN NEW.type_id = 3 THEN UPDATE book
+            WHEN NEW.type_id IN (3, 4) THEN UPDATE book
                                          SET popularity = popularity + 10
                                          WHERE id = NEW.book_id;
 
