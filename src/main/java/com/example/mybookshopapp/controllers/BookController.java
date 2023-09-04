@@ -21,7 +21,7 @@ import java.nio.file.Path;
 
 @Controller
 @RequestMapping("/books")
-public class BookController {
+public class BookController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final ResourceStorage storage;
@@ -34,16 +34,6 @@ public class BookController {
         this.storage = storage;
         this.bookRepository = bookRepository;
         this.userRegister = userRegister;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
-        return new SearchWordDto();
-    }
-
-    @ModelAttribute("curUsr")
-    public Object curUsr(){
-        return userRegister.getCurrentUser();
     }
 
     @GetMapping("/{bookSlug}")

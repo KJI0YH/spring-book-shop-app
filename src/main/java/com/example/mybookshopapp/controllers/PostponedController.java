@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/postponed")
-public class PostponedController {
+public class PostponedController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
@@ -30,16 +30,6 @@ public class PostponedController {
     public PostponedController(BookService bookService, BookstoreUserRegister userRegister) {
         this.bookService = bookService;
         this.userRegister = userRegister;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
-        return new SearchWordDto();
-    }
-
-    @ModelAttribute("curUsr")
-    public Object curUsr(){
-        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute(name = "bookKept")

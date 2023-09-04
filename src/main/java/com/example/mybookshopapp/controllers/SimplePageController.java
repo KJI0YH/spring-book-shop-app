@@ -1,25 +1,21 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.data.BookEntity;
-import com.example.mybookshopapp.data.TagEntity;
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
-import com.example.mybookshopapp.services.AuthorService;
-import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.GenreService;
-import com.example.mybookshopapp.services.TagService;
+import com.example.mybookshopapp.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
-public class SimplePageController {
+public class SimplePageController extends AbstractHeaderFooterController{
     private final BookstoreUserRegister userRegister;
     private final BookService bookService;
     private final AuthorService authorService;
@@ -33,11 +29,6 @@ public class SimplePageController {
         this.authorService = authorService;
         this.genreService = genreService;
         this.tagService = tagService;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @ModelAttribute("curUsr")

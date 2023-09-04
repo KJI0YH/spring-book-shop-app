@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class MainPageController {
+public class MainPageController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final TagService tagService;
@@ -45,16 +45,6 @@ public class MainPageController {
     @ModelAttribute("popularBooks")
     public List<BookEntity> popularBooks() {
         return bookService.getPageOfPopularBooks(0, 6).getContent();
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
-    }
-
-    @ModelAttribute("curUsr")
-    public Object curUsr(){
-        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute("searchResults")

@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
-public class CartController {
+public class CartController extends AbstractHeaderFooterController{
 
     private final BookService bookService;
     private final CartService cartService;
@@ -32,19 +32,9 @@ public class CartController {
         this.userRegister = userRegister;
     }
 
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
-    }
-
     @ModelAttribute(name = "bookCart")
     public List<BookEntity> bookCart() {
         return new ArrayList<>();
-    }
-
-    @ModelAttribute("curUsr")
-    public Object curUsr(){
-        return userRegister.getCurrentUser();
     }
 
     @ModelAttribute("cartPrice")
