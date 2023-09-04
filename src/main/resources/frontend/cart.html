@@ -154,8 +154,9 @@ p.error-browser
                 </div>
                 <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
-                        <strong class="Cart-title" th:text="#{cart.total}">Итого:
-                        </strong><span class="Cart-price">534 р.</span><span class="Cart-price_old">658 р.</span>
+                        <strong class="Cart-title" th:text="#{cart.total}">Итого:</strong>
+                        <span class="Cart-price" th:text="${cartPrice + '$'}">534 р.</span>
+                        <span class="Cart-price_old" th:text="${cartPriceOld + '$'}">658 р.</span>
                     </div>
                     <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html" th:text="#{cart.buy}">Купить</a>
                     </div>

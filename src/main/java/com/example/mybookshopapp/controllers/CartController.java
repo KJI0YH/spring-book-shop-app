@@ -47,6 +47,16 @@ public class CartController {
         return userRegister.getCurrentUser();
     }
 
+    @ModelAttribute("cartPrice")
+    public Long cartPrice(){
+        return 0L;
+    }
+
+    @ModelAttribute("cartPriceOld")
+    public Long cartPriceOld(){
+        return 0L;
+    }
+
     @GetMapping
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
                                     Model model) {
@@ -62,6 +72,8 @@ public class CartController {
                 model.addAttribute("isCartEmpty", true);
             }
             model.addAttribute("bookCart", booksInCart);
+            model.addAttribute("cartPrice", booksInCart.stream().mapToLong(BookEntity::getDiscountPrice).sum());
+            model.addAttribute("cartPriceOld", booksInCart.stream().mapToLong(BookEntity::getPrice).sum());
             return "cart";
         }
 
@@ -73,6 +85,8 @@ public class CartController {
             String[] cookieIds = cartService.getCookiesIds(cartContents);
             List<BookEntity> booksFromCookiesIds = bookService.getBooksByIds(Arrays.stream(cookieIds).map(Integer::valueOf).toArray(Integer[]::new));
             model.addAttribute("bookCart", booksFromCookiesIds);
+            model.addAttribute("cartPrice", booksFromCookiesIds.stream().mapToLong(BookEntity::getDiscountPrice).sum());
+            model.addAttribute("cartPriceOld", booksFromCookiesIds.stream().mapToLong(BookEntity::getPrice).sum());
         }
         return "cart";
     }
