@@ -79,6 +79,14 @@ public class BookService {
         return bookRepository.findBooksByUserType(userId, book2UserType.getId(), nextPage);
     }
 
+    public Long getCountOfBooksByUserStatus(Integer userId, String status){
+        Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
+        if (book2UserType != null) {
+            return bookRepository.getCountOfBooksByUserType(userId, book2UserType.getId());
+        }
+        return 0L;
+    }
+
     public List<BookEntity> getBooksByIds(Integer[] bookIds) {
         return bookRepository.findBookEntitiesByIdIn(bookIds);
     }

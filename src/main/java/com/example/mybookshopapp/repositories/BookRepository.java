@@ -38,4 +38,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = "select b.* from book as b join book2user as b2u on b2u.book_id = b.id join users as u on b2u.user_id = ?1 where b2u.type_id = ?2", nativeQuery = true)
     Page<BookEntity> findBooksByUserType(Integer userId, Integer typeId, Pageable pageable);
+
+    @Query(value = "SELECT COUNT(b.id) FROM book AS b JOIN book2user AS b2u ON b2u.book_id = b.id JOIN users AS u ON b2u.user_id = ?1 WHERE b2u.type_id = ?2", nativeQuery = true)
+    Long getCountOfBooksByUserType(Integer userId, Integer typeId);
+
 }

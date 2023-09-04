@@ -33,32 +33,42 @@ public abstract class AbstractHeaderFooterController {
     }
 
     @ModelAttribute("cartAmount")
-    public Integer cartAmount(@CookieValue(value = "cartContents", required = false) String cartContents) {
+    public Long cartAmount(@CookieValue(value = "cartContents", required = false) String cartContents) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user != null) {
 
             // Authorized user
-            return bookService.getBooksByUserStatus(user.getId(), "CART").size();
+            return bookService.getCountOfBooksByUserStatus(user.getId(), "CART");
         } else {
 
             // Unauthorized user
-            return cartService.getCookiesIds(cartContents).length;
+            return (long) cartService.getCookiesIds(cartContents).length;
         }
     }
 
     @ModelAttribute("postponedAmount")
-    public Integer postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents){
+    public Long postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents){
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
 
         // Authorized user
         if (user != null){
-            return bookService.getBooksByUserStatus(user.getId(), "KEPT").size();
+            return bookService.getCountOfBooksByUserStatus(user.getId(), "KEPT");
 
         }
 
         // Unauthorized user
         else {
-            return cartService.getCookiesIds(postponedContents).length;
+            return (long) cartService.getCookiesIds(postponedContents).length;
         }
+    }
+
+    @ModelAttribute("myAmount")
+    public Long myAmount(){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            return bookService.getCountOfBooksByUserStatus(user.getId(), "PAID") +
+                    bookService.getCountOfBooksByUserStatus(user.getId(), "ARCHIVED");
+        }
+        return 0L;
     }
 }
