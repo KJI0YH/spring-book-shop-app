@@ -1,35 +1,26 @@
 package com.example.mybookshopapp.security;
 
-import com.example.mybookshopapp.dto.SearchWordDto;
+import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
+import com.example.mybookshopapp.services.BookService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class AuthUserController {
+public class AuthUserController extends AbstractHeaderFooterController {
 
     private final BookstoreUserRegister userRegister;
+    private final BookService bookService;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister) {
+    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService) {
         this.userRegister = userRegister;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
-        return new SearchWordDto();
-    }
-
-    @ModelAttribute("curUsr")
-    public Object curUsr(){
-        return userRegister.getCurrentUser();
+        this.bookService = bookService;
     }
 
     @GetMapping("/signin")
@@ -77,12 +68,20 @@ public class AuthUserController {
     }
 
     @GetMapping("/my")
-    public String handleMy() {
+    public String handleMy(Model model) {
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", 0, 20));
+        }
         return "my";
     }
 
     @GetMapping("/my/archive")
-    public String handleMyArchive(){
+    public String handleMyArchive(Model model){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", 0, 20));
+        }
         return "myarchive";
     }
 

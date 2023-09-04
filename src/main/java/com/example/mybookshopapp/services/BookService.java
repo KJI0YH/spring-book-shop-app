@@ -73,6 +73,12 @@ public class BookService {
         return new ArrayList<>();
     }
 
+    public Page<BookEntity> getPageOfBooksByUserStatus(Integer userId, String status, Integer offset, Integer limit){
+        Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBooksByUserType(userId, book2UserType.getId(), nextPage);
+    }
+
     public List<BookEntity> getBooksByIds(Integer[] bookIds) {
         return bookRepository.findBookEntitiesByIdIn(bookIds);
     }

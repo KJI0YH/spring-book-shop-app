@@ -1,6 +1,8 @@
 package com.example.mybookshopapp.controllers;
 
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.BooksPageDto;
+import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.DateResolverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,13 @@ public class ApiBooksController {
 
     private final BookService bookService;
     private final DateResolverService dateResolverService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    public ApiBooksController(BookService bookService, DateResolverService dateResolverService) {
+    public ApiBooksController(BookService bookService, DateResolverService dateResolverService, BookstoreUserRegister userRegister) {
         this.bookService = bookService;
         this.dateResolverService = dateResolverService;
+        this.userRegister = userRegister;
     }
 
     @GetMapping("/recent")
@@ -54,10 +58,24 @@ public class ApiBooksController {
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreSlug(genreSlug, offset, limit).getContent()));
     }
 
-    @GetMapping("author/{authorSlug}")
+    @GetMapping("/author/{authorSlug}")
     public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorSlug") String authroSlug,
                                                                @RequestParam("offset") Integer offset,
                                                                @RequestParam("limit") Integer limit){
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorSlug(authroSlug, offset, limit).getContent()));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<BooksPageDto> getBooksMyPage(@RequestParam("offset") Integer offset,
+                                                       @RequestParam("limit") Integer limit){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", offset, limit).getContent()));
+    }
+
+    @GetMapping("/my/archive")
+    public ResponseEntity<BooksPageDto> getBooksMyArchivePage(@RequestParam("offset") Integer offset,
+                                                              @RequestParam("limit") Integer limit){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", offset, limit).getContent()));
     }
 }

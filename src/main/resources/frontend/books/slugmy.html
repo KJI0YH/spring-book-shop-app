@@ -326,7 +326,7 @@
                 <div class="ProductCard-cartElement">
                   <button class="btn btn_primary btn_outline"
                           data-sendstatus="ARCHIVED"
-                          data-bookid="[1111]" th:attr="data-bookid=${book.id}"
+                          data-bookid="[1111]" th:attr="data-bookid=${'[' + book.id + ']'}"
                           data-btntype="check"
                           data-btnradio="buyblock"
                           data-check="false"
