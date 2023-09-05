@@ -2,10 +2,7 @@ package com.example.mybookshopapp.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,13 +29,18 @@ public class UserEntity {
     private String phone;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    @JsonIgnore
     private List<UserContactEntity> contactList;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
+    @ToString.Exclude
     private List<Book2UserEntity> book2userList;
 
     @OneToMany
     @JoinColumn(name = "review_id")
+    @ToString.Exclude
+    @JsonIgnore
     private List<BookReviewEntity> reviewList;
 }
