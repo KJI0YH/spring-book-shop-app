@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,12 @@ public class BookstoreUserRegister {
         this.jwtUtil = jwtUtil;
     }
 
-    public void registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException {
+    public UserEntity registerNewUser(RegistrationForm registrationForm) {
 
-        if (userRepository.findUserEntityByEmail(registrationForm.getEmail()) == null) {
+        UserEntity userByEmail = userRepository.findUserEntityByEmail(registrationForm.getEmail());
+        UserEntity userByPhone = userRepository.findUserEntityByPhone(registrationForm.getPhone());
+
+        if (userByEmail == null && userByPhone == null) {
             UserEntity user = new UserEntity();
             user.setName(registrationForm.getName());
             user.setEmail(registrationForm.getEmail());
@@ -45,15 +49,17 @@ public class BookstoreUserRegister {
             user.setHash("hash");
             user.setBalance(0);
             userRepository.save(user);
+            return user;
         } else {
-            throw new UserAlreadyExistException("User with email " + registrationForm.getEmail() + " already exists");
+            return userByPhone;
+//            throw new UserAlreadyExistException("User with email " + registrationForm.getEmail() + " already exists");
         }
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
-                payload.getCode()));
+                        payload.getCode()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
@@ -61,10 +67,22 @@ public class BookstoreUserRegister {
         return response;
     }
 
-    public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload){
+    public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
                 payload.getCode()));
         BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(payload.getContact());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        response.setResult(jwtToken);
+        return response;
+    }
+
+    public ContactConfirmationResponse jwtLoginByPhoneNumber(ContactConfirmationPayload payload) {
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setPhone(payload.getContact());
+        registrationForm.setPass(payload.getCode());
+        registerNewUser(registrationForm);
+        UserDetails userDetails = bookstoreUserDetailsService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult(jwtToken);
@@ -75,8 +93,10 @@ public class BookstoreUserRegister {
         try {
             BookstoreUserDetails userDetails = (BookstoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUserEntity();
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             return null;
         }
     }
+
+
 }
