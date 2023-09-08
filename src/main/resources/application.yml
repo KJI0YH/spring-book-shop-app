@@ -52,3 +52,7 @@ twilio:
   ACCOUNT_SID: ACabb2cf0b0e1c9b52489d4403616e9634
   AUTH_TOKEN: 703c2d6ca9dccabad6e5982553b67f73
   PHONE_NUMBER: +18163483992
+
+appEmail:
+  email: bookstore.test@mail.ru
+  password: y4y3cGBP5K8jdsT9xqbG

@@ -97,6 +97,4 @@ public class BookstoreUserRegister {
             return null;
         }
     }
-
-
 }

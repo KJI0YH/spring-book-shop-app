@@ -6,12 +6,14 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
 @Service
-public class SmsService {
+public class CodeService {
 
     @Value("${twilio.ACCOUNT_SID}")
     private String ACCOUNT_SID;
@@ -22,14 +24,16 @@ public class SmsService {
     @Value("${twilio.PHONE_NUMBER}")
     private String PHONE_NUMBER;
 
-    private final SmsCodeRepository smsCodeRepository;
+    private final CodeRepository codeRepository;
+    private final JavaMailSender javaMailSender;
 
     @Autowired
-    public SmsService(SmsCodeRepository smsCodeRepository) {
-        this.smsCodeRepository = smsCodeRepository;
+    public CodeService(CodeRepository codeRepository, JavaMailSender javaMailSender) {
+        this.codeRepository = codeRepository;
+        this.javaMailSender = javaMailSender;
     }
 
-    public String sendSmsCode(String contact){
+    public String sendCodeToPhone(String contact){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         String formattedContact = contact.replaceAll("[( )-]", "");
         String generatedCode = generateCode();
@@ -38,6 +42,17 @@ public class SmsService {
                 new PhoneNumber(PHONE_NUMBER),
                 "Your secret code is: " + generatedCode
         ).create();
+        return generatedCode;
+    }
+
+    public String sendCodeToEmail(String email){
+        String generatedCode = generateCode();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("bookstore.test@mail.ru");
+        message.setTo(email);
+        message.setSubject("Bookstore email verification");
+        message.setText("Verification code is: " + generatedCode);
+        javaMailSender.send(message);
         return generatedCode;
     }
 
@@ -52,14 +67,14 @@ public class SmsService {
         return builder.toString();
     }
 
-    public void saveNewSmsCode(SmsCodeEntity smsCode){
-        if (smsCodeRepository.findByCode(smsCode.getCode()) == null){
-            smsCodeRepository.save(smsCode);
+    public void saveCode(SmsCodeEntity smsCode){
+        if (codeRepository.findByCode(smsCode.getCode()) == null){
+            codeRepository.save(smsCode);
         }
     }
 
-    public Boolean verifySmsCode(String code){
-        SmsCodeEntity smsCode = smsCodeRepository.findByCode(code);
+    public Boolean verifyCode(String code){
+        SmsCodeEntity smsCode = codeRepository.findByCode(code);
         return (smsCode != null && !smsCode.isExpired());
     }
 }
