@@ -18,12 +18,15 @@ public class BookstoreUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findUserEntityByEmail(email);
-        if (userEntity != null){
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findUserEntityByEmail(username);
+        if (userEntity != null) {
             return new BookstoreUserDetails(userEntity);
-        } else {
-            throw new UsernameNotFoundException("user not found");
         }
+        userEntity = userRepository.findUserEntityByPhone(username);
+        if (userEntity != null) {
+            return new PhoneNumberUserDetails(userEntity);
+        }
+        throw new UsernameNotFoundException("User not found");
     }
 }

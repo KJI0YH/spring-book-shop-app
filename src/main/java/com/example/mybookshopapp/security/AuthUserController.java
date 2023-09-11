@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
+import com.example.mybookshopapp.data.SmsCodeEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.services.BookService;
@@ -9,18 +10,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AuthUserController extends AbstractHeaderFooterController {
 
     private final BookstoreUserRegister userRegister;
     private final BookService bookService;
+    private final CodeService codeService;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService) {
+    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService) {
         this.userRegister = userRegister;
         this.bookService = bookService;
+        this.codeService = codeService;
     }
 
     @GetMapping("/signin")
@@ -34,19 +40,38 @@ public class AuthUserController extends AbstractHeaderFooterController {
         return "signup";
     }
 
-    @PostMapping("/requestContactConfirmation")
+    @PostMapping("/api/requestContactConfirmation")
     @ResponseBody
-    public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
+    public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult("true");
-        return response;
+
+        // Confirmation with email
+        if (payload.getContact().contains("@")) {
+            String codeString = codeService.sendCodeToEmail(payload.getContact());
+
+            // Expires in 60 seconds
+            codeService.saveCode(new SmsCodeEntity(codeString, 60));
+            return response;
+
+            // Confirmation with phone
+        } else {
+            String smsCodeString = codeService.sendCodeToPhone(payload.getContact());
+
+            // Expires in 60 seconds
+            codeService.saveCode(new SmsCodeEntity(smsCodeString, 60));
+            return response;
+        }
     }
 
-    @PostMapping("/approveContact")
+    @PostMapping("/api/approveContact")
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult("true");
+
+        if (codeService.verifyCode(payload.getCode())) {
+            response.setResult("true");
+        }
         return response;
     }
 
@@ -67,19 +92,33 @@ public class AuthUserController extends AbstractHeaderFooterController {
         return loginResponse;
     }
 
+    @PostMapping("/login-by-phone-number")
+    @ResponseBody
+    public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
+                                                                HttpServletResponse httpServletResponse) {
+        if (codeService.verifyCode(payload.getCode())) {
+            ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
+            Cookie cookie = new Cookie("token", loginResponse.getResult());
+            httpServletResponse.addCookie(cookie);
+            return loginResponse;
+        } else {
+            return new ContactConfirmationResponse();
+        }
+    }
+
     @GetMapping("/my")
     public String handleMy(Model model) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", 0, 20));
         }
         return "my";
     }
 
     @GetMapping("/my/archive")
-    public String handleMyArchive(Model model){
+    public String handleMyArchive(Model model) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", 0, 20));
         }
         return "myarchive";
