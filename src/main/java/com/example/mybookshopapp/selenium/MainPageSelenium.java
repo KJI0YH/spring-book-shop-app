@@ -5,8 +5,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class MainPageSelenium {
 
-    private String url = "http://localhost:8085/";
-    private FirefoxDriver driver;
+    private final String url = "http://localhost:8085/";
+    private final FirefoxDriver driver;
 
     public MainPageSelenium(FirefoxDriver driver){
         this.driver = driver;

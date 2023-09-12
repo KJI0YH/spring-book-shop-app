@@ -31,11 +31,6 @@ public class SimplePageController extends AbstractHeaderFooterController{
         this.tagService = tagService;
     }
 
-    @ModelAttribute("curUsr")
-    public Object curUsr() {
-        return userRegister.getCurrentUser();
-    }
-
     @GetMapping("/about")
     public String aboutPage() {
         return "about";

@@ -14,10 +14,16 @@ public class BalanceTransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
     private LocalDateTime time;
     private Integer value;
-    private Integer bookId;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
     private String description;
 }
 

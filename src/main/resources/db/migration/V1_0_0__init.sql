@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS balance_transaction
     user_id INTEGER NOT NULL,
     time TIMESTAMP NOT NULL,
     value INTEGER NOT NULL DEFAULT 0,
-    book_id INTEGER NOT NULL,
+    book_id INTEGER,
     description TEXT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT user_id_fkey FOREIGN KEY (user_id)
