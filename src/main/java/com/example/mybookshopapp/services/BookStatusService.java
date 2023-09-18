@@ -3,6 +3,7 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.Book2UserEntity;
 import com.example.mybookshopapp.data.Book2UserIdEntity;
 import com.example.mybookshopapp.data.Book2UserTypeEntity;
+import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.BookCookieStoreDto;
 import com.example.mybookshopapp.repositories.Book2UserRepository;
 import com.example.mybookshopapp.repositories.Book2UserTypeRepository;
@@ -111,6 +112,12 @@ public class BookStatusService {
                 book2User.setType(book2UserType);
                 book2UserRepository.save(book2User);
             }
+        }
+    }
+
+    public void setStatuses(List<BookEntity> books, Integer userId, String status){
+        for (BookEntity book : books) {
+            setStatus(book.getId(), userId, status);
         }
     }
 }

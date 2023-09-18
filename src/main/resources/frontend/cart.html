@@ -158,7 +158,11 @@ p.error-browser
                         <span class="Cart-price" th:text="${cartPrice / 100 + '.' + cartPrice % 100 + '₽'}">534 р.</span>
                         <span class="Cart-price_old" th:text="${cartPriceOld / 100 + '.' + cartPrice % 100 + '₽'}">658 р.</span>
                     </div>
-                    <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html" th:href="@{/payment/books}" th:text="#{cart.buy}">Купить</a>
+                    <div class="Cart-block" th:if="${paymentError != null}">
+                        <a th:text="${paymentError}" th:href="@{/profile}">Ошибка оплаты</a>
+                    </div>
+                    <div class="Cart-block">
+                        <a class="btn btn_success btn_md" href="/order.html" th:href="@{/payment/books}" th:text="#{cart.buy}">Купить</a>
                     </div>
                 </div>
             </form>

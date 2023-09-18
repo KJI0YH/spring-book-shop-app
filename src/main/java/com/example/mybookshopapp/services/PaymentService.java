@@ -226,7 +226,6 @@ public class PaymentService {
             }
 
         } catch (PaymentDoesNotExistsException | PaymentStatusException exception){
-            return;
         }
     }
 

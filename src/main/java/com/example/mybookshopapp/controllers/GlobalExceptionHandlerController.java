@@ -1,11 +1,15 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
@@ -27,11 +31,5 @@ public class GlobalExceptionHandlerController {
     public String handleUserAlreadyExistException(UserAlreadyExistException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("regError", e);
         return "redirect:/signup";
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String handleBadCredentialsException(BadCredentialsException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("authError", e);
-        return "redirect:/signin";
     }
 }
