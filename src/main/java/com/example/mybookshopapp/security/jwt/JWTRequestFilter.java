@@ -2,6 +2,7 @@ package com.example.mybookshopapp.security.jwt;
 
 import com.example.mybookshopapp.security.BookstoreUserDetails;
 import com.example.mybookshopapp.security.BookstoreUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -36,29 +37,43 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         String username = null;
         Cookie[] cookies = request.getCookies();
 
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    token = cookie.getValue();
+        try {
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("token")) {
+                        token = cookie.getValue();
 
-                    if (jwtBlackListService.isInBlackList(token)){
-                        throw new BadCredentialsException("Token is blacklisted");
+                        if (jwtBlackListService.isInBlackList(token)){
+                            throw new BadCredentialsException("Token is blacklisted");
+                        }
+
+                        username = jwtUtil.extractUsername(token);
                     }
 
-                    username = jwtUtil.extractUsername(token);
-                }
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = bookstoreUserDetailsService.loadUserByUsername(username);
-                    if (jwtUtil.validateToken(token, userDetails)) {
-                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = bookstoreUserDetailsService.loadUserByUsername(username);
+                        if (jwtUtil.validateToken(token, userDetails)) {
+                            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        }
                     }
                 }
             }
+            filterChain.doFilter(request, response);
+        } catch (BadCredentialsException | ExpiredJwtException exception){
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("token".equals(cookie.getName())) {
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                        break;
+                    }
+                }
+            }
+            response.sendRedirect("/signin");
         }
-        filterChain.doFilter(request, response);
     }
 }
