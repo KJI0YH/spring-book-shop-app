@@ -137,12 +137,12 @@ p.error-browser
                                 <div class="Cart-priceTitle" th:text="#{cart.price}">Цена:
                                 </div>
                                 <div class="Cart-price Cart-price_old" th:if="${book.discount != 0}"
-                                     th:text="${'$' + book.price}">150 р.
+                                     th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">150 р.
                                 </div>
                                 <div class="Cart-price" th:if="${book.discount != 0}"
-                                     th:text="${'$' + book.discountPrice}">100 р.
+                                     th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}">100 р.
                                 </div>
-                                <div class="Cart-price" th:text="${'$' + book.price}" th:unless="${book.discount != 0}">
+                                <div class="Cart-price" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}" th:unless="${book.discount != 0}">
                                     100 р.
                                 </div>
                                 <div class="Cart-sale" th:if="${book.discount != 0}"
@@ -155,10 +155,10 @@ p.error-browser
                 <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
                         <strong class="Cart-title" th:text="#{cart.total}">Итого:</strong>
-                        <span class="Cart-price" th:text="${cartPrice + '$'}">534 р.</span>
-                        <span class="Cart-price_old" th:text="${cartPriceOld + '$'}">658 р.</span>
+                        <span class="Cart-price" th:text="${cartPrice / 100 + '.' + cartPrice % 100 + '₽'}">534 р.</span>
+                        <span class="Cart-price_old" th:text="${cartPriceOld / 100 + '.' + cartPrice % 100 + '₽'}">658 р.</span>
                     </div>
-                    <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html" th:href="@{/payment}" th:text="#{cart.buy}">Купить</a>
+                    <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html" th:href="@{/payment/books}" th:text="#{cart.buy}">Купить</a>
                     </div>
                 </div>
             </form>

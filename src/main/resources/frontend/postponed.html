@@ -137,12 +137,12 @@ p.error-browser
                                 <div class="Cart-priceTitle" th:text="#{cart.price}">Цена:
                                 </div>
                                 <div class="Cart-price Cart-price_old" th:if="${book.discount != 0}"
-                                     th:text="${'$' + book.price}">150 р.
+                                     th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">150 р.
                                 </div>
                                 <div class="Cart-price" th:if="${book.discount != 0}"
-                                     th:text="${'$' + book.discountPrice}">100 р.
+                                     th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}">100 р.
                                 </div>
-                                <div class="Cart-price" th:text="${'$' + book.price}" th:unless="${book.discount != 0}">
+                                <div class="Cart-price" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}" th:unless="${book.discount != 0}">
                                     100 р.
                                 </div>
                                 <div class="Cart-sale" th:if="${book.discount != 0}"

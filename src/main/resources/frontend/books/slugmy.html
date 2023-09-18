@@ -263,10 +263,10 @@
                 </div>
                 <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
                   <span class="ProductCard-priceOld" th:if="${book.discount != 0}"
-                        th:text="${'$' + book.price}">₽300</span>
+                        th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽300</span>
                   <span class="ProductCard-price" th:if="${book.discount == 0}"
-                        th:text="${'$' + book.price}">₽180</span>
-                  <span class="ProductCard-price" th:text="${'$' + book.discountPrice}"
+                        th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽180</span>
+                  <span class="ProductCard-price" th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}"
                         th:unless="${book.discount == 0}">₽180</span>
                 </div>
                 <!--+div.-info

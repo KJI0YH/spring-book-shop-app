@@ -78,9 +78,9 @@
                   <a th:text="${author}" th:href="${'/authors/' + author.slug}">Кондратенко Александр Петрович</a>
                 </div>
                 <div class="Card-cost">
-                  <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="${'$' + book.price}">₽500.00</span>
-                  <span class="Card-price" th:if="${book.discount == 0}" th:text="${'$' + book.price}">₽390.00</span>
-                  <span class="Card-price" th:unless="${book.discount == 0}" th:text="${'$' + book.discountPrice}">₽390.00</span>
+                  <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽500.00</span>
+                  <span class="Card-price" th:if="${book.discount == 0}" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽390.00</span>
+                  <span class="Card-price" th:unless="${book.discount == 0}" th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}">₽390.00</span>
                 </div>
               </div>
             </div>
