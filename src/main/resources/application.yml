@@ -60,3 +60,12 @@ appEmail:
 yookassa:
     SECRET_KEY: test_cNFKV9OtMSJcRLhJlrDTRKv8K_y9TgcCM_sBg-LWrA0
     shopId: 254029
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
