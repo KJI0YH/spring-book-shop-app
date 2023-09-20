@@ -48,6 +48,17 @@ spring:
     url: jdbc:postgresql://127.0.0.1:54320/book_store
     locations: classpath:/db/migration
 
+  application:
+    name: bookshop
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+        instance:
+          service-url: http://localhost:8085/
+          health-url: http://localhost:8085/actuator/health
+          management-url: http://localhost:8085/actuator
+
 twilio:
   ACCOUNT_SID: ACabb2cf0b0e1c9b52489d4403616e9634
   AUTH_TOKEN: a41870d694472cd4fc6850ba7e7ed148
