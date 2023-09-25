@@ -8,6 +8,7 @@ import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.TransactionService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,14 @@ public class AuthUserController extends AbstractHeaderFooterController {
     private final BookstoreUserRegister userRegister;
     private final BookService bookService;
     private final CodeService codeService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService) {
+    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService, TransactionService transactionService) {
         this.userRegister = userRegister;
         this.bookService = bookService;
         this.codeService = codeService;
+        this.transactionService = transactionService;
     }
 
     @GetMapping("/signin")
@@ -112,7 +115,11 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @GetMapping("/profile")
-    public String handleProfile() {
+    public String handleProfile(Model model) {
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            model.addAttribute("transactions", transactionService.getTransactionsByUserAsc(user, 0, 5));
+        }
         return "profile";
     }
 

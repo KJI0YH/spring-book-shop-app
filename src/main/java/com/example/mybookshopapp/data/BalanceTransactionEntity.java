@@ -25,5 +25,16 @@ public class BalanceTransactionEntity {
     @JoinColumn(name = "book_id")
     private BookEntity book;
     private String description;
+
+    public String getTimeValue(){
+        return String.valueOf(String.format("%02d", time.getDayOfMonth())) + '.' +
+                String.format("%02d", time.getMonthValue()) + '.' +
+                time.getYear() + ' ' +
+                String.format("%02d", time.getHour()) + ':' +
+                String.format("%02d", time.getMinute()) + ':' +
+                String.format("%02d", time.getSecond());
+    }
+
+
 }
 
