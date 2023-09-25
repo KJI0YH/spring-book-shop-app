@@ -33,9 +33,9 @@ public class CodeService {
         this.javaMailSender = javaMailSender;
     }
 
-    public String sendCodeToPhone(String contact){
+    public String sendCodeToPhone(String phone){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        String formattedContact = contact.replaceAll("[( )-]", "");
+        String formattedContact = phone.replaceAll("[( )-]", "");
         String generatedCode = generateCode();
         Message.creator(
                 new PhoneNumber(formattedContact),
@@ -57,13 +57,11 @@ public class CodeService {
     }
 
     private String generateCode(){
-        // nnn nnn - pattern
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
         while (builder.length() < 6){
             builder.append(random.nextInt(9));
         }
-        builder.insert(3, " ");
         return builder.toString();
     }
 
@@ -74,7 +72,11 @@ public class CodeService {
     }
 
     public Boolean verifyCode(String code){
-        SmsCodeEntity smsCode = codeRepository.findByCode(code);
+        SmsCodeEntity smsCode = codeRepository.findByCode(simplifyCode(code));
         return (smsCode != null && !smsCode.isExpired());
+    }
+
+    private String simplifyCode(String code){
+        return code.replaceAll("\\s|-", "");
     }
 }

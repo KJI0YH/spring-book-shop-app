@@ -92,20 +92,6 @@ public class AuthUserController extends AbstractHeaderFooterController {
         return loginResponse;
     }
 
-    @PostMapping("/login-by-phone-number")
-    @ResponseBody
-    public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
-                                                                HttpServletResponse httpServletResponse) {
-        if (codeService.verifyCode(payload.getCode())) {
-            ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
-            Cookie cookie = new Cookie("token", loginResponse.getResult());
-            httpServletResponse.addCookie(cookie);
-            return loginResponse;
-        } else {
-            return new ContactConfirmationResponse();
-        }
-    }
-
     @GetMapping("/my")
     public String handleMy(Model model) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
