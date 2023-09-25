@@ -3,6 +3,9 @@ package com.example.mybookshopapp.security;
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
 import com.example.mybookshopapp.data.SmsCodeEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.dto.ContactConfirmationPayload;
+import com.example.mybookshopapp.dto.ContactConfirmationResponse;
+import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.services.BookService;
 import jakarta.servlet.http.Cookie;
@@ -10,10 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthUserController extends AbstractHeaderFooterController {
@@ -113,5 +114,26 @@ public class AuthUserController extends AbstractHeaderFooterController {
     @GetMapping("/profile")
     public String handleProfile() {
         return "profile";
+    }
+
+    @PostMapping("/profile/change")
+    public String handleProfileChange(@RequestParam(value = "name") String name,
+                                      @RequestParam(value = "mail") String email,
+                                      @RequestParam(value = "phone") String phone,
+                                      @RequestParam(value = "password") String password,
+                                      @RequestParam(value = "passwordReply") String passwordReply,
+                                      RedirectAttributes redirectAttributes){
+
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+
+        if (user != null){
+            if (!password.isEmpty() && !passwordReply.isEmpty() && password.equals(passwordReply)){
+                userRegister.changePassword(user, password);
+                redirectAttributes.addFlashAttribute("profileMessage", "Profile successfully changed");
+            } else {
+                redirectAttributes.addFlashAttribute("profileMessage", "Password do not match or empty");
+            }
+        }
+        return "redirect:/profile";
     }
 }

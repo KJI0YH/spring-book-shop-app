@@ -63,7 +63,7 @@ p.error-browser
         <div class="Tabs-wrap">
           <div class="Tabs-block" id="basic">
             <div class="Profile">
-              <form class="form Profile-form" action="#" method="post">
+              <form class="form Profile-form" action="#" th:action="@{/profile/change}" method="post">
                 <div class="row">
                   <div class="row-block">
                     <div class="form-group">
@@ -110,7 +110,8 @@ p.error-browser
                         <button class="btn btn_primary" type="submit">Сохранить
                         </button>
                       </div>
-                      <div class="Profile-success">Профиль успешно сохранен
+                      <div class="Profile-success">
+                        <label th:text="${profileMessage}">Профиль успешно сохранен</label>
                       </div>
                     </div>
                   </div>

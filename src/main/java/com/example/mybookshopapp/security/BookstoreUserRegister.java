@@ -1,6 +1,9 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.dto.ContactConfirmationPayload;
+import com.example.mybookshopapp.dto.ContactConfirmationResponse;
+import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +87,11 @@ public class BookstoreUserRegister {
         } catch (ClassCastException e) {
             return null;
         }
+    }
+
+    public UserEntity changePassword(UserEntity user, String newPassword){
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return user;
     }
 }
