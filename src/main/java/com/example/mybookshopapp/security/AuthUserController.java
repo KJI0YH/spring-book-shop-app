@@ -17,6 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class AuthUserController extends AbstractHeaderFooterController {
 
@@ -132,15 +135,33 @@ public class AuthUserController extends AbstractHeaderFooterController {
                                       RedirectAttributes redirectAttributes){
 
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user == null){
+            return "redirect:profile";
+        }
+        List<String> messages = new ArrayList<String>();
 
-        if (user != null){
-            if (!password.isEmpty() && !passwordReply.isEmpty() && password.equals(passwordReply)){
+        // Name change
+        if (!name.isEmpty() && !name.equals(user.getName())){
+            userRegister.changeName(user, name);
+            messages.add("Name successfully changed");
+        }
+
+        // Email change
+
+        // Phone change
+
+        // Password change
+        if (!password.isEmpty() && !passwordReply.isEmpty()) {
+            if (password.equals(passwordReply)) {
                 userRegister.changePassword(user, password);
-                redirectAttributes.addFlashAttribute("profileMessage", "Profile successfully changed");
+                messages.add("Password successfully changed");
             } else {
-                redirectAttributes.addFlashAttribute("profileMessage", "Password do not match or empty");
+                messages.add("Password do not match");
             }
         }
+
+        redirectAttributes.addFlashAttribute("profileMessage", messages);
+
         return "redirect:/profile";
     }
 }

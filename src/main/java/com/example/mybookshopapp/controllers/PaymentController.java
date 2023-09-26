@@ -46,7 +46,7 @@ public class PaymentController {
     }
 
     @PostMapping("/payment")
-    @CrossOrigin(origins = " https://yoomoney.ru/*")
+    @CrossOrigin(origins = "https://yoomoney.ru/checkout/payments/v2/contract")
     public ResponseEntity<?> handlePayment(@RequestBody PaymentDto payment) throws URISyntaxException, IOException, InterruptedException {
 
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
@@ -65,7 +65,6 @@ public class PaymentController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header("Location", paymentUrl)
-                .header("Access-Control-Allow-Origin", "https://yoomoney.ru/*")
                 .build();
     }
 

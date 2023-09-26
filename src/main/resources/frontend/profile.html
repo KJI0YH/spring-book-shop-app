@@ -111,7 +111,9 @@ p.error-browser
                         </button>
                       </div>
                       <div class="Profile-success">
-                        <label th:text="${profileMessage}">Профиль успешно сохранен</label>
+                        <th:block th:each="message : ${profileMessage}">
+                          <label th:text="${message}">Профиль успешно сохранен</label><br>
+                        </th:block>
                       </div>
                     </div>
                   </div>
@@ -142,7 +144,10 @@ p.error-browser
                         <strong th:unless="${transaction.value < 0}" th:text="${'+' + transaction.value / 100 + '.' + transaction.value % 100 + 'р.'}">+500 р.</strong>
                       </span>
                     </td>
-                    <td th:text="${transaction.description}">Пополнение счета</td>
+                    <td th:if="${transaction.book != null}" >
+                      <a th:href="@{/books/{slug}(slug=${transaction.book.slug})}" th:text="${transaction.description}"></a>
+                    </td>
+                    <td th:unless="${transaction.book != null}" th:text="${transaction.description}">Пополнение счета</td>
                   </tr>
                   </tbody>
                 </table>

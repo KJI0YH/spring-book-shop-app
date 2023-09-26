@@ -94,4 +94,22 @@ public class BookstoreUserRegister {
         userRepository.save(user);
         return user;
     }
+
+    public UserEntity changeName(UserEntity user, String newName){
+        user.setName(newName);
+        userRepository.save(user);
+        return user;
+    }
+
+    public UserEntity changeEmail(UserEntity user, String newEmail){
+        user.setEmail(newEmail);
+        userRepository.save(user);
+        return user;
+    }
+
+    public UserEntity changePhone(UserEntity user, String newPhone){
+        user.setPassword(newPhone);
+        userRepository.save(user);
+        return user;
+    }
 }
