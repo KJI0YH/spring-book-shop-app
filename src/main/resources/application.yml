@@ -59,9 +59,3 @@ management:
   endpoint:
     health:
       show-details: always
-  endpoints:
-    web:
-      cors:
-        allowed-origins: https://yoomoney.ru/checkout/payments/v2/contract
-        allowed-methods: OPTIONS, GET
-

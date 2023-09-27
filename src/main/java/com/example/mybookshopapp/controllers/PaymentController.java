@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.controllers;
 
+import com.example.mybookshopapp.data.ApiResponse;
 import com.example.mybookshopapp.data.BalanceTransactionEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +48,6 @@ public class PaymentController {
     }
 
     @PostMapping("/payment")
-    @CrossOrigin(origins = "https://yoomoney.ru/checkout/payments/v2/contract")
     public ResponseEntity<?> handlePayment(@RequestBody PaymentDto payment) throws URISyntaxException, IOException, InterruptedException {
 
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
@@ -62,10 +63,7 @@ public class PaymentController {
         }
 
         String paymentUrl = paymentService.createPayment(sum, user);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .header("Location", paymentUrl)
-                .build();
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.FOUND, true, paymentUrl), HttpStatus.OK);
     }
 
     @GetMapping("/payment/confirm")
