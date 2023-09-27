@@ -14,6 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Service
@@ -46,9 +49,7 @@ public class BookstoreUserRegister {
             user.setPhone(registrationForm.getPhone());
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             user.setRegTime(LocalDateTime.now());
-
-            // TODO generate hash for user
-            user.setHash("hash");
+            user.setHash(generateHash(user));
             user.setBalance(0);
             userRepository.save(user);
             return user;
@@ -111,5 +112,22 @@ public class BookstoreUserRegister {
         user.setPhone(newPhone);
         userRepository.save(user);
         return user;
+    }
+
+    private String generateHash(UserEntity user){
+        String input = user.getName() + ":" + user.getEmail() + ":" + user.getPhone() + ":" + user.getRegTime();
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            byte[] inputBytes = input.getBytes(StandardCharsets.UTF_8);
+            messageDigest.update(inputBytes);
+            byte[] digest = messageDigest.digest();
+            StringBuilder builder = new StringBuilder();
+            for (byte b : digest){
+                builder.append(String.format("%02x", b));
+            }
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e){
+            return user.getRegTime().toString();
+        }
     }
 }
