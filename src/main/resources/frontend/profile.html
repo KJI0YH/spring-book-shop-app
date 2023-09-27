@@ -78,7 +78,7 @@ p.error-browser
                       <input class="form-input" id="mail" name="mail" type="text" th:value="${curUsr.email}"
                              value="addr@sait.com" data-validate="require mail"/>
                       <div class="Profile-btn Profile-btn_confirm">
-                        <button class="btn btn_primary" type="button">Подтвердить
+                        <button class="btn btn_primary" type="button" id="confirmChangeEmailButton">Подтвердить
                         </button>
                       </div>
                     </div>
@@ -87,7 +87,7 @@ p.error-browser
                       </label>
                       <input class="form-input" id="phone" name="phone" type="text" th:value="${curUsr.phone}" data-mask="+375 (99) 999-99-99" data-validate="require"/>
                       <div class="Profile-btn Profile-btn_confirm">
-                        <button class="btn btn_primary" type="button">Подтвердить
+                        <button class="btn btn_primary" type="button" id="confirmChangePhoneButton">Подтвердить
                         </button>
                       </div>
                     </div>

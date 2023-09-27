@@ -108,7 +108,7 @@ public class BookstoreUserRegister {
     }
 
     public UserEntity changePhone(UserEntity user, String newPhone){
-        user.setPassword(newPhone);
+        user.setPhone(newPhone);
         userRepository.save(user);
         return user;
     }

@@ -1,17 +1,23 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
+import com.example.mybookshopapp.data.ApiResponse;
+import com.example.mybookshopapp.data.ContactChangeConfirmationEntity;
 import com.example.mybookshopapp.data.SmsCodeEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
+import com.example.mybookshopapp.dto.ContactDto;
 import com.example.mybookshopapp.dto.RegistrationForm;
+import com.example.mybookshopapp.errors.ContactConfirmationException;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
-import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.TransactionService;
+import com.example.mybookshopapp.security.jwt.JWTUtil;
+import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +33,23 @@ public class AuthUserController extends AbstractHeaderFooterController {
     private final BookService bookService;
     private final CodeService codeService;
     private final TransactionService transactionService;
+    private final EmailService emailService;
+    private final PhoneService phoneService;
+    private final JWTUtil jwtUtil;
+    private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    private final ContactChangeConfirmationService confirmationService;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService, TransactionService transactionService) {
+    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService, TransactionService transactionService, EmailService emailService, PhoneService phoneService, JWTUtil jwtUtil, BookstoreUserDetailsService bookstoreUserDetailsService, ContactChangeConfirmationService confirmationService) {
         this.userRegister = userRegister;
         this.bookService = bookService;
         this.codeService = codeService;
         this.transactionService = transactionService;
+        this.emailService = emailService;
+        this.phoneService = phoneService;
+        this.jwtUtil = jwtUtil;
+        this.bookstoreUserDetailsService = bookstoreUserDetailsService;
+        this.confirmationService = confirmationService;
     }
 
     @GetMapping("/signin")
@@ -146,10 +162,6 @@ public class AuthUserController extends AbstractHeaderFooterController {
             messages.add("Name successfully changed");
         }
 
-        // Email change
-
-        // Phone change
-
         // Password change
         if (!password.isEmpty() && !passwordReply.isEmpty()) {
             if (password.equals(passwordReply)) {
@@ -161,6 +173,93 @@ public class AuthUserController extends AbstractHeaderFooterController {
         }
 
         redirectAttributes.addFlashAttribute("profileMessage", messages);
+
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/change/email")
+    public ResponseEntity<ApiResponse> handleProfileEmailChange(@RequestBody ContactDto email){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String newEmail = email.getContact();
+
+        if (!newEmail.isEmpty() && !user.getEmail().equals(newEmail)){
+            String key = emailService.generateEmailConfirmationKey(newEmail);
+            confirmationService.createConfirmation(key, user, newEmail);
+            String link = emailService.getEmailConfirmationLink(key);
+            emailService.sendEmailMessage(newEmail, "Bookstore email change confirmation", "Click on the link to confirm your email: " + link);
+        }
+
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+    }
+
+    @GetMapping("/profile/change/email")
+    public String handleProfileEmailChangeConfirm(@RequestParam(name = "key", required = true) String key,
+                                                  RedirectAttributes redirectAttributes,
+                                                  HttpServletResponse httpServletResponse){
+        ContactChangeConfirmationEntity newContact;
+        try {
+            newContact = confirmationService.getContactConfirmationByKey(key);
+        } catch(ContactConfirmationException e){
+            return "redirect:/profile";
+        }
+
+        UserEntity newUser = userRegister.changeEmail(newContact.getUser(), newContact.getContact());
+        confirmationService.confirmContactChange(newContact);
+        redirectAttributes.addFlashAttribute("profileMessage", "Email changed successfully");
+
+        // Update jwt token
+        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(newUser.getEmail());
+        Cookie cookie = new Cookie("token", jwtUtil.generateToken(userDetails));
+        cookie.setPath("/");
+        httpServletResponse.addCookie(cookie);
+
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/change/phone")
+    public ResponseEntity<ApiResponse> handleProfilePhoneChange(@RequestBody ContactDto phone){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String newPhone = phone.getContact();
+
+        if (!newPhone.isEmpty() && !user.getPhone().equals(newPhone)){
+            String key = phoneService.generatePhoneConfirmationKey(newPhone);
+            confirmationService.createConfirmation(key, user, newPhone);
+            String link = phoneService.getPhoneConfirmationLink(key);
+            phoneService.sendPhoneMessage(newPhone, "Follow the link to confirm your phone change: " + link);
+        }
+
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+    }
+
+    @GetMapping("/profile/change/phone")
+    public String handleProfilePhoneChangeConfirm(@RequestParam(name = "key", required = true) String key,
+                                                 RedirectAttributes redirectAttributes,
+                                                  HttpServletResponse httpServletResponse){
+        ContactChangeConfirmationEntity newContact;
+        try {
+            newContact = confirmationService.getContactConfirmationByKey(key);
+        } catch (ContactConfirmationException e){
+            return "redirect:/profile";
+        }
+
+        UserEntity newUser = userRegister.changePhone(newContact.getUser(), newContact.getContact());
+        confirmationService.confirmContactChange(newContact);
+        redirectAttributes.addFlashAttribute("profileMessage", "Phone changed successfully");
+
+
+        // Update jwt token
+        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(newUser.getPhone());
+        Cookie cookie = new Cookie("token", jwtUtil.generateToken(userDetails));
+        cookie.setPath("/");
+        httpServletResponse.addCookie(cookie);
 
         return "redirect:/profile";
     }

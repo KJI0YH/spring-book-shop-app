@@ -1,6 +1,8 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.data.SmsCodeEntity;
+import com.example.mybookshopapp.services.EmailService;
+import com.example.mybookshopapp.services.PhoneService;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -14,45 +16,26 @@ import java.util.Random;
 
 @Service
 public class CodeService {
-
-    @Value("${twilio.ACCOUNT_SID}")
-    private String ACCOUNT_SID;
-
-    @Value("${twilio.AUTH_TOKEN}")
-    private String AUTH_TOKEN;
-
-    @Value("${twilio.PHONE_NUMBER}")
-    private String PHONE_NUMBER;
-
     private final CodeRepository codeRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
+    private final PhoneService phoneService;
 
     @Autowired
-    public CodeService(CodeRepository codeRepository, JavaMailSender javaMailSender) {
+    public CodeService(CodeRepository codeRepository, EmailService emailService, PhoneService phoneService) {
         this.codeRepository = codeRepository;
-        this.javaMailSender = javaMailSender;
+        this.emailService = emailService;
+        this.phoneService = phoneService;
     }
 
     public String sendCodeToPhone(String phone){
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        String formattedContact = phone.replaceAll("[( )-]", "");
         String generatedCode = generateCode();
-        Message.creator(
-                new PhoneNumber(formattedContact),
-                new PhoneNumber(PHONE_NUMBER),
-                "Your secret code is: " + generatedCode
-        ).create();
+        phoneService.sendPhoneMessage(phone, "Your secret code is: " + generatedCode);
         return generatedCode;
     }
 
     public String sendCodeToEmail(String email){
         String generatedCode = generateCode();
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("bookstore.test@mail.ru");
-        message.setTo(email);
-        message.setSubject("Bookstore email verification");
-        message.setText("Verification code is: " + generatedCode);
-        javaMailSender.send(message);
+        emailService.sendEmailMessage(email, "Bookstore email verification", "Verification code is: " + generatedCode);
         return generatedCode;
     }
 
