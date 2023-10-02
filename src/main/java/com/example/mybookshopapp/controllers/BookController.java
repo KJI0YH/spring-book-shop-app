@@ -1,9 +1,11 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.BookViewedService;
 import com.example.mybookshopapp.services.ResourceStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,22 @@ public class BookController extends AbstractHeaderFooterController {
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
     private final BookstoreUserRegister userRegister;
+    private final BookViewedService bookViewedService;
 
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
+
         if (book != null){
             model.addAttribute("book", book);
+
+            if (user != null){
+                bookViewedService.setViewedBook(user.getId(), book.getId());
+            }
         }
 
-        if (userRegister.getCurrentUser() == null){
+        if (user == null){
             return "books/slug";
         } else {
             return "books/slugmy";

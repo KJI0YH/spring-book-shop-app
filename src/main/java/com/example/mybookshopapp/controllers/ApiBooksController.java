@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.BooksPageDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.BookViewedService;
 import com.example.mybookshopapp.services.DateResolverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class ApiBooksController {
     private final BookService bookService;
     private final DateResolverService dateResolverService;
     private final BookstoreUserRegister userRegister;
+    private final BookViewedService bookViewedService;
 
     @GetMapping("/recent")
     public ResponseEntity<BooksPageDto> getRecentBooksPage(@RequestParam("offset") Integer offset,
@@ -72,5 +74,12 @@ public class ApiBooksController {
                                                               @RequestParam("limit") Integer limit){
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", offset, limit).getContent()));
+    }
+
+    @GetMapping("/viewed")
+    public ResponseEntity<BooksPageDto> getBooksViewedPage(@RequestParam("offset") Integer offset,
+                                                           @RequestParam("limit") Integer limit){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        return ResponseEntity.ok(new BooksPageDto((bookViewedService.getPageOfViewedBooks(user.getId(), offset, limit))));
     }
 }

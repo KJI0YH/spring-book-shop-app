@@ -5,6 +5,7 @@ import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     private final AuthorService authorService;
     private final GenreService genreService;
     private final TagService tagService;
+    private final BookViewedService bookViewedService;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -54,6 +56,15 @@ public class SimplePageController extends AbstractHeaderFooterController{
     public String popularBooksPage(Model model) {
         model.addAttribute("booksList", bookService.getPageOfPopularBooks(0, 20).getContent());
         return "books/popular";
+    }
+
+    @GetMapping("/books/viewed")
+    public String viewedBooksPage(Model model){
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user != null){
+            model.addAttribute("booksList", bookViewedService.getPageOfViewedBooks(user.getId(), 0, 20));
+        }
+        return "books/viewed";
     }
 
     @GetMapping("/authors")
