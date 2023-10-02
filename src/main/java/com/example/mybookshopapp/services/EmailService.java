@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,17 +13,13 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EmailService {
 
     @Value("${appEmail.email}")
     private String SENDER_EMAIL;
 
     private final JavaMailSender javaMailSender;
-
-    @Autowired
-    public EmailService(JavaMailSender javaMailSender){
-        this.javaMailSender = javaMailSender;
-    }
 
     public void sendEmailMessage(String receiveEmail, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();

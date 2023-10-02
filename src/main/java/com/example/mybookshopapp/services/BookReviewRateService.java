@@ -3,19 +3,16 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.BookReviewLikeEntity;
 import com.example.mybookshopapp.data.BookReviewLikeIdEntity;
 import com.example.mybookshopapp.repositories.BookReviewRateRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookReviewRateService {
     private final BookReviewRateRepository bookReviewRateRepository;
-
-    @Autowired
-    public BookReviewRateService(BookReviewRateRepository bookReviewRateRepository) {
-        this.bookReviewRateRepository = bookReviewRateRepository;
-    }
 
     public void rateReview(Integer reviewId, Integer userId, Integer value) {
         BookReviewLikeIdEntity reviewLikeId = new BookReviewLikeIdEntity();

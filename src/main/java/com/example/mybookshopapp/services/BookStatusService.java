@@ -8,6 +8,7 @@ import com.example.mybookshopapp.dto.BookCookieStoreDto;
 import com.example.mybookshopapp.repositories.Book2UserRepository;
 import com.example.mybookshopapp.repositories.Book2UserTypeRepository;
 import jakarta.servlet.http.Cookie;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookStatusService {
 
     private final Book2UserRepository book2UserRepository;
     private final Book2UserTypeRepository book2UserTypeRepository;
-
-    @Autowired
-    public BookStatusService(Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository) {
-        this.book2UserRepository = book2UserRepository;
-        this.book2UserTypeRepository = book2UserTypeRepository;
-    }
 
     public BookCookieStoreDto changeStatus(String status, List<String> cartBooks, List<String> postponedBooks, List<String> bookIds) {
         switch (status) {

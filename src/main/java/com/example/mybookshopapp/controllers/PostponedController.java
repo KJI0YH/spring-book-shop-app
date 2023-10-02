@@ -6,6 +6,7 @@ import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +22,11 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/postponed")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PostponedController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
-
-    @Autowired
-    public PostponedController(BookService bookService, BookstoreUserRegister userRegister) {
-        this.bookService = bookService;
-        this.userRegister = userRegister;
-    }
 
     @ModelAttribute(name = "bookKept")
     public List<BookEntity> bookKept() {

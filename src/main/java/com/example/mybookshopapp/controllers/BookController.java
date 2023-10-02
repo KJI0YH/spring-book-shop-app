@@ -1,11 +1,11 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
-import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.ResourceStorage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -21,20 +21,13 @@ import java.nio.file.Path;
 
 @Controller
 @RequestMapping("/books")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
     private final BookstoreUserRegister userRegister;
-
-    @Autowired
-    public BookController(BookService bookService, ResourceStorage storage, BookRepository bookRepository, BookstoreUserRegister userRegister) {
-        this.bookService = bookService;
-        this.storage = storage;
-        this.bookRepository = bookRepository;
-        this.userRegister = userRegister;
-    }
 
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){

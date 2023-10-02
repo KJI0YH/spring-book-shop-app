@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.Book2UserTypeEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.repositories.Book2UserTypeRepository;
 import com.example.mybookshopapp.repositories.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,16 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookService {
 
     private final BookRepository bookRepository;
     private final Book2UserTypeRepository book2UserTypeRepository;
-
-    @Autowired
-    public BookService(BookRepository bookRepository, Book2UserTypeRepository book2UserTypeRepository) {
-        this.bookRepository = bookRepository;
-        this.book2UserTypeRepository = book2UserTypeRepository;
-    }
 
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);

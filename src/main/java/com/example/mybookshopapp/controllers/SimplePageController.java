@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,21 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.LocalDate;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SimplePageController extends AbstractHeaderFooterController{
     private final BookstoreUserRegister userRegister;
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
     private final TagService tagService;
-
-    @Autowired
-    public SimplePageController(BookstoreUserRegister userRegister, BookService bookService, AuthorService authorService, GenreService genreService, TagService tagService) {
-        this.userRegister = userRegister;
-        this.bookService = bookService;
-        this.authorService = authorService;
-        this.genreService = genreService;
-        this.tagService = tagService;
-    }
 
     @GetMapping("/about")
     public String aboutPage() {
