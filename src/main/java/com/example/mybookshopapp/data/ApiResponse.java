@@ -14,7 +14,7 @@ public class ApiResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timeStamp;
     private Boolean result;
-    private String error;
+    private String message;
 
 
     public ApiResponse() {
@@ -27,10 +27,10 @@ public class ApiResponse {
         this.result = result;
     }
 
-    public ApiResponse(HttpStatus status, Boolean result, String error) {
+    public ApiResponse(HttpStatus status, Boolean result, String message) {
         this();
         this.status = status;
         this.result = result;
-        this.error = error;
+        this.message = message;
     }
 }
