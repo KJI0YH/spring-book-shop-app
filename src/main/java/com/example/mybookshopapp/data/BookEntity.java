@@ -92,4 +92,9 @@ public class BookEntity {
     public Long getRateCount(Integer rateValue) {
         return rateList.stream().filter(rate -> rate.getRate().equals(rateValue)).count();
     }
+
+    public Integer getRate(){
+        if (rateList.isEmpty()) return 0;
+        return Math.round(rateList.stream().mapToInt(BookRateEntity::getRate).sum() / (float)rateList.size());
+    }
 }
