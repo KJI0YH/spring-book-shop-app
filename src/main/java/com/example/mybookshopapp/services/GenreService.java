@@ -2,6 +2,7 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.GenreEntity;
 import com.example.mybookshopapp.repositories.GenreRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GenreService {
 
     private final GenreRepository genreRepository;
-
-    @Autowired
-    public GenreService(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
 
     public List<GenreEntity> getAllRootGenres() {
         return genreRepository.findGenreEntityByParentIdIsNull();

@@ -4,33 +4,27 @@ import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.TagEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.dto.TagDto;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.TagService;
 import com.example.mybookshopapp.services.TagsPopularityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MainPageController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final TagService tagService;
     private final TagsPopularityService tagsPopularityService;
-    private final BookstoreUserRegister userRegister;
-
-    @Autowired
-    public MainPageController(BookService bookService, TagService tagService, TagsPopularityService tagsPopularityService, BookstoreUserRegister userRegister) {
-        this.bookService = bookService;
-        this.tagService = tagService;
-        this.tagsPopularityService = tagsPopularityService;
-        this.userRegister = userRegister;
-    }
 
     @ModelAttribute("recommendedBooks")
     public List<BookEntity> recommendedBooks() {

@@ -2,35 +2,30 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CartController extends AbstractHeaderFooterController{
 
     private final BookService bookService;
     private final CartService cartService;
     private final BookstoreUserRegister userRegister;
-
-    @Autowired
-    public CartController(BookService bookService, CartService cartService, BookstoreUserRegister userRegister) {
-        this.bookService = bookService;
-        this.cartService = cartService;
-        this.userRegister = userRegister;
-    }
 
     @ModelAttribute(name = "bookCart")
     public List<BookEntity> bookCart() {

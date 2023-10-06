@@ -6,6 +6,7 @@ import com.example.mybookshopapp.services.PhoneService;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,17 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CodeService {
     private final CodeRepository codeRepository;
     private final EmailService emailService;
     private final PhoneService phoneService;
-
-    @Autowired
-    public CodeService(CodeRepository codeRepository, EmailService emailService, PhoneService phoneService) {
-        this.codeRepository = codeRepository;
-        this.emailService = emailService;
-        this.phoneService = phoneService;
-    }
 
     public String sendCodeToPhone(String phone){
         String generatedCode = generateCode();

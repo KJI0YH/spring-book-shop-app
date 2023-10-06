@@ -15,6 +15,7 @@ import com.example.mybookshopapp.security.jwt.JWTUtil;
 import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthUserController extends AbstractHeaderFooterController {
 
     private final BookstoreUserRegister userRegister;
@@ -38,19 +40,6 @@ public class AuthUserController extends AbstractHeaderFooterController {
     private final JWTUtil jwtUtil;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final ContactChangeConfirmationService confirmationService;
-
-    @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, BookService bookService, CodeService codeService, TransactionService transactionService, EmailService emailService, PhoneService phoneService, JWTUtil jwtUtil, BookstoreUserDetailsService bookstoreUserDetailsService, ContactChangeConfirmationService confirmationService) {
-        this.userRegister = userRegister;
-        this.bookService = bookService;
-        this.codeService = codeService;
-        this.transactionService = transactionService;
-        this.emailService = emailService;
-        this.phoneService = phoneService;
-        this.jwtUtil = jwtUtil;
-        this.bookstoreUserDetailsService = bookstoreUserDetailsService;
-        this.confirmationService = confirmationService;
-    }
 
     @GetMapping("/signin")
     public String handleSignin() {

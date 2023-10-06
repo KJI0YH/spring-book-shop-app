@@ -5,6 +5,7 @@ import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BalanceTransactionRepository;
 import com.example.mybookshopapp.security.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,15 +16,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TransactionService {
     private final BalanceTransactionRepository transactionRepository;
     private final UserRepository userRepository;
-
-    @Autowired
-    public TransactionService(BalanceTransactionRepository transactionRepository, UserRepository userRepository) {
-        this.transactionRepository = transactionRepository;
-        this.userRepository = userRepository;
-    }
 
     public Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);

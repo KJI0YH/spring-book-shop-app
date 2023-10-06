@@ -14,38 +14,30 @@ import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.BookStatusService;
 import com.example.mybookshopapp.services.PaymentService;
 import com.example.mybookshopapp.services.TransactionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentController {
     private final PaymentService paymentService;
     private final BookService bookService;
     private final BookStatusService bookStatusService;
     private final TransactionService transactionService;
     private final BookstoreUserRegister userRegister;
-    private final UserRepository userRepository;
-
-    @Autowired
-    public PaymentController(PaymentService paymentService, BookstoreUserRegister userRegister, BookService bookService, BookService bookService1, BookStatusService bookStatusService, TransactionService transactionService, UserRepository userRepository){
-        this.paymentService = paymentService;
-        this.userRegister = userRegister;
-        this.bookService = bookService1;
-        this.bookStatusService = bookStatusService;
-        this.transactionService = transactionService;
-        this.userRepository = userRepository;
-    }
 
     @PostMapping("/payment")
     public ResponseEntity<?> handlePayment(@RequestBody PaymentDto payment) throws URISyntaxException, IOException, InterruptedException {

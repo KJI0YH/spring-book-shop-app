@@ -2,6 +2,7 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.AuthorEntity;
 import com.example.mybookshopapp.repositories.AuthorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,10 @@ import java.util.Map;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
-
-    @Autowired
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
 
     public List<AuthorEntity> getAuthorsData() {
         return authorRepository.findAll();

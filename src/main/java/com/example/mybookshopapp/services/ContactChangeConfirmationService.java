@@ -4,17 +4,15 @@ import com.example.mybookshopapp.data.ContactChangeConfirmationEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.ContactConfirmationException;
 import com.example.mybookshopapp.repositories.ContactChangeConfirmationRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ContactChangeConfirmationService {
-    private final ContactChangeConfirmationRepository contactChangeConfirmationRepository;
 
-    @Autowired
-    public ContactChangeConfirmationService(ContactChangeConfirmationRepository contactChangeConfirmationRepository) {
-        this.contactChangeConfirmationRepository = contactChangeConfirmationRepository;
-    }
+    private final ContactChangeConfirmationRepository contactChangeConfirmationRepository;
 
     public ContactChangeConfirmationEntity createConfirmation(String key, UserEntity user, String contact){
         ContactChangeConfirmationEntity confirmation = new ContactChangeConfirmationEntity();

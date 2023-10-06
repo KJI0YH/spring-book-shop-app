@@ -1,18 +1,15 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.TagEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TagsPopularityService {
 
     private final TagService tagService;
-
-    @Autowired
-    public TagsPopularityService(TagService tagService) {
-        this.tagService = tagService;
-    }
 
     public String getPopularityTag(TagEntity tagEntity) {
         Integer max = tagService.getMaxPopularityTagCount();

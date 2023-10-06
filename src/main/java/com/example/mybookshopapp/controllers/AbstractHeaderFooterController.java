@@ -5,8 +5,8 @@ import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -20,7 +20,6 @@ public abstract class AbstractHeaderFooterController {
 
     @Autowired
     private CartService cartService;
-
 
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto(){
@@ -70,5 +69,10 @@ public abstract class AbstractHeaderFooterController {
                     bookService.getCountOfBooksByUserStatus(user.getId(), "ARCHIVED");
         }
         return 0L;
+    }
+
+    @ModelAttribute("requestURI")
+    public String request(HttpServletRequest request){
+        return request.getRequestURI();
     }
 }

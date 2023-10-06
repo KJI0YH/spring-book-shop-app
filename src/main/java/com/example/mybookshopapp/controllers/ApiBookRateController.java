@@ -10,6 +10,7 @@ import com.example.mybookshopapp.services.BookRateService;
 import com.example.mybookshopapp.services.BookReviewRateService;
 import com.example.mybookshopapp.services.BookReviewService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +18,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApiBookRateController {
 
     private final BookRateService bookRateService;
     private final BookReviewService bookReviewService;
     private final BookReviewRateService bookReviewRateService;
     private final BookstoreUserRegister userRegister;
-
-    @Autowired
-    public ApiBookRateController(BookRateService bookRateService, BookReviewService bookReviewService, BookReviewRateService bookReviewRateService, BookstoreUserRegister userRegister) {
-        this.bookRateService = bookRateService;
-        this.bookReviewService = bookReviewService;
-        this.bookReviewRateService = bookReviewRateService;
-        this.userRegister = userRegister;
-    }
 
     @PostMapping("/rateBook")
     @ResponseBody

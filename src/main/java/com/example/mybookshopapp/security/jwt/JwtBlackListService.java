@@ -1,17 +1,14 @@
 package com.example.mybookshopapp.security.jwt;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JwtBlackListService {
 
     private final JwtRepository jwtRepository;
-
-    @Autowired
-    public JwtBlackListService(JwtRepository jwtRepository) {
-        this.jwtRepository = jwtRepository;
-    }
 
     public void AddJwtToBlackList(JWTEntity jwtEntity){
         jwtRepository.save(jwtEntity);

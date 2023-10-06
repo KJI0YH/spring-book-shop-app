@@ -10,6 +10,7 @@ import com.example.mybookshopapp.repositories.PaymentStatusRepository;
 import com.example.mybookshopapp.security.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentService {
 
     @Value("${yookassa.SECRET_KEY}")
@@ -35,19 +37,12 @@ public class PaymentService {
     @Value("${yookassa.shopId}")
     private String shopId;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final String apiUrl = "https://api.yookassa.ru/v3/payments";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final PaymentStatusRepository paymentStatusRepository;
     private final BalanceTransactionRepository balanceTransactionRepository;
     private final UserRepository userRepository;
-
-    @Autowired
-    public PaymentService(PaymentStatusRepository paymentStatusRepository, BalanceTransactionRepository balanceTransactionRepository, UserRepository userRepository) {
-        this.paymentStatusRepository = paymentStatusRepository;
-        this.balanceTransactionRepository = balanceTransactionRepository;
-        this.userRepository = userRepository;
-    }
 
     public String createPayment(Integer amount, UserEntity user) throws URISyntaxException, IOException, InterruptedException {
         // TODO create idempotence key
