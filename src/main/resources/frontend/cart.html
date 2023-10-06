@@ -53,16 +53,17 @@ p.error-browser
                     <div class="Cart-block Cart-block_row">
                         <div class="Cart-block Cart-block_pict">
                             <a class="Cart-pict" href="#" th:href="${'/books/' + book.slug}">
-                                <img alt="card.jpg" class="Cart-img" src="/assets/img/content/main/card.jpg"
-                                     th:src="${book.image}"/>
+                                <img alt="card.jpg" class="Cart-img" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
                             </a>
                         </div>
                         <div class="Cart-block Cart-block_row">
                             <div class="Cart-block Cart-block_info">
                                 <div class="Cart-author">
-                                    <a href="#" th:each="author: ${book.authorList}"
-                                       th:href="${'/authors/' + author.slug}" th:text="${author.toString()}">Борис
-                                        Васильевич Бедный</a>
+                                    <th:block th:each="author: ${book.authorList}">
+                                        <a href="#" th:href="${'/authors/' + author.slug}"
+                                           th:text="${author.toString()}">Борис Васильевич Бедный</a>
+                                        <br>
+                                    </th:block>
                                 </div>
                                 <div class="Cart-title"><a href="#" th:href="${'/books/' + book.slug}"
                                                            th:text="${book.title}">Жизнь</a>
