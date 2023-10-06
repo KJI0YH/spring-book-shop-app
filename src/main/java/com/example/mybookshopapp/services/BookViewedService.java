@@ -20,6 +20,7 @@ import java.util.List;
 public class BookViewedService {
 
     private final Book2UserViewedRepository book2UserViewedRepository;
+    private final BookService bookService;
 
     public List<BookEntity> getPageOfViewedBooks(Integer userId, Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
@@ -28,7 +29,7 @@ public class BookViewedService {
         for( Book2UserViewedEntity book2UserViewed : result){
             bookList.add(book2UserViewed.getBook());
         }
-        return bookList;
+        return bookService.setBookStatus(bookList);
     }
 
     public Book2UserViewedEntity setViewedBook(Integer userId, Integer bookId){

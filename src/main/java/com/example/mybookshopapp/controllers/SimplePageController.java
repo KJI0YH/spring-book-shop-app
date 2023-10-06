@@ -48,13 +48,13 @@ public class SimplePageController extends AbstractHeaderFooterController{
 
     @GetMapping("/books/recent")
     public String recentBooksPage(Model model) {
-        model.addAttribute("booksList", bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20));
         return "books/recent";
     }
 
     @GetMapping("/books/popular")
     public String popularBooksPage(Model model) {
-        model.addAttribute("booksList", bookService.getPageOfPopularBooks(0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfPopularBooks(0, 20));
         return "books/popular";
     }
 
@@ -83,7 +83,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     @GetMapping("/books/author/{authorSlug}")
     public String authorBooksPage(@PathVariable("authorSlug") String authorSlug,
                                   Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByAuthorSlug(authorSlug, 0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfBooksByAuthorSlug(authorSlug, 0, 20));
         model.addAttribute("author", authorService.getAuthorBySlug(authorSlug));
         return "books/author";
     }
@@ -97,7 +97,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     @GetMapping("/genres/{genreSlug}")
     public String genrePage(@PathVariable("genreSlug") String genreSlug,
                             Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20));
         model.addAttribute("genre", genreService.getGenreBySlug(genreSlug));
         model.addAttribute("breadcrumbs", genreService.getGenresBreadcrumbs(genreSlug));
         return "genres/slug";
@@ -106,7 +106,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     @GetMapping("/tags/{tagSlug}")
     public String tagPage(@PathVariable("tagSlug") String tagSlug,
                           Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20));
         model.addAttribute("tag", tagService.getTagBySlug(tagSlug));
         return "tags/index";
     }
