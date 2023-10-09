@@ -104,10 +104,10 @@ public class PaymentController {
         }
         List<BalanceTransactionEntity> transactions;
 
-        if (sort.equals("desc")){
-            transactions = transactionService.getTransactionsByUserDesc(user, offset, limit).getContent();
-        } else {
+        if (sort.equals("asc")){
             transactions = transactionService.getTransactionsByUserAsc(user, offset, limit).getContent();
+        } else {
+            transactions = transactionService.getTransactionsByUserDesc(user, offset, limit).getContent();
         }
 
         return ResponseEntity.ok(new TransactionPageDto(transactions));
