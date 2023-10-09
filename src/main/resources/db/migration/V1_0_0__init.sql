@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS message
 (
     id SERIAL NOT NULL,
     time TIMESTAMP NOT NULL,
-    user_id INTEGER NOT NULL,
+    user_id INTEGER,
     email VARCHAR(255),
     name VARCHAR(255),
     subject VARCHAR(255) NOT NULL,

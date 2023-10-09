@@ -124,6 +124,7 @@ p.error-browser
           <div class="Tabs-block" id="transactions">
             <div class="Transactions">
               <div class="tableWrap">
+                <a class="Transactions-time">Revert</a>
                 <table class="table table_noMargin">
                   <thead>
                   <tr>
@@ -135,7 +136,7 @@ p.error-browser
                     </th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="Transactions-body">
                   <tr th:each="transaction : ${transactions}">
                     <td th:text="${transaction.getTimeValue()}">15 мая 2017 10:03</td>
                     <td>
@@ -152,7 +153,7 @@ p.error-browser
                   </tbody>
                 </table>
               </div>
-              <div class="Transactions-footer Transactions-footer_center"><a class="btn btn_primary Transactions-get" href="#" data-transactionoffset="0" data-transactionlimit="5" data-transactionsort="asc">Показать еще</a>
+              <div class="Transactions-footer Transactions-footer_center"><a class="btn btn_primary Transactions-get" href="#" data-transactionoffset="0" data-transactionlimit="50" data-transactionsort="desc">Показать еще</a>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ public class ApiSearchController {
     public BooksPageDto getNextSearchPage(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto,
                                           @RequestParam("offset") Integer offset,
                                           @RequestParam("limit") Integer limit) {
-        return new BooksPageDto(bookService.getPageOfBooksByTitle(searchWordDto.getExample(), offset, limit).getContent());
+        return new BooksPageDto(bookService.getPageOfBooksByTitle(searchWordDto.getExample(), offset, limit));
     }
 
 }

@@ -28,17 +28,17 @@ public class MainPageController extends AbstractHeaderFooterController {
 
     @ModelAttribute("recommendedBooks")
     public List<BookEntity> recommendedBooks() {
-        return bookService.getPageOfRecommendedBooks(0, 6).getContent();
+        return bookService.getPageOfRecommendedBooks(0, 6);
     }
 
     @ModelAttribute("recentBooks")
     public List<BookEntity> recentBooks() {
-        return bookService.getPageOfRecentBooks(null, null, 0, 6).getContent();
+        return bookService.getPageOfRecentBooks(null, null, 0, 6);
     }
 
     @ModelAttribute("popularBooks")
     public List<BookEntity> popularBooks() {
-        return bookService.getPageOfPopularBooks(0, 6).getContent();
+        return bookService.getPageOfPopularBooks(0, 6);
     }
 
     @ModelAttribute("searchResults")
@@ -64,7 +64,7 @@ public class MainPageController extends AbstractHeaderFooterController {
     @GetMapping(value = {"/search", "/search/{searchWord}"})
     public String getSearchResults(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto, Model model) {
         model.addAttribute("searchWordDto", searchWordDto);
-        model.addAttribute("searchResults", bookService.getPageOfBooksByTitle(searchWordDto.getExample(), 0, 20).getContent());
+        model.addAttribute("searchResults", bookService.getPageOfBooksByTitle(searchWordDto.getExample(), 0, 20));
         return "search/index";
     }
 }

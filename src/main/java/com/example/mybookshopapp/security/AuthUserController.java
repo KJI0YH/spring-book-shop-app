@@ -126,7 +126,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
     public String handleProfile(Model model) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user != null){
-            model.addAttribute("transactions", transactionService.getTransactionsByUserAsc(user, 0, 5));
+            model.addAttribute("transactions", transactionService.getTransactionsByUserDesc(user, 0, 50));
         }
         return "profile";
     }
