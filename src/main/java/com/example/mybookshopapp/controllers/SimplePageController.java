@@ -25,6 +25,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     private final GenreService genreService;
     private final TagService tagService;
     private final BookViewedService bookViewedService;
+    private final DocumentService documentService;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -37,8 +38,16 @@ public class SimplePageController extends AbstractHeaderFooterController{
     }
 
     @GetMapping("/documents")
-    public String documentPage() {
+    public String documentsPage(Model model) {
+        model.addAttribute("documents", documentService.getDocuments());
         return "documents/index";
+    }
+
+    @GetMapping("/documents/{documentSlug}")
+    public String documentPage(@PathVariable("documentSlug") String documentSlug,
+                               Model model){
+        model.addAttribute("document", documentService.getDocumentBySlug(documentSlug));
+        return "documents/slug";
     }
 
     @GetMapping("/faq")

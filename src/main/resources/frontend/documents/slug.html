@@ -9,7 +9,7 @@
 <!--[if IE 9]>
 <html class="ie9" lang="ru" xmlns:th="http://www.thymeleaf.org">
 <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="ru"> <!--<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
   <title>Тут название страницы написать</title>
   <meta name="description" content="Описание страницы">
@@ -30,6 +30,7 @@
   <script defer src="/assets/js/scripts.min.js?v=46559719"></script>
 </head>
 <body class="Site">
+<div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
   <!--if lt IE 8
   p.error-browser
       | Ваш браузер&nbsp;
@@ -50,21 +51,23 @@
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html">Главная</a>
+          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}">Главная</a>
           </li>
-          <li class="breadcrumbs-item"><a href="/documents/index.html">Документы</a>
+          <li class="breadcrumbs-item"><a href="/documents/index.html" th:href="@{'/documents'}" >Документы</a>
           </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span>Политика обработки персональных данных</span>
+          <li class="breadcrumbs-item breadcrumbs-item_current">
+            <span th:text="${document.title}">Политика обработки персональных данных</span>
           </li>
         </ul>
-        <h1 class="Middle-title">Политика обработки персональных данных
+        <h1 class="Middle-title" th:title="${document.title}">Политика обработки персональных данных
         </h1>
         <article class="Article">
           <div class="sdf">
           </div>
-          <div class="pict pict_left"><img src="/assets/img/content/documents/2.jpg" alt="2.jpg"/>
+          <div class="pict pict_left">
+            <img src="/assets/img/content/documents/1.jpg" alt="1.jpg"/>
           </div>
-          <div>
+          <div th:utext="${document.text}">
             <h2>1. Что регулирует настоящая политика конфиденциальности
             </h2>
             <p>Настоящая политика конфиденциальности (далее — Политика) действует в отношении всей информации, включая персональные данные в понимании применимого законодательства (далее — «Персональная информация»), которую ООО «ЯНДЕКС» и/или его аффилированные лица, в том числе входящие в одну группу с ООО «ЯНДЕКС» (далее — «Яндекс»), могут получить о Вас в процессе использования Вами любых сайтов, программ, продуктов и/или сервисов Яндекса (далее вместе — «Сервисы»), информацию о которых Вы можете найти на сайтах yandex.ru, yandex.com, yandex.ua, yandex.by, yandex.kz, yandex.com.tr, yandex.co.il и других принадлежащих Яндексу сайтах (далее вместе — «Сайты»), а также в ходе исполнения Яндексом / его аффилированными лицами любых соглашений и договоров, заключенных с Вами в связи с использованием Вами Сервисов. Яндекс может также получать Персональную информацию от своих партнеров (далее — «Партнеры»), сайты, программы, продукты или сервисы которых Вы используете (например, от рекламодателей Яндекса или службами такси). В таких случаях передача Персональной информации возможна только в случаях, установленных применимым законодательством, и осуществляется на основании специальных договоров между Яндексом и каждым из Партнеров.
