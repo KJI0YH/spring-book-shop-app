@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.dto.MessageDto;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.*;
@@ -34,7 +35,8 @@ public class SimplePageController extends AbstractHeaderFooterController{
     }
 
     @GetMapping("/contacts")
-    public String contactsPage() {
+    public String contactsPage(Model model) {
+        model.addAttribute("message", new MessageDto());
         return "contacts";
     }
 
