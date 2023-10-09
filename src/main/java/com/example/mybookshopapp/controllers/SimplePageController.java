@@ -26,6 +26,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
     private final TagService tagService;
     private final BookViewedService bookViewedService;
     private final DocumentService documentService;
+    private final FaqService faqService;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -51,7 +52,8 @@ public class SimplePageController extends AbstractHeaderFooterController{
     }
 
     @GetMapping("/faq")
-    public String faqPage() {
+    public String faqPage(Model model) {
+        model.addAttribute("faqs", faqService.getFaqs());
         return "faq";
     }
 
