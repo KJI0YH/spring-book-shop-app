@@ -17,6 +17,16 @@ public class BookReviewEntity implements Comparable<BookReviewEntity>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDateTime time;
+
+    public String getTime(){
+        return String.valueOf(String.format("%02d", time.getDayOfMonth())) + '.' +
+                String.format("%02d", time.getMonthValue()) + '.' +
+                time.getYear() + ' ' +
+                String.format("%02d", time.getHour()) + ':' +
+                String.format("%02d", time.getMinute()) + ':' +
+                String.format("%02d", time.getSecond());
+    }
+
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
