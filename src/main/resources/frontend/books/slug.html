@@ -243,6 +243,7 @@ p.error-browser
                                 <div>
                                     <strong class="Comment-title">
                                         <span th:text="${review.user.name}">Александр Кузнецов</span>
+                                        <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(${review.user.getRating()})}"></span>
                                     </strong>
                                     <span class="Comment-date" th:text="${review.time}">17.04.2020 16:40</span>
                                 </div>

@@ -49,6 +49,11 @@ public class BookReviewEntity implements Comparable<BookReviewEntity>{
 
     @Override
     public int compareTo(BookReviewEntity o) {
-        return this.getPopularityValue().compareTo(o.getPopularityValue());
+        if (getPopularityValue() > o.getPopularityValue()){
+            return -1;
+        } else if (getPopularityValue() < o.getPopularityValue()){
+            return 1;
+        }
+        return 0;
     }
 }

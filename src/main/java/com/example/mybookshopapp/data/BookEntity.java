@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -116,6 +117,11 @@ public class BookEntity {
     @JsonIgnore
     @ToString.Exclude
     private List<BookReviewEntity> reviewList;
+
+    public List<BookReviewEntity> getReviewList(){
+        Collections.sort(reviewList);
+        return reviewList;
+    }
 
     @OneToMany(mappedBy = "book")
     @JsonIgnore

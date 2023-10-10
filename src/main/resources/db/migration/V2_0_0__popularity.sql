@@ -31,21 +31,21 @@ CREATE OR REPLACE FUNCTION update_popularity_delete()
 $$
 BEGIN
     CASE
-        WHEN NEW.type_id IN(3, 4) THEN UPDATE book
+        WHEN OLD.type_id IN(3, 4) THEN UPDATE book
                                   SET popularity = popularity - 10
-                                  WHERE id = NEW.book_id;
+                                  WHERE id = OLD.book_id;
 
-        WHEN NEW.type_id = 2 THEN UPDATE book
+        WHEN OLD.type_id = 2 THEN UPDATE book
                                   SET popularity = popularity - 7
-                                  WHERE id = NEW.book_id;
+                                  WHERE id = OLD.book_id;
 
-        WHEN NEW.type_id = 1 THEN UPDATE book
+        WHEN OLD.type_id = 1 THEN UPDATE book
                                   SET popularity = popularity - 4
-                                  WHERE id = NEW.book_id;
+                                  WHERE id = OLD.book_id;
         ELSE
         END CASE;
 
-    RETURN NEW;
+    RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 

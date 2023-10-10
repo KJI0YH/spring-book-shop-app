@@ -19,9 +19,9 @@ CREATE OR REPLACE FUNCTION update_review_rating_delete()
 $$
 BEGIN
     UPDATE book_review
-    SET rating = rating - NEW.value
-    WHERE id = NEW.review_id;
-    RETURN NEW;
+    SET rating = rating - OLD.value
+    WHERE id = OLD.review_id;
+    RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 

@@ -28,6 +28,13 @@ public class UserEntity {
     private String email;
     private String phone;
 
+    public Integer getRating(){
+        long likesCount = reviewList.stream().mapToLong(BookReviewEntity::getLikesCount).sum();
+        long dislikesCount = reviewList.stream().mapToLong(BookReviewEntity::getDislikesCount).sum();
+        if (likesCount == 0 && dislikesCount == 0) return 0;
+        return Math.toIntExact(Math.round((double) likesCount / (likesCount + dislikesCount) * 5.0));
+    }
+
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore
@@ -38,8 +45,7 @@ public class UserEntity {
     @ToString.Exclude
     private List<Book2UserEntity> book2userList;
 
-    @OneToMany
-    @JoinColumn(name = "review_id")
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore
     private List<BookReviewEntity> reviewList;
