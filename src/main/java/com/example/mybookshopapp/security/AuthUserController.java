@@ -1,7 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
-import com.example.mybookshopapp.data.ApiResponse;
+import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.data.ContactChangeConfirmationEntity;
 import com.example.mybookshopapp.data.SmsCodeEntity;
 import com.example.mybookshopapp.data.UserEntity;
@@ -185,7 +185,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
             emailService.sendEmailMessage(newEmail, "Bookstore email change confirmation", "Click on the link to confirm your email: " + link);
         }
 
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @GetMapping("/profile/change/email")
@@ -228,7 +228,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
             phoneService.sendPhoneMessage(newPhone, "Follow the link to confirm your phone change: " + link);
         }
 
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+        return ResponseEntity.ok(new ApiResponse( true));
     }
 
     @GetMapping("/profile/change/phone")

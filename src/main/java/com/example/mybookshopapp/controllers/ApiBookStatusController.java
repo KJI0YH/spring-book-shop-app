@@ -1,7 +1,6 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.data.ApiResponse;
-import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.BookCookieStoreDto;
 import com.example.mybookshopapp.dto.BookStatusDto;
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/api")
@@ -43,7 +39,7 @@ public class ApiBookStatusController {
             response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getCartContents(), "cartContents"));
             response.addCookie(bookStatusService.createCookieFromBookIds(bookCookieStore.getPostponedContents(), "postponedContents"));
 
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+            return ResponseEntity.ok(new ApiResponse( true));
 
             // Authorized user, store data in database
         } else {
@@ -54,7 +50,7 @@ public class ApiBookStatusController {
                     //
                 }
             }
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, true));
+            return ResponseEntity.ok(new ApiResponse(true));
         }
     }
 }

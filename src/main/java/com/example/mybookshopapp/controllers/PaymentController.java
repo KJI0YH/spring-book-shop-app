@@ -1,6 +1,6 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.data.ApiResponse;
+import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.data.BalanceTransactionEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
@@ -9,7 +9,6 @@ import com.example.mybookshopapp.dto.TransactionPageDto;
 import com.example.mybookshopapp.errors.PaymentDoesNotExistsException;
 import com.example.mybookshopapp.errors.PaymentStatusException;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
-import com.example.mybookshopapp.security.UserRepository;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.BookStatusService;
 import com.example.mybookshopapp.services.PaymentService;
@@ -39,23 +38,23 @@ public class PaymentController {
     private final TransactionService transactionService;
     private final BookstoreUserRegister userRegister;
 
-    @PostMapping("/payment")
-    public ResponseEntity<?> handlePayment(@RequestBody PaymentDto payment) throws URISyntaxException, IOException, InterruptedException {
+    @PostMapping("/api/payment")
+    public ResponseEntity<ApiResponse> handlePayment(@RequestBody PaymentDto payment) throws URISyntaxException, IOException, InterruptedException {
 
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorized");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "User not authorized"));
         }
 
         int sum = 0;
         try {
             sum = paymentService.SumStringToLong(payment.getSum());
         } catch (NumberFormatException exception){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid sum format");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(false, "Invalid sum format"));
         }
 
         String paymentUrl = paymentService.createPayment(sum, user);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.FOUND, true, paymentUrl), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(true, paymentUrl));
     }
 
     @GetMapping("/payment/confirm")
