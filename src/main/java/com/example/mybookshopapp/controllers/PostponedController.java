@@ -2,10 +2,9 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.CookieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 public class PostponedController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
+    private final CookieService cookieService;
     private final BookstoreUserRegister userRegister;
 
     @ModelAttribute(name = "bookKept")
@@ -34,48 +34,32 @@ public class PostponedController extends AbstractHeaderFooterController {
     }
 
     @ModelAttribute(name = "bookKeptString")
-    public String bookKeptString(){
+    public String bookKeptString() {
         return "";
     }
 
     @GetMapping
     public String postponedPage(@CookieValue(value = "postponedContents", required = false) String postponedContents,
-                                Model model){
+                                Model model) {
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        List<BookEntity> booksInPostponed;
 
         // Authorized user
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
-
-            // Get postponed books from database
-            List<BookEntity> booksInPostponed = bookService.getBooksByUserStatus(user.getId(), "KEPT");
-
-            if (booksInPostponed.size() > 0){
-                model.addAttribute("isPostponedEmpty", false);
-            } else {
-                model.addAttribute("isPostponedEmpty", true);
-            }
-            model.addAttribute("bookKept", booksInPostponed);
-            model.addAttribute("bookKeptString", booksInPostponed.stream().map(book -> book.getId().toString()).collect(Collectors.joining(",")));
-            return "postponed";
+        if (user != null) {
+            booksInPostponed = bookService.getBooksByUserStatus(user.getId(), "KEPT");
         }
 
         // Unauthorized user
-        if (postponedContents == null || postponedContents.equals("")) {
-            model.addAttribute("isPostponedEmpty", true);
-        } else {
-            model.addAttribute("isPostponedEmpty", false);
-
-            // Get postponed books from cookie
-            postponedContents = postponedContents.startsWith("/") ? postponedContents.substring(1) : postponedContents;
-            postponedContents = postponedContents.endsWith("/") ? postponedContents.substring(0, postponedContents.length() - 1) : postponedContents;
-            String[] postponedItems = postponedContents.split("/");
-            Integer[] cookieIds = Arrays.stream(postponedItems)
-                    .map(Integer::valueOf)
-                    .toArray(Integer[]::new);
-            List<BookEntity> booksFromCookiesIds = bookService.getBooksByIds(cookieIds);
-            model.addAttribute("bookKept", booksFromCookiesIds);
-            model.addAttribute("bookKeptString", String.join(",", postponedItems));
+        else {
+            booksInPostponed = bookService.getBooksByIds(cookieService.getIntegerIds(postponedContents));
         }
+
+        model.addAttribute("isPostponedEmpty", booksInPostponed.isEmpty());
+        model.addAttribute("bookKept", booksInPostponed);
+        model.addAttribute("bookKeptString", booksInPostponed.stream()
+                .map(book -> book.getId().toString())
+                .collect(Collectors.joining(",")));
+
         return "postponed";
     }
 }

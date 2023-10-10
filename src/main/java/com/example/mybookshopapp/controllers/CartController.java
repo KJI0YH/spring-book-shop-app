@@ -4,7 +4,7 @@ import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.CartService;
+import com.example.mybookshopapp.services.CookieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,16 +15,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CartController extends AbstractHeaderFooterController{
+public class CartController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
-    private final CartService cartService;
+    private final CookieService cookieService;
     private final BookstoreUserRegister userRegister;
 
     @ModelAttribute(name = "bookCart")
@@ -33,46 +32,36 @@ public class CartController extends AbstractHeaderFooterController{
     }
 
     @ModelAttribute("cartPrice")
-    public Long cartPrice(){
+    public Long cartPrice() {
         return 0L;
     }
 
     @ModelAttribute("cartPriceOld")
-    public Long cartPriceOld(){
+    public Long cartPriceOld() {
         return 0L;
     }
 
     @GetMapping
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
                                     Model model) {
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        List<BookEntity> booksInCart;
 
         // Authorized user
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
-            List<BookEntity> booksInCart = bookService.getBooksByUserStatus(user.getId(), "CART");
-
-            if (booksInCart.size() > 0){
-                model.addAttribute("isCartEmpty", false);
-            } else {
-                model.addAttribute("isCartEmpty", true);
-            }
-            model.addAttribute("bookCart", booksInCart);
-            model.addAttribute("cartPrice", booksInCart.stream().mapToLong(BookEntity::getDiscountPrice).sum());
-            model.addAttribute("cartPriceOld", booksInCart.stream().mapToLong(BookEntity::getPrice).sum());
-            return "cart";
+        if (user != null) {
+            booksInCart = bookService.getBooksByUserStatus(user.getId(), "CART");
         }
 
         // Unauthorized user
-        if (cartContents == null || cartContents.equals("")) {
-            model.addAttribute("isCartEmpty", true);
-        } else {
-            model.addAttribute("isCartEmpty", false);
-            String[] cookieIds = cartService.getCookiesIds(cartContents);
-            List<BookEntity> booksFromCookiesIds = bookService.getBooksByIds(Arrays.stream(cookieIds).map(Integer::valueOf).toArray(Integer[]::new));
-            model.addAttribute("bookCart", booksFromCookiesIds);
-            model.addAttribute("cartPrice", booksFromCookiesIds.stream().mapToLong(BookEntity::getDiscountPrice).sum());
-            model.addAttribute("cartPriceOld", booksFromCookiesIds.stream().mapToLong(BookEntity::getPrice).sum());
+        else {
+            booksInCart = bookService.getBooksByIds(cookieService.getIntegerIds(cartContents));
         }
+
+        model.addAttribute("isCartEmpty", booksInCart.isEmpty());
+        model.addAttribute("bookCart", booksInCart);
+        model.addAttribute("cartPrice", booksInCart.stream().mapToLong(BookEntity::getDiscountPrice).sum());
+        model.addAttribute("cartPriceOld", booksInCart.stream().mapToLong(BookEntity::getPrice).sum());
+
         return "cart";
     }
 }

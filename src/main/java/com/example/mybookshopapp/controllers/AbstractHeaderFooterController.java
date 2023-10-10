@@ -4,7 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.CartService;
+import com.example.mybookshopapp.services.CookieService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -19,52 +19,51 @@ public abstract class AbstractHeaderFooterController {
     private BookService bookService;
 
     @Autowired
-    private CartService cartService;
+    private CookieService cookieService;
 
     @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto(){
+    public SearchWordDto searchWordDto() {
         return new SearchWordDto();
     }
 
     @ModelAttribute("curUsr")
-    public Object curUsr(){
+    public Object curUsr() {
         return userRegister.getCurrentUser();
     }
 
     @ModelAttribute("cartAmount")
     public Long cartAmount(@CookieValue(value = "cartContents", required = false) String cartContents) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null) {
 
-            // Authorized user
+        // Authorized user
+        if (user != null) {
             return bookService.getCountOfBooksByUserStatus(user.getId(), "CART");
-        } else {
 
             // Unauthorized user
-            return (long) cartService.getCookiesIds(cartContents).length;
+        } else {
+            return (long) cookieService.getStringIds(cartContents).length;
         }
     }
 
     @ModelAttribute("postponedAmount")
-    public Long postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents){
+    public Long postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
 
         // Authorized user
-        if (user != null){
+        if (user != null) {
             return bookService.getCountOfBooksByUserStatus(user.getId(), "KEPT");
-
         }
 
         // Unauthorized user
         else {
-            return (long) cartService.getCookiesIds(postponedContents).length;
+            return (long) cookieService.getStringIds(postponedContents).length;
         }
     }
 
     @ModelAttribute("myAmount")
-    public Long myAmount(){
+    public Long myAmount() {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             return bookService.getCountOfBooksByUserStatus(user.getId(), "PAID") +
                     bookService.getCountOfBooksByUserStatus(user.getId(), "ARCHIVED");
         }
@@ -72,7 +71,7 @@ public abstract class AbstractHeaderFooterController {
     }
 
     @ModelAttribute("requestURI")
-    public String request(HttpServletRequest request){
+    public String request(HttpServletRequest request) {
         return request.getRequestURI();
     }
 }
