@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.repositories;
 
 import com.example.mybookshopapp.data.BookEntity;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,8 +25,14 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     @Query(value = "select b.* from book as b join book2genre as b2g on b2g.book_id = b.id join genre as g on b2g.genre_id = g.id where g.slug = ?1 order by b.pub_date desc", nativeQuery = true)
     Page<BookEntity> findBooksByGenreSlug(String tagID, Pageable pageable);
 
+    @Query(value = "select b.* from book as b join book2genre as b2g on b2g.book_id = b.id join genre as g on b2g.genre_id = g.id where g.id = ?1 order by b.pub_date desc", nativeQuery = true)
+    Page<BookEntity> findBooksByGenreId(Integer genreId, Pageable pageable);
+
     @Query(value = "select b.* from book as b join book2author as b2a on b2a.book_id = b.id join author as a on b2a.author_id = a.id where a.slug = ?1 order by b.pub_date desc", nativeQuery = true)
     Page<BookEntity> findBooksByAuthorSlug(String authorSlug, Pageable pageable);
+
+    @Query(value = "select b.* from book as b join book2author as b2a on b2a.book_id = b.id join author as a on b2a.author_id = a.id where a.id = ?1 order by b.pub_date desc", nativeQuery = true)
+    Page<BookEntity> findBooksByAuthorId(Integer authorId, Pageable nextPage);
 
     BookEntity findBookEntityBySlug(String slug);
 

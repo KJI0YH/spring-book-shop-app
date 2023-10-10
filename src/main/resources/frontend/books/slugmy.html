@@ -79,7 +79,7 @@
                   <span class="ProductCard-titleProp" th:text="#{book.rating}">Рейтинг:</span>
                   <button class="trigger trigger_dropdown" type="button">
                     <div class="Rating Rating_noStyleLink">
-                      <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(${book.getRate()})}"></span>
+                      <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(${book.getRating()})}"></span>
                       <span class="Rating-title" th:text="${'(' + book.rateList.size() + ')'}">(567)</span>
                     </div>
                     <div class="modal modal_compression modal_dropdown">

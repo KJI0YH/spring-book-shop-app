@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,14 +20,64 @@ public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDate pubDate;
-    private boolean isBestseller;
     private String slug;
-    private String title;
     private String image;
-    private Integer price;
+
+    @Transient
+    @JsonIgnore
+    private String authors;
+
+    @JsonGetter
+    public String getAuthors() {
+        String authors = authorList.get(0).toString();
+        if (authorList.size() > 1){
+            authors += " and others";
+        }
+        return authors;
+    }
+
+    private String title;
     private Integer discount;
+    private boolean isBestseller;
+
+    @Transient
+    private Integer rating;
+
+    @Transient
+    @JsonIgnore
+    private String status;
+
+    @JsonGetter("status")
+    private Object getStatusJson(){
+        if (status == null){
+            return false;
+        }
+        return status;
+    }
+
+    @JsonIgnore
+    private Integer price;
+
+    @JsonGetter("price")
+    public String getPriceJson(){
+        return price / 100 + "." + String.format("%02d", price % 100);
+    }
+
+    public Integer getDiscountPrice(){
+        return Math.toIntExact(Math.round(price * (1 - discount / 100.0)));
+    }
+
+    @JsonGetter("discountPrice")
+    public String getDiscountPriceJson(){
+        int discountPrice = getDiscountPrice();
+        return discountPrice / 100 + "." + String.format("%02d", discountPrice % 100);
+    }
+
+    @JsonIgnore
     private String description;
+
+    @JsonIgnore
+    private LocalDate pubDate;
 
     @ManyToMany
     @JoinTable(name = "book2author",
@@ -36,12 +87,6 @@ public class BookEntity {
     @JsonIgnore
     @ToString.Exclude
     private List<AuthorEntity> authorList;
-
-    @Transient
-    private Integer discountPrice;
-
-    @Transient
-    private List<String> authors;
 
     @ManyToMany
     @JoinTable(name = "book2tag",
@@ -77,23 +122,12 @@ public class BookEntity {
     @ToString.Exclude
     private List<BookRateEntity> rateList;
 
-    @Transient
-    @JsonIgnore
-    private String status;
-
-    public Integer getDiscountPrice() {
-        return Math.toIntExact(Math.round(price * (1 - discount / 100.0)));
-    }
-
-    public List<String> getAuthors() {
-        return authorList.stream().map(AuthorEntity::toString).toList();
-    }
 
     public Long getRateCount(Integer rateValue) {
         return rateList.stream().filter(rate -> rate.getRate().equals(rateValue)).count();
     }
 
-    public Integer getRate(){
+    public Integer getRating(){
         if (rateList.isEmpty()) return 0;
         return Math.round(rateList.stream().mapToInt(BookRateEntity::getRate).sum() / (float)rateList.size());
     }

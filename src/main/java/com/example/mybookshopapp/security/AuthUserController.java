@@ -83,7 +83,10 @@ public class AuthUserController extends AbstractHeaderFooterController {
 
         if (codeService.verifyCode(payload.getCode())) {
             response.setResult("true");
+        } else {
+            response.setResult("false");
         }
+
         return response;
     }
 

@@ -7,6 +7,7 @@ import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,9 +55,19 @@ public class BookService {
         return setBookStatus(bookRepository.findBooksByGenreSlug(genreSlug, nextPage).getContent());
     }
 
+    public List<BookEntity> getPageOfBooksByGenreId(Integer genreId, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return setBookStatus(bookRepository.findBooksByGenreId(genreId, nextPage).getContent());
+    }
+
     public List<BookEntity> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return setBookStatus(bookRepository.findBooksByAuthorSlug(authorSlug, nextPage).getContent());
+    }
+
+    public List<BookEntity> getPageOfBooksByAuthorId(Integer authorId, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return setBookStatus(bookRepository.findBooksByAuthorId(authorId, nextPage).getContent());
     }
 
     public BookEntity getBookBySlug(String slug) {

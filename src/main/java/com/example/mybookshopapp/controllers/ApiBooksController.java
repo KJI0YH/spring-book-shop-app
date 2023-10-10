@@ -48,18 +48,18 @@ public class ApiBooksController {
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagSlug(tagSlug, offset, limit)));
     }
 
-    @GetMapping("/genre/{genreSlug}")
-    public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreSlug") String genreSlug,
+    @GetMapping("/genre/{genreId}")
+    public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreId") Integer genreId,
                                                             @RequestParam("offset") Integer offset,
                                                             @RequestParam("limit") Integer limit){
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreSlug(genreSlug, offset, limit)));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreId(genreId, offset, limit)));
     }
 
-    @GetMapping("/author/{authorSlug}")
-    public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorSlug") String authroSlug,
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<BooksPageDto> getBooksByAuthorIdPage(@PathVariable("authorId") Integer authorId,
                                                                @RequestParam("offset") Integer offset,
                                                                @RequestParam("limit") Integer limit){
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorSlug(authroSlug, offset, limit)));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByAuthorId(authorId, offset, limit)));
     }
 
     @GetMapping("/my")

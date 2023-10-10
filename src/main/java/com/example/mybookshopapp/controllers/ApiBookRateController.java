@@ -28,7 +28,7 @@ public class ApiBookRateController {
 
     @PostMapping("/rateBook")
     @ResponseBody
-    public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) throws JsonProcessingException {
+    public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) {
         if (bookRateDto == null || bookRateDto.getBookId() == null || bookRateDto.getValue() == null){
             return ResponseEntity
                     .badRequest()

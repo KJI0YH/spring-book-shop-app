@@ -19,9 +19,9 @@ public class SmsCodeEntity {
     private String code;
     private LocalDateTime expiredTime;
 
-    public SmsCodeEntity(String code, Integer expiredIn){
+    public SmsCodeEntity(String code, Integer expiredInSeconds){
         this.code = code;
-        this.expiredTime = LocalDateTime.now().plusSeconds(expiredIn);
+        this.expiredTime = LocalDateTime.now().plusSeconds(expiredInSeconds);
     }
 
     public Boolean isExpired(){

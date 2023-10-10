@@ -141,14 +141,10 @@ p.error-browser
                     <td th:text="${transaction.getTimeValue()}">15 мая 2017 10:03</td>
                     <td>
                       <span class="Transactions_textSuccess">
-                        <strong th:if="${transaction.value < 0}" th:text="${'-' + -transaction.value / 100 + '.' + -transaction.value % 100 + 'р.'}">+500 р.</strong>
-                        <strong th:unless="${transaction.value < 0}" th:text="${'+' + transaction.value / 100 + '.' + transaction.value % 100 + 'р.'}">+500 р.</strong>
+                        <strong th:text="${transaction.getValueJson() + 'р.'}">+500 р.</strong>
                       </span>
                     </td>
-                    <td th:if="${transaction.book != null}" >
-                      <a th:href="@{/books/{slug}(slug=${transaction.book.slug})}" th:text="${transaction.description}"></a>
-                    </td>
-                    <td th:unless="${transaction.book != null}" th:text="${transaction.description}">Пополнение счета</td>
+                    <td th:text="${transaction.description}">Пополнение счета</td>
                   </tr>
                   </tbody>
                 </table>
