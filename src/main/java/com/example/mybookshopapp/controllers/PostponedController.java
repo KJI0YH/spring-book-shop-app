@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public class PostponedController extends AbstractHeaderFooterController {
 
         // Authorized user
         if (user != null) {
-            booksInPostponed = bookService.getBooksByUserStatus(user.getId(), "KEPT");
+            booksInPostponed = bookService.getAllBooksByUserStatus(user.getId(), "KEPT");
         }
 
         // Unauthorized user

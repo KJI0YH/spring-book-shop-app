@@ -5,7 +5,6 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.BookViewedService;
 import com.example.mybookshopapp.services.ResourceStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ public class BookController extends AbstractHeaderFooterController {
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
     private final BookstoreUserRegister userRegister;
-    private final BookViewedService bookViewedService;
 
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
@@ -41,7 +39,7 @@ public class BookController extends AbstractHeaderFooterController {
             model.addAttribute("book", book);
 
             if (user != null){
-                bookViewedService.setViewedBook(user.getId(), book.getId());
+                bookService.setViewedBook(user.getId(), book.getId());
             }
         }
 

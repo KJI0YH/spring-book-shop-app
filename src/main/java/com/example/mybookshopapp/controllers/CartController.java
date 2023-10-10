@@ -49,7 +49,7 @@ public class CartController extends AbstractHeaderFooterController {
 
         // Authorized user
         if (user != null) {
-            booksInCart = bookService.getBooksByUserStatus(user.getId(), "CART");
+            booksInCart = bookService.getAllBooksByUserStatus(user.getId(), "CART");
         }
 
         // Unauthorized user

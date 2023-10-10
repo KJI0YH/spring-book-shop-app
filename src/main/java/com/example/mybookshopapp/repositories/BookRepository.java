@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {
@@ -36,7 +37,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     BookEntity findBookEntityBySlug(String slug);
 
-    List<BookEntity> findBookEntitiesByIdIn(Integer[] ids);
+    List<BookEntity> findBookEntitiesByIdIn(Collection<Integer> id);
 
     BookEntity findBookEntityById(Integer id);
 
@@ -48,5 +49,4 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = "SELECT COUNT(distinct b.id) FROM book AS b JOIN book2user AS b2u ON b2u.book_id = b.id JOIN users AS u ON b2u.user_id = ?1 WHERE b2u.type_id = ?2", nativeQuery = true)
     Long getCountOfBooksByUserType(Integer userId, Integer typeId);
-
 }

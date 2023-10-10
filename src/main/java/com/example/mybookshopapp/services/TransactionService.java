@@ -21,17 +21,17 @@ public class TransactionService {
     private final BalanceTransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
-    public Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit){
+    public Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return transactionRepository.findAllByUserOrderByTimeAsc(user, nextPage);
     }
 
-    public Page<BalanceTransactionEntity> getTransactionsByUserDesc(UserEntity user, Integer offset, Integer limit){
+    public Page<BalanceTransactionEntity> getTransactionsByUserDesc(UserEntity user, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return transactionRepository.findAllByUserOrderByTimeDesc(user, nextPage);
     }
 
-    public void saveBookTransaction(UserEntity user, BookEntity book){
+    public void saveBookTransaction(UserEntity user, BookEntity book) {
         BalanceTransactionEntity transaction = new BalanceTransactionEntity();
         transaction.setBook(book);
         transaction.setUser(user);
@@ -43,10 +43,14 @@ public class TransactionService {
         userRepository.save(user);
     }
 
-    public void saveBooksTransactions(UserEntity user, List<BookEntity> paidBooks){
-        for (BookEntity book : paidBooks){
+    public void saveBooksTransactions(UserEntity user, List<BookEntity> paidBooks) {
+        for (BookEntity book : paidBooks) {
             saveBookTransaction(user, book);
         }
+    }
+
+    public boolean isBookPaid(Integer bookId, Integer userId) {
+        return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
     }
 
 }

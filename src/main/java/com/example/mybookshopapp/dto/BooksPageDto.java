@@ -12,7 +12,7 @@ public class BooksPageDto {
     private List<BookEntity> books;
 
     public BooksPageDto(List<BookEntity> books) {
-        this.books = books;
         this.count = books.size();
+        this.books = books;
     }
 }

@@ -1,16 +1,16 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.data.BalanceTransactionEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.dto.PaymentDto;
 import com.example.mybookshopapp.dto.TransactionPageDto;
+import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentDoesNotExistsException;
 import com.example.mybookshopapp.errors.PaymentStatusException;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.BookStatusService;
 import com.example.mybookshopapp.services.PaymentService;
 import com.example.mybookshopapp.services.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +28,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentController {
     private final PaymentService paymentService;
     private final BookService bookService;
-    private final BookStatusService bookStatusService;
     private final TransactionService transactionService;
     private final BookstoreUserRegister userRegister;
 
@@ -71,17 +71,22 @@ public class PaymentController {
         return new RedirectView("/profile");
     }
 
+    // TODO move to service level
     @GetMapping("/payment/books")
     public String handlePaymentBooks(RedirectAttributes redirectAttributes){
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
 
-        List<BookEntity> cartBooks = bookService.getBooksByUserStatus(user.getId(), "CART");
+        List<BookEntity> cartBooks = bookService.getAllBooksByUserStatus(user.getId(), "CART");
         Integer paymentAmount = cartBooks.stream().mapToInt(BookEntity::getDiscountPrice).sum();
 
         // Balance are enough
         if (paymentAmount <= user.getBalance()){
             transactionService.saveBooksTransactions(user, cartBooks);
-            bookStatusService.setStatuses(cartBooks, user.getId(), "PAID");
+            try {
+                bookService.updateBook2UserStatuses(cartBooks.stream().map(BookEntity::getId).collect(Collectors.toList()), user.getId(), "PAID");
+            } catch (ApiWrongParameterException e) {
+                return "";
+            }
             return "redirect:/my";
         }
         // Balance are not enough

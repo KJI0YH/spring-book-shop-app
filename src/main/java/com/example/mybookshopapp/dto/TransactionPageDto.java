@@ -7,11 +7,11 @@ import java.util.List;
 
 @Data
 public class TransactionPageDto {
-    private List<BalanceTransactionEntity> transactions;
     private Integer count;
+    private List<BalanceTransactionEntity> transactions;
 
     public TransactionPageDto(List<BalanceTransactionEntity> transactions){
-        this.transactions = transactions;
         this.count = transactions.size();
+        this.transactions = transactions;
     }
 }
