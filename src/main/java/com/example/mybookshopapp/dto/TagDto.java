@@ -5,13 +5,11 @@ import lombok.Data;
 
 @Data
 public class TagDto {
-
     private TagEntity tag;
+    private String popularityClass;
 
-    private String popularity;
-
-    public TagDto(TagEntity tag, String popularity) {
+    public TagDto(TagEntity tag, String popularityClass) {
         this.tag = tag;
-        this.popularity = popularity;
+        this.popularityClass = popularityClass;
     }
 }
