@@ -72,7 +72,8 @@ public class TransactionService {
         if (isBalanceEnough(user, paymentAmount)) {
             saveBooksTransactions(user, cartBooks);
         } else {
-            throw new BalanceNotEnoughException("Lack of funds", paymentAmount - user.getBalance());
+            int lack = paymentAmount - user.getBalance();
+            throw new BalanceNotEnoughException("Insufficient funds. Refill to " + lack / 100 + '.' + lack % 100 + " rubles");
         }
     }
 

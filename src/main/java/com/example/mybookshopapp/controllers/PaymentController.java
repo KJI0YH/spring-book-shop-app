@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -22,26 +23,15 @@ public class PaymentController {
     private final BookstoreUserRegister userRegister;
 
     @GetMapping("/payment/confirm")
-    public RedirectView handlePaymentConfirm(@RequestParam("key") String key) {
+    public String handlePaymentConfirm(@RequestParam("key") String key) {
         paymentService.processPayment(paymentService.getPaymentStatusById(key));
-        return new RedirectView("/profile");
+        return "redirect:/profile";
     }
 
-    // TODO error handling
-    @GetMapping("/payment/books")
-    public String handlePaymentBooks(RedirectAttributes redirectAttributes) {
+    @PostMapping("/payment/cart")
+    public String handlePaymentBooks() throws BalanceNotEnoughException, ApiWrongParameterException {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-
-        try {
-            transactionService.cartBooksPayment(user);
-        } catch (BalanceNotEnoughException e) {
-            int lack = e.getFundsLackInCents();
-            redirectAttributes.addFlashAttribute("paymentError", "Insufficient funds. Refill to " + lack / 100 + '.' + lack % 100 + " rubles. Go to profile");
-            return "redirect:/cart";
-        } catch (ApiWrongParameterException e) {
-            redirectAttributes.addFlashAttribute("paymentError", "Internal error");
-            return "redirect:/cart";
-        }
+        transactionService.cartBooksPayment(user);
         return "redirect:/my";
     }
 }

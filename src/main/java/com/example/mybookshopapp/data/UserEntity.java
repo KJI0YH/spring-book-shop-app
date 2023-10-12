@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +21,14 @@ public class UserEntity {
     private Integer id;
     private String hash;
     private LocalDateTime regTime;
+    @JsonIgnore
     private Integer balance;
+
+    @JsonGetter("balance")
+    public String getBalanceJson(){
+        return balance / 100 + "." + String.format("%02d", balance % 100);
+    }
+
     private String name;
 
     @Column(name = "password_hash")

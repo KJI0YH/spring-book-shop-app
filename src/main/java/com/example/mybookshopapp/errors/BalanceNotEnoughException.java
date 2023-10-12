@@ -4,10 +4,7 @@ import lombok.Data;
 
 @Data
 public class BalanceNotEnoughException extends Exception {
-    private final Integer fundsLackInCents;
-
-    public BalanceNotEnoughException(String message, Integer fundsLackInCents) {
+    public BalanceNotEnoughException(String message) {
         super(message);
-        this.fundsLackInCents = fundsLackInCents;
     }
 }

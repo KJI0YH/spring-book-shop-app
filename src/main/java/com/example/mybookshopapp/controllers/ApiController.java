@@ -96,70 +96,55 @@ public class ApiController {
     public ResponseEntity<ApiResponse> handleChangeBookStatus(HttpServletResponse response,
                                                               @RequestBody BookStatusDto bookStatusDto,
                                                               @CookieValue(value = "cartContents", required = false) String cartContents,
-                                                              @CookieValue(value = "postponedContents", required = false) String keptContents) {
+                                                              @CookieValue(value = "postponedContents", required = false) String keptContents) throws ApiWrongParameterException {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        try {
 
-            // Authorized user
-            if (user != null) {
-                Integer[] booksIds = Arrays.stream(bookStatusDto.getBooksIds()).map(Integer::valueOf).toArray(Integer[]::new);
-                bookService.updateBook2UserStatuses(List.of(booksIds), user.getId(), bookStatusDto.getStatus());
-            }
+        // Authorized user
+        if (user != null) {
+            Integer[] booksIds = Arrays.stream(bookStatusDto.getBooksIds()).map(Integer::valueOf).toArray(Integer[]::new);
+            bookService.updateBook2UserStatuses(List.of(booksIds), user.getId(), bookStatusDto.getStatus());
+        }
 
-            // Unauthorized user
-            else {
-                List<Cookie> cookies = cookieService.updateCookieBookStatuses(bookStatusDto.getBooksIds(), cartContents, keptContents, bookStatusDto.getStatus());
-                cookies.forEach(response::addCookie);
-            }
-        } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, e.getMessage()));
+        // Unauthorized user
+        else {
+            List<Cookie> cookies = cookieService.updateCookieBookStatuses(bookStatusDto.getBooksIds(), cartContents, keptContents, bookStatusDto.getStatus());
+            cookies.forEach(response::addCookie);
         }
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/rateBook")
-    public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) {
+    public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) throws ApiWrongParameterException {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book"));
-        try {
-            bookService.rateBook(bookRateDto.getBookId(), user.getId(), bookRateDto.getValue());
-        } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, e.getMessage()));
-        }
+
+        bookService.rateBook(bookRateDto.getBookId(), user.getId(), bookRateDto.getValue());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/bookReview")
-    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) {
+    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can review the book"));
         }
-        try {
-            bookService.reviewBook(bookReviewDto.getBookId(), user.getId(), bookReviewDto.getText());
-        } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
-        }
+
+        bookService.reviewBook(bookReviewDto.getBookId(), user.getId(), bookReviewDto.getText());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/rateBookReview")
-    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) {
+    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book review"));
         }
-        try {
-            bookService.rateBookReview(reviewLikeDto.getReviewId(), user.getId(), reviewLikeDto.getValue());
-        } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
-        }
+
+        bookService.rateBookReview(reviewLikeDto.getReviewId(), user.getId(), reviewLikeDto.getValue());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
@@ -192,17 +177,9 @@ public class ApiController {
 
     // TODO fix redirect
     @PostMapping("/payment")
-    public ResponseEntity<ApiResponse> handlePayment(@RequestBody PaymentDto payment) {
-        try {
-            String paymentUrl = paymentService.initiatePayment(payment.getSum(), payment.getHash());
-            return ResponseEntity.ok()
-                    .body(new ApiResponse(true, paymentUrl));
-        } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, e.getMessage()));
-        } catch (PaymentInitiateException e) {
-            return ResponseEntity.internalServerError()
-                    .body(new ApiResponse(false, e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse> handlePayment(@RequestBody PaymentDto payment) throws ApiWrongParameterException, PaymentInitiateException {
+        String paymentUrl = paymentService.initiatePayment(payment.getSum(), payment.getHash());
+        return ResponseEntity.ok()
+                .body(new ApiResponse(true, paymentUrl));
     }
 }
