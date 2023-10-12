@@ -1,7 +1,6 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
-import com.example.mybookshopapp.dto.BookReviewDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.*;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
@@ -31,9 +30,9 @@ public class BookService {
     private final BookRateRepository bookRateRepository;
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewRateRepository bookReviewRateRepository;
+    private final BalanceTransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final BookstoreUserRegister userRegister;
-    private final TransactionService transactionService;
 
     public List<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
@@ -152,7 +151,7 @@ public class BookService {
 
         Book2UserIdEntity book2UserId = new Book2UserIdEntity(bookId, userId);
         String newStatusCode = newBook2UserType.getCode();
-        boolean isBookPaid = transactionService.isBookPaid(bookId, userId);
+        boolean isBookPaid = isBookPaid(bookId, userId);
 
         // Catch invalid statuses updates
         if ((newStatusCode.equals("PAID") || newStatusCode.equals("ARCHIVED")) && !isBookPaid) {
@@ -191,7 +190,7 @@ public class BookService {
             throw new ApiWrongParameterException("Invalid rate value");
 
         BookEntity book = bookRepository.findBookEntityById(bookId);
-        if (book == null){
+        if (book == null) {
             throw new ApiWrongParameterException("Invalid book id value");
         }
 
@@ -242,5 +241,9 @@ public class BookService {
         reviewLike.setValue(value);
         reviewLike.setTime(LocalDateTime.now());
         bookReviewRateRepository.save(reviewLike);
+    }
+
+    private boolean isBookPaid(Integer bookId, Integer userId) {
+        return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
     }
 }

@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PaymentStatusRepository extends JpaRepository<PaymentStatusEntity, String> {
-    List<PaymentStatusEntity> findAllByIsProcessedIsFalse();
+    List<PaymentStatusEntity> findAllByIsProcessedIsFalseAndStatus(String status);
+    PaymentStatusEntity findPaymentStatusEntityById(String id);
 }

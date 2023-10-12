@@ -3,11 +3,9 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.PaymentInitiateException;
 import com.example.mybookshopapp.security.BookstoreUserRegister;
-import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.CookieService;
-import com.example.mybookshopapp.services.DateService;
-import com.example.mybookshopapp.services.MessageService;
+import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +25,8 @@ public class ApiController {
     private final BookService bookService;
     private final CookieService cookieService;
     private final MessageService messageService;
+    private final TransactionService transactionService;
+    private final PaymentService paymentService;
     private final BookstoreUserRegister userRegister;
     private final DateService dateService;
 
@@ -111,8 +111,9 @@ public class ApiController {
                 List<Cookie> cookies = cookieService.updateCookieBookStatuses(bookStatusDto.getBooksIds(), cartContents, keptContents, bookStatusDto.getStatus());
                 cookies.forEach(response::addCookie);
             }
-        } catch (ApiWrongParameterException e){
-            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        } catch (ApiWrongParameterException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
         }
         return ResponseEntity.ok(new ApiResponse(true));
     }
@@ -121,41 +122,42 @@ public class ApiController {
     public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
         if (user == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book"));
         try {
             bookService.rateBook(bookRateDto.getBookId(), user.getId(), bookRateDto.getValue());
         } catch (ApiWrongParameterException e) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
         }
-        return ResponseEntity.ok(new ApiResponse( true));
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/bookReview")
-    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto){
+    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse( false, "Only authorised users can review the book"));
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse(false, "Only authorised users can review the book"));
         }
-        try{
+        try {
             bookService.reviewBook(bookReviewDto.getBookId(), user.getId(), bookReviewDto.getText());
-        } catch (ApiWrongParameterException e){
+        } catch (ApiWrongParameterException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/rateBookReview")
-    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto){
+    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) {
         UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book review"));
         }
         try {
             bookService.rateBookReview(reviewLikeDto.getReviewId(), user.getId(), reviewLikeDto.getValue());
-        } catch (ApiWrongParameterException e){
+        } catch (ApiWrongParameterException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
         return ResponseEntity.ok(new ApiResponse(true));
@@ -169,11 +171,38 @@ public class ApiController {
     }
 
     @PostMapping(value = "/contacts/message", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<ApiResponse> handleContactMessage(MessageDto messageDto){
+    public ResponseEntity<ApiResponse> handleContactMessage(MessageDto messageDto) {
         messageService.saveMessage(messageDto);
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
                 .header("Location", "/contacts")
                 .body(new ApiResponse(true));
+    }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<TransactionPageDto> handleTransactions(@RequestParam(name = "sort", required = false) String sort,
+                                                                 @RequestParam(name = "offset") Integer offset,
+                                                                 @RequestParam(name = "limit") Integer limit) {
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(new TransactionPageDto(transactionService.getTransactionByUser(user, offset, limit, sort).getContent()));
+    }
+
+    // TODO fix redirect
+    @PostMapping("/payment")
+    public ResponseEntity<ApiResponse> handlePayment(@RequestBody PaymentDto payment) {
+        try {
+            String paymentUrl = paymentService.initiatePayment(payment.getSum(), payment.getHash());
+            return ResponseEntity.ok()
+                    .body(new ApiResponse(true, paymentUrl));
+        } catch (ApiWrongParameterException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        } catch (PaymentInitiateException e) {
+            return ResponseEntity.internalServerError()
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
     }
 }

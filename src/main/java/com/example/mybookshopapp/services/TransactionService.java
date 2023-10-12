@@ -3,8 +3,9 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.BalanceTransactionEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.BalanceNotEnoughException;
 import com.example.mybookshopapp.repositories.BalanceTransactionRepository;
-import com.example.mybookshopapp.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,17 +19,24 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TransactionService {
+    private final BookService bookService;
     private final BalanceTransactionRepository transactionRepository;
-    private final UserRepository userRepository;
 
-    public Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit) {
+    private Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return transactionRepository.findAllByUserOrderByTimeAsc(user, nextPage);
     }
 
-    public Page<BalanceTransactionEntity> getTransactionsByUserDesc(UserEntity user, Integer offset, Integer limit) {
+    private Page<BalanceTransactionEntity> getTransactionsByUserDesc(UserEntity user, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return transactionRepository.findAllByUserOrderByTimeDesc(user, nextPage);
+    }
+
+    public Page<BalanceTransactionEntity> getTransactionByUser(UserEntity user, Integer offset, Integer limit, String order) {
+        if (order.equals("asc"))
+            return getTransactionsByUserAsc(user, offset, limit);
+        else
+            return getTransactionsByUserDesc(user, offset, limit);
     }
 
     public void saveBookTransaction(UserEntity user, BookEntity book) {
@@ -39,8 +47,16 @@ public class TransactionService {
         transaction.setTime(LocalDateTime.now());
         transaction.setDescription("Book purchase: " + book.getTitle());
         transactionRepository.save(transaction);
-        user.setBalance(user.getBalance() - book.getDiscountPrice());
-        userRepository.save(user);
+    }
+
+    public void saveReplenishmentTransaction(UserEntity user, Integer sum, String description) {
+        BalanceTransactionEntity transaction = new BalanceTransactionEntity();
+        transaction.setBook(null);
+        transaction.setUser(user);
+        transaction.setValue(sum);
+        transaction.setTime(LocalDateTime.now());
+        transaction.setDescription(description);
+        transactionRepository.save(transaction);
     }
 
     public void saveBooksTransactions(UserEntity user, List<BookEntity> paidBooks) {
@@ -49,8 +65,18 @@ public class TransactionService {
         }
     }
 
-    public boolean isBookPaid(Integer bookId, Integer userId) {
-        return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
+    public void cartBooksPayment(UserEntity user) throws BalanceNotEnoughException, ApiWrongParameterException {
+        List<BookEntity> cartBooks = bookService.getAllBooksByUserStatus(user.getId(), "CART");
+        Integer paymentAmount = cartBooks.stream().mapToInt(BookEntity::getDiscountPrice).sum();
+
+        if (isBalanceEnough(user, paymentAmount)) {
+            saveBooksTransactions(user, cartBooks);
+        } else {
+            throw new BalanceNotEnoughException("Lack of funds", paymentAmount - user.getBalance());
+        }
     }
 
+    private boolean isBalanceEnough(UserEntity user, Integer paymentAmount) {
+        return paymentAmount <= user.getBalance();
+    }
 }
