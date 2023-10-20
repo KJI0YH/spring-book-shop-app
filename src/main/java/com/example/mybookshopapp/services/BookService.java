@@ -3,7 +3,6 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.*;
-import com.example.mybookshopapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -244,5 +243,32 @@ public class BookService {
 
     private boolean isBookPaid(Integer bookId, Integer userId) {
         return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
+    }
+
+    public void mergeCartBooks(Integer[] bookIds, Integer userId) {
+        for (Integer bookId : bookIds) {
+            try {
+                updateBook2UserStatus(bookId, userId, "CART");
+            } catch (ApiWrongParameterException ignored) {
+            }
+        }
+    }
+
+    public void mergePostponedBooks(Integer[] bookIds, Integer userId) {
+        for (Integer bookId : bookIds) {
+            try {
+                updateBook2UserStatus(bookId, userId, "KEPT");
+            } catch (ApiWrongParameterException ignored) {
+            }
+        }
+    }
+
+    public void mergeViewedBooks(Integer[] bookIds, Integer userId) {
+        for (Integer bookId : bookIds) {
+            Book2UserViewedEntity viewedBook = book2UserViewedRepository.findBook2UserViewedEntityById(new Book2UserIdEntity(bookId, userId));
+            if (viewedBook == null) {
+                setViewedBook(userId, bookId);
+            }
+        }
     }
 }

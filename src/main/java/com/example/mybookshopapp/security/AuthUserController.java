@@ -9,9 +9,12 @@ import com.example.mybookshopapp.errors.ContactConfirmationException;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import com.example.mybookshopapp.services.*;
+import io.netty.handler.codec.http.cookie.CookieEncoder;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +33,13 @@ public class AuthUserController extends AbstractHeaderFooterController {
     private final UserService userService;
     private final UserProfileService userProfileService;
     private final BookService bookService;
-    private final ApproveContactService approveContactService;
     private final TransactionService transactionService;
     private final EmailService emailService;
     private final PhoneService phoneService;
     private final JWTUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
     private final ContactChangeConfirmationService confirmationService;
+    private final CookieService cookieService;
 
     @GetMapping("/signin")
     public String handleSignin() {
@@ -69,14 +72,22 @@ public class AuthUserController extends AbstractHeaderFooterController {
         return "signin";
     }
 
-    // TODO create viewed cookie
-    // TODO merge cookies cart, postponed, viewed
     @PostMapping("/login")
     @ResponseBody
     public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
-                                                   HttpServletResponse httpServletResponse) {
+                                                   @CookieValue(value = "cartContents", required = false) String cartContents,
+                                                   @CookieValue(value = "postponedContents", required = false) String postponedContents,
+                                                   @CookieValue(value = "viewedContents", required = false) String viewedContents,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
         ContactConfirmationResponse loginResponse = userService.jwtLogin(payload);
-        httpServletResponse.addCookie(new Cookie("token", loginResponse.getResult()));
+        EmailUserDetails userDetails = (EmailUserDetails)(customUserDetailsService.loadUserByUsername(jwtUtil.extractUsername(loginResponse.getResult())));
+        UserEntity user = userDetails.getUserEntity();
+        bookService.mergeCartBooks(cookieService.getIntegerIds(cartContents), user.getId());
+        bookService.mergePostponedBooks(cookieService.getIntegerIds(postponedContents), user.getId());
+        bookService.mergeViewedBooks(cookieService.getIntegerIds(viewedContents), user.getId());
+        cookieService.deleteAllCookies(request, response);
+        response.addCookie(new Cookie("token", loginResponse.getResult()));
         return loginResponse;
     }
 

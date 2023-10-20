@@ -2,6 +2,8 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class CookieService {
 
     public Cookie addBookId(String cookieValue, String id) {
         List<String> ids = new ArrayList<>(List.of(getStringIds(cookieValue)));
-        if (!ids.contains(id)){
+        if (!ids.contains(id)) {
             ids.add(id);
         }
         return createCookieFromBookIds("viewedContents", "/", ids);
@@ -70,5 +72,13 @@ public class CookieService {
         cookies.add(createCookieFromBookIds("cartContents", "/", cartIds));
         cookies.add(createCookieFromBookIds("postponedContents", "/", keptIds));
         return cookies;
+    }
+
+    public void deleteAllCookies(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
     }
 }

@@ -5,9 +5,9 @@ import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
+import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.security.CustomUserDetailsService;
 import com.example.mybookshopapp.security.EmailUserDetails;
-import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +65,7 @@ public class UserService {
     }
 
     public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
-                payload.getCode()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(), payload.getCode()));
         EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
         ContactConfirmationResponse response = new ContactConfirmationResponse();

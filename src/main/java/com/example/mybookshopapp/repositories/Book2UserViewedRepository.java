@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Book2UserViewedRepository extends JpaRepository<Book2UserViewedEntity, Book2UserIdEntity> {
     Page<Book2UserViewedEntity> findAllByUserIdOrderByTimeDesc(Integer userId, Pageable pageable);
+    Book2UserViewedEntity findBook2UserViewedEntityById(Book2UserIdEntity id);
 }
