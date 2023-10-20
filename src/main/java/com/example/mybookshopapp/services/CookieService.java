@@ -29,10 +29,18 @@ public class CookieService {
         return Arrays.stream(stringIds).map(Integer::valueOf).toArray(Integer[]::new);
     }
 
-    private Cookie createCookieFromBookIds(String cookieName, String cookiePath, List<String> ids) {
+    public Cookie createCookieFromBookIds(String cookieName, String cookiePath, List<String> ids) {
         Cookie cookie = new Cookie(cookieName, String.join("/", ids));
         cookie.setPath(cookiePath);
         return cookie;
+    }
+
+    public Cookie addBookId(String cookieValue, String id) {
+        List<String> ids = new ArrayList<>(List.of(getStringIds(cookieValue)));
+        if (!ids.contains(id)){
+            ids.add(id);
+        }
+        return createCookieFromBookIds("viewedContents", "/", ids);
     }
 
     public List<Cookie> updateCookieBookStatuses(String[] bookIds, String cartCookie, String keptCookie, String status) throws ApiWrongParameterException {
@@ -57,7 +65,7 @@ public class CookieService {
                     throw new ApiWrongParameterException("Invalid status parameter value");
             }
         }
-        
+
         List<Cookie> cookies = new ArrayList<>();
         cookies.add(createCookieFromBookIds("cartContents", "/", cartIds));
         cookies.add(createCookieFromBookIds("postponedContents", "/", keptIds));

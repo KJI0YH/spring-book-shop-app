@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.BalanceNotEnoughException;
-import com.example.mybookshopapp.security.UserService;
+import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.PaymentService;
 import com.example.mybookshopapp.services.TransactionService;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentInitiateException;
-import com.example.mybookshopapp.security.UserService;
+import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

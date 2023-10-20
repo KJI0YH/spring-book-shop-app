@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.security.UserService;
+import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CookieService;
 import jakarta.servlet.http.HttpServletRequest;

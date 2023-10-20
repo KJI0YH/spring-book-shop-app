@@ -3,9 +3,11 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BookRepository;
-import com.example.mybookshopapp.security.UserService;
+import com.example.mybookshopapp.services.CookieService;
+import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.ResourceStorage;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,25 +31,30 @@ public class BookController extends AbstractHeaderFooterController {
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
     private final UserService userService;
+    private final CookieService cookieService;
 
     @GetMapping("/{bookSlug}")
-    public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
+    public String getBookPage(@PathVariable("bookSlug") String bookSlug,
+                              @CookieValue(value = "viewedContents", required = false) String viewedContents,
+                              Model model,
+                              HttpServletResponse response){
         UserEntity user = (UserEntity) userService.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
 
         if (book != null){
             model.addAttribute("book", book);
 
+            // Authorized user
             if (user != null){
                 bookService.setViewedBook(user.getId(), book.getId());
             }
-        }
 
-        if (user == null){
-            return "books/slug";
-        } else {
-            return "books/slugmy";
+            // Unauthorized user
+            else {
+                response.addCookie(cookieService.addBookId(viewedContents, book.getId().toString()));
+            }
         }
+        return "books/slug";
     }
 
     @PostMapping("/{bookSlug}/img/save")

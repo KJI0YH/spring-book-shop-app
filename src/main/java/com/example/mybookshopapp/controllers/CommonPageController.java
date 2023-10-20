@@ -2,12 +2,12 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.MessageDto;
-import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CommonPageController extends AbstractHeaderFooterController{
+public class CommonPageController extends AbstractHeaderFooterController {
     private final UserService userService;
     private final BookService bookService;
     private final AuthorService authorService;
@@ -23,6 +23,7 @@ public class CommonPageController extends AbstractHeaderFooterController{
     private final TagService tagService;
     private final DocumentService documentService;
     private final FaqService faqService;
+    private final CookieService cookieService;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -43,7 +44,7 @@ public class CommonPageController extends AbstractHeaderFooterController{
 
     @GetMapping("/documents/{documentSlug}")
     public String documentPage(@PathVariable("documentSlug") String documentSlug,
-                               Model model){
+                               Model model) {
         model.addAttribute("document", documentService.getDocumentBySlug(documentSlug));
         return "documents/slug";
     }
@@ -67,10 +68,13 @@ public class CommonPageController extends AbstractHeaderFooterController{
     }
 
     @GetMapping("/books/viewed")
-    public String viewedBooksPage(Model model){
+    public String viewedBooksPage(@CookieValue(value = "viewedContents", required = false) String viewedContents,
+                                  Model model) {
         UserEntity user = (UserEntity) userService.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfViewedBooks(user.getId(), 0, 20));
+        } else {
+            model.addAttribute("booksList", bookService.getBooksByIds(cookieService.getIntegerIds(viewedContents)));
         }
         return "books/viewed";
     }

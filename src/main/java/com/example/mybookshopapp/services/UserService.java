@@ -1,10 +1,13 @@
-package com.example.mybookshopapp.security;
+package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
+import com.example.mybookshopapp.security.CustomUserDetailsService;
+import com.example.mybookshopapp.security.EmailUserDetails;
+import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

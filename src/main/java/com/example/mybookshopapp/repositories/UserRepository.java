@@ -1,4 +1,4 @@
-package com.example.mybookshopapp.security;
+package com.example.mybookshopapp.repositories;
 
 import com.example.mybookshopapp.data.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

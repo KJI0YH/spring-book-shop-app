@@ -7,7 +7,7 @@ import com.example.mybookshopapp.errors.PaymentDoesNotExistsException;
 import com.example.mybookshopapp.errors.PaymentInitiateException;
 import com.example.mybookshopapp.errors.PaymentStatusException;
 import com.example.mybookshopapp.repositories.PaymentStatusRepository;
-import com.example.mybookshopapp.security.UserRepository;
+import com.example.mybookshopapp.repositories.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

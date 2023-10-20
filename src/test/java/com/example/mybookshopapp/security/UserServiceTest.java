@@ -2,6 +2,7 @@ package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.SpringBootApplicationTest;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
