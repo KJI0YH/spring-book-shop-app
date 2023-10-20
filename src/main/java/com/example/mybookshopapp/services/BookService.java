@@ -3,7 +3,7 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.*;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class BookService {
     private final BookReviewRateRepository bookReviewRateRepository;
     private final BalanceTransactionRepository transactionRepository;
     private final UserRepository userRepository;
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
 
     public List<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
@@ -121,7 +121,7 @@ public class BookService {
 
     // TODO refactor
     private List<BookEntity> setBook2UserStatus(List<BookEntity> books) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         if (user != null) {
             Book2UserIdEntity id = new Book2UserIdEntity();
             id.setUserId(user.getId());

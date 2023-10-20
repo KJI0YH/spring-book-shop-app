@@ -10,6 +10,7 @@
             <span class="Card-ribbonText" th:if="${book.isBestseller}" th:text="#{main.bestseller}">Бестселлер</span>
         </div>
         <a th:if="${book.status?.equals('PAID')}" class="Card-status" title="Куплена"><img src="/assets/img/icons/check.svg" alt="Куплена"></a>
+        <a th:if="${book.status?.equals('ARCHIVED')}" class="Card-status" title="Куплена"><img src="/assets/img/icons/check.svg" alt="Куплена"></a>
         <a th:if="${book.status?.equals('CART')}" class="Card-status" title="В корзине"><img src="/assets/img/icons/shopping-basket.svg" alt="В корзине"></a>
         <a th:if="${book.status?.equals('KEPT')}" class="Card-status" title="Отложена"><img src="/assets/img/icons/heart.svg" alt="Отложена"></a>
     </a>

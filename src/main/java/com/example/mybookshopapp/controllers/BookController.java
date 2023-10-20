@@ -3,7 +3,7 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BookRepository;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.ResourceStorage;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +28,11 @@ public class BookController extends AbstractHeaderFooterController {
     private final BookService bookService;
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
 
     @GetMapping("/{bookSlug}")
     public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
 
         if (book != null){

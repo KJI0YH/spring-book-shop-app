@@ -1,14 +1,10 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
-import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.data.ContactChangeConfirmationEntity;
-import com.example.mybookshopapp.data.SmsCodeEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.dto.ContactConfirmationPayload;
-import com.example.mybookshopapp.dto.ContactConfirmationResponse;
-import com.example.mybookshopapp.dto.ContactDto;
-import com.example.mybookshopapp.dto.RegistrationForm;
+import com.example.mybookshopapp.dto.*;
+import com.example.mybookshopapp.errors.ApproveContactException;
 import com.example.mybookshopapp.errors.ContactConfirmationException;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
@@ -31,14 +27,15 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthUserController extends AbstractHeaderFooterController {
 
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
+    private final UserProfileService userProfileService;
     private final BookService bookService;
-    private final CodeService codeService;
+    private final ApproveContactService approveContactService;
     private final TransactionService transactionService;
     private final EmailService emailService;
     private final PhoneService phoneService;
     private final JWTUtil jwtUtil;
-    private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final ContactChangeConfirmationService confirmationService;
 
     @GetMapping("/signin")
@@ -53,63 +50,39 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @PostMapping("/api/requestContactConfirmation")
-    @ResponseBody
-    public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
-        ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult("true");
-
-        // Confirmation with email
-        if (payload.getContact().contains("@")) {
-            String codeString = codeService.sendCodeToEmail(payload.getContact());
-
-            // Expires in 60 seconds
-            codeService.saveCode(new SmsCodeEntity(codeString, 60));
-            return response;
-
-            // Confirmation with phone
-        } else {
-            String smsCodeString = codeService.sendCodeToPhone(payload.getContact());
-
-            // Expires in 60 seconds
-            codeService.saveCode(new SmsCodeEntity(smsCodeString, 60));
-            return response;
-        }
+    public ResponseEntity<ApiResponse> handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) throws ApproveContactException {
+        userProfileService.initiateContactConfirmation(payload);
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/api/approveContact")
     @ResponseBody
-    public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
-        ContactConfirmationResponse response = new ContactConfirmationResponse();
-
-        if (codeService.verifyCode(payload.getCode())) {
-            response.setResult("true");
-        } else {
-            response.setResult("false");
-        }
-
-        return response;
+    public ResponseEntity<ApiResponse> handleApproveContact(@RequestBody ContactConfirmationPayload payload) throws ApproveContactException {
+        userProfileService.approveContact(payload);
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/reg")
     public String handleUserRegistration(RegistrationForm registrationForm, Model model) throws UserAlreadyExistException {
-        userRegister.registerNewUser(registrationForm);
+        userService.registerNewUser(registrationForm);
         model.addAttribute("regOk", true);
         return "signin";
     }
 
+    // TODO create viewed cookie
+    // TODO merge cookies cart, postponed, viewed
     @PostMapping("/login")
     @ResponseBody
     public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
                                                    HttpServletResponse httpServletResponse) {
-        ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
-        Cookie cookie = new Cookie("token", loginResponse.getResult());
-        httpServletResponse.addCookie(cookie);
+        ContactConfirmationResponse loginResponse = userService.jwtLogin(payload);
+        httpServletResponse.addCookie(new Cookie("token", loginResponse.getResult()));
         return loginResponse;
     }
 
     @GetMapping("/my")
     public String handleMy(Model model) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", 0, 20));
         }
@@ -118,7 +91,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
 
     @GetMapping("/my/archive")
     public String handleMyArchive(Model model) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", 0, 20));
         }
@@ -127,8 +100,8 @@ public class AuthUserController extends AbstractHeaderFooterController {
 
     @GetMapping("/profile")
     public String handleProfile(Model model) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
+        UserEntity user = (UserEntity) userService.getCurrentUser();
+        if (user != null) {
             model.addAttribute("transactions", transactionService.getTransactionByUser(user, 0, 50, "desc"));
         }
         return "profile";
@@ -140,24 +113,24 @@ public class AuthUserController extends AbstractHeaderFooterController {
                                       @RequestParam(value = "phone") String phone,
                                       @RequestParam(value = "password") String password,
                                       @RequestParam(value = "passwordReply") String passwordReply,
-                                      RedirectAttributes redirectAttributes){
+                                      RedirectAttributes redirectAttributes) {
 
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user == null){
+        UserEntity user = (UserEntity) userService.getCurrentUser();
+        if (user == null) {
             return "redirect:profile";
         }
         List<String> messages = new ArrayList<String>();
 
         // Name change
-        if (!name.isEmpty() && !name.equals(user.getName())){
-            userRegister.changeName(user, name);
+        if (!name.isEmpty() && !name.equals(user.getName())) {
+            userService.changeName(user, name);
             messages.add("Name successfully changed");
         }
 
         // Password change
         if (!password.isEmpty() && !passwordReply.isEmpty()) {
             if (password.equals(passwordReply)) {
-                userRegister.changePassword(user, password);
+                userService.changePassword(user, password);
                 messages.add("Password successfully changed");
             } else {
                 messages.add("Password do not match");
@@ -170,15 +143,15 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @PostMapping("/profile/change/email")
-    public ResponseEntity<ApiResponse> handleProfileEmailChange(@RequestBody ContactDto email){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user == null){
+    public ResponseEntity<ApiResponse> handleProfileEmailChange(@RequestBody ContactDto email) {
+        UserEntity user = (UserEntity) userService.getCurrentUser();
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String newEmail = email.getContact();
 
-        if (!newEmail.isEmpty() && !user.getEmail().equals(newEmail)){
+        if (!newEmail.isEmpty() && !user.getEmail().equals(newEmail)) {
             String key = emailService.generateEmailConfirmationKey(newEmail);
             confirmationService.createConfirmation(key, user, newEmail);
             String link = emailService.getEmailConfirmationLink(key);
@@ -191,20 +164,20 @@ public class AuthUserController extends AbstractHeaderFooterController {
     @GetMapping("/profile/change/email")
     public String handleProfileEmailChangeConfirm(@RequestParam(name = "key", required = true) String key,
                                                   RedirectAttributes redirectAttributes,
-                                                  HttpServletResponse httpServletResponse){
+                                                  HttpServletResponse httpServletResponse) {
         ContactChangeConfirmationEntity newContact;
         try {
             newContact = confirmationService.getContactConfirmationByKey(key);
-        } catch(ContactConfirmationException e){
+        } catch (ContactConfirmationException e) {
             return "redirect:/profile";
         }
 
-        UserEntity newUser = userRegister.changeEmail(newContact.getUser(), newContact.getContact());
+        UserEntity newUser = userService.changeEmail(newContact.getUser(), newContact.getContact());
         confirmationService.confirmContactChange(newContact);
         redirectAttributes.addFlashAttribute("profileMessage", "Email changed successfully");
 
         // Update jwt token
-        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(newUser.getEmail());
+        EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(newUser.getEmail());
         Cookie cookie = new Cookie("token", jwtUtil.generateToken(userDetails));
         cookie.setPath("/");
         httpServletResponse.addCookie(cookie);
@@ -213,42 +186,42 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @PostMapping("/profile/change/phone")
-    public ResponseEntity<ApiResponse> handleProfilePhoneChange(@RequestBody ContactDto phone){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user == null){
+    public ResponseEntity<ApiResponse> handleProfilePhoneChange(@RequestBody ContactDto phone) {
+        UserEntity user = (UserEntity) userService.getCurrentUser();
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String newPhone = phone.getContact();
 
-        if (!newPhone.isEmpty() && !user.getPhone().equals(newPhone)){
+        if (!newPhone.isEmpty() && !user.getPhone().equals(newPhone)) {
             String key = phoneService.generatePhoneConfirmationKey(newPhone);
             confirmationService.createConfirmation(key, user, newPhone);
             String link = phoneService.getPhoneConfirmationLink(key);
             phoneService.sendPhoneMessage(newPhone, "Follow the link to confirm your phone change: " + link);
         }
 
-        return ResponseEntity.ok(new ApiResponse( true));
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @GetMapping("/profile/change/phone")
     public String handleProfilePhoneChangeConfirm(@RequestParam(name = "key", required = true) String key,
-                                                 RedirectAttributes redirectAttributes,
-                                                  HttpServletResponse httpServletResponse){
+                                                  RedirectAttributes redirectAttributes,
+                                                  HttpServletResponse httpServletResponse) {
         ContactChangeConfirmationEntity newContact;
         try {
             newContact = confirmationService.getContactConfirmationByKey(key);
-        } catch (ContactConfirmationException e){
+        } catch (ContactConfirmationException e) {
             return "redirect:/profile";
         }
 
-        UserEntity newUser = userRegister.changePhone(newContact.getUser(), newContact.getContact());
+        UserEntity newUser = userService.changePhone(newContact.getUser(), newContact.getContact());
         confirmationService.confirmContactChange(newContact);
         redirectAttributes.addFlashAttribute("profileMessage", "Phone changed successfully");
 
 
         // Update jwt token
-        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(newUser.getPhone());
+        EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(newUser.getPhone());
         Cookie cookie = new Cookie("token", jwtUtil.generateToken(userDetails));
         cookie.setPath("/");
         httpServletResponse.addCookie(cookie);

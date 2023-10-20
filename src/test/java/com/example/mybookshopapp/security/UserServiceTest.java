@@ -13,19 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
-class BookstoreUserRegisterTest extends SpringBootApplicationTest {
+class UserServiceTest extends SpringBootApplicationTest {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
-    private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public BookstoreUserRegisterTest(UserRepository userRepository, AuthenticationManager authenticationManager, BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public UserServiceTest(UserRepository userRepository, AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService, JWTUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
-        this.bookstoreUserDetailsService = bookstoreUserDetailsService;
+        this.customUserDetailsService = customUserDetailsService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
     }
@@ -46,7 +46,7 @@ class BookstoreUserRegisterTest extends SpringBootApplicationTest {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 "password"));
-        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(user.getEmail());
+        EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(user.getEmail());
         String jwtToken = jwtUtil.generateToken(userDetails);
         Assertions.assertTrue(jwtUtil.validateToken(jwtToken, userDetails));
         Assertions.assertFalse(jwtUtil.isTokenExpired(jwtToken));

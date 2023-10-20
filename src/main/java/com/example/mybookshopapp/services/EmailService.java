@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,12 +17,12 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EmailService {
 
+    private final JavaMailSender javaMailSender;
+    private final EmailValidator emailValidator = EmailValidator.getInstance();
     @Value("${appEmail.email}")
     private String SENDER_EMAIL;
 
-    private final JavaMailSender javaMailSender;
-
-    public void sendEmailMessage(String receiveEmail, String subject, String text){
+    public void sendEmailMessage(String receiveEmail, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(SENDER_EMAIL);
         message.setTo(receiveEmail);
@@ -30,11 +31,11 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public String getEmailConfirmationLink(String key){
+    public String getEmailConfirmationLink(String key) {
         return "http://localhost:8085/profile/change/email?key=" + key;
     }
 
-    public String generateEmailConfirmationKey(String email){
+    public String generateEmailConfirmationKey(String email) {
         String input = email + ":" + LocalDateTime.now().toString();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -42,16 +43,20 @@ public class EmailService {
             messageDigest.update(inputBytes);
             byte[] digest = messageDigest.digest();
             return getDigestString(digest);
-        } catch (NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             return input;
         }
     }
 
-    private String getDigestString(byte[] digest){
+    private String getDigestString(byte[] digest) {
         StringBuilder builder = new StringBuilder();
-        for (byte b : digest){
+        for (byte b : digest) {
             builder.append(String.format("%02x", b));
         }
         return builder.toString();
+    }
+
+    public boolean isValidEmail(String email) {
+        return emailValidator.isValid(email);
     }
 }

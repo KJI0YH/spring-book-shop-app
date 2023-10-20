@@ -65,7 +65,7 @@ public class TransactionService {
         }
     }
 
-    public void cartBooksPayment(UserEntity user) throws BalanceNotEnoughException, ApiWrongParameterException {
+    public void cartBooksPayment(UserEntity user) throws BalanceNotEnoughException {
         List<BookEntity> cartBooks = bookService.getAllBooksByUserStatus(user.getId(), "CART");
         Integer paymentAmount = cartBooks.stream().mapToInt(BookEntity::getDiscountPrice).sum();
 

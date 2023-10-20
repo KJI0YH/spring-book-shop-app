@@ -1,7 +1,6 @@
 package com.example.mybookshopapp.security.jwt;
 
-import com.example.mybookshopapp.security.BookstoreUserDetails;
-import com.example.mybookshopapp.security.BookstoreUserDetailsService;
+import com.example.mybookshopapp.security.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,12 +20,12 @@ import java.io.IOException;
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
-    private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
     private final JwtBlackListService jwtBlackListService;
 
-    public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, JwtBlackListService jwtBlackListService) {
-        this.bookstoreUserDetailsService = bookstoreUserDetailsService;
+    public JWTRequestFilter(CustomUserDetailsService customUserDetailsService, JWTUtil jwtUtil, JwtBlackListService jwtBlackListService) {
+        this.customUserDetailsService = customUserDetailsService;
         this.jwtUtil = jwtUtil;
         this.jwtBlackListService = jwtBlackListService;
     }
@@ -51,7 +50,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                     }
 
                     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        UserDetails userDetails = bookstoreUserDetailsService.loadUserByUsername(username);
+                        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
                         if (jwtUtil.validateToken(token, userDetails)) {
                             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities());

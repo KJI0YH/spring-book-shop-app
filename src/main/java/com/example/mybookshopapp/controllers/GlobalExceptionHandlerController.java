@@ -17,6 +17,7 @@ public class GlobalExceptionHandlerController {
             UserAlreadyExistException.class,
             UsernameNotFoundException.class,
             ApiWrongParameterException.class,
+            ApproveContactException.class
     })
     public ResponseEntity<ApiResponse> handleApiException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

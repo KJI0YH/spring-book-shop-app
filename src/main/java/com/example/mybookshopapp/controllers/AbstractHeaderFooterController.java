@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CookieService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public abstract class AbstractHeaderFooterController {
 
     @Autowired
-    private BookstoreUserRegister userRegister;
+    private UserService userService;
 
     @Autowired
     private BookService bookService;
@@ -28,12 +28,12 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("curUsr")
     public Object curUsr() {
-        return userRegister.getCurrentUser();
+        return userService.getCurrentUser();
     }
 
     @ModelAttribute("cartAmount")
     public Long cartAmount(@CookieValue(value = "cartContents", required = false) String cartContents) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
 
         // Authorized user
         if (user != null) {
@@ -47,7 +47,7 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("postponedAmount")
     public Long postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
 
         // Authorized user
         if (user != null) {
@@ -62,7 +62,7 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("myAmount")
     public Long myAmount() {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         if (user != null) {
             return bookService.getCountOfBooksByUserStatus(user.getId(), "PAID") +
                     bookService.getCountOfBooksByUserStatus(user.getId(), "ARCHIVED");

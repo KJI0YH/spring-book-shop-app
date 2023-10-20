@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CookieService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class PostponedController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final CookieService cookieService;
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
 
     @ModelAttribute(name = "bookKept")
     public List<BookEntity> bookKept() {
@@ -40,7 +40,7 @@ public class PostponedController extends AbstractHeaderFooterController {
     @GetMapping
     public String postponedPage(@CookieValue(value = "postponedContents", required = false) String postponedContents,
                                 Model model) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         List<BookEntity> booksInPostponed;
 
         // Authorized user

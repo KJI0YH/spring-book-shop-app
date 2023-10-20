@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.MessageDto;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommonPageController extends AbstractHeaderFooterController{
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
@@ -68,7 +68,7 @@ public class CommonPageController extends AbstractHeaderFooterController{
 
     @GetMapping("/books/viewed")
     public String viewedBooksPage(Model model){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         if (user != null){
             model.addAttribute("booksList", bookService.getPageOfViewedBooks(user.getId(), 0, 20));
         }

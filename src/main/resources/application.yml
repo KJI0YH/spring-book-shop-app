@@ -59,3 +59,9 @@ management:
   endpoint:
     health:
       show-details: always
+
+contact:
+  confirmation:
+    max-attempts: 3
+    expiration-seconds: 600
+    resend-seconds: 300

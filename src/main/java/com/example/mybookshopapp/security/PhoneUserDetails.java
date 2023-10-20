@@ -1,11 +1,10 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.data.UserEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 
-public class PhoneNumberUserDetails extends BookstoreUserDetails {
+public class PhoneUserDetails extends EmailUserDetails {
 
-    public PhoneNumberUserDetails(UserEntity userEntity) {
+    public PhoneUserDetails(UserEntity userEntity) {
         super(userEntity);
     }
 

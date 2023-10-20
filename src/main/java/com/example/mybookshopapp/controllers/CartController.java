@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
+import com.example.mybookshopapp.security.UserService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CookieService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class CartController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final CookieService cookieService;
-    private final BookstoreUserRegister userRegister;
+    private final UserService userService;
 
     @ModelAttribute(name = "bookCart")
     public List<BookEntity> bookCart() {
@@ -44,7 +44,7 @@ public class CartController extends AbstractHeaderFooterController {
     @GetMapping
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
                                     Model model) {
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        UserEntity user = (UserEntity) userService.getCurrentUser();
         List<BookEntity> booksInCart;
 
         // Authorized user
