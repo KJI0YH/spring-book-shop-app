@@ -3,10 +3,10 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.repositories.BookRepository;
-import com.example.mybookshopapp.services.CookieService;
-import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.CookieService;
 import com.example.mybookshopapp.services.ResourceStorage;
+import com.example.mybookshopapp.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +37,19 @@ public class BookController extends AbstractHeaderFooterController {
     public String getBookPage(@PathVariable("bookSlug") String bookSlug,
                               @CookieValue(value = "viewedContents", required = false) String viewedContents,
                               Model model,
-                              HttpServletResponse response){
+                              HttpServletResponse response) {
         UserEntity user = userService.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
 
-        if (book != null){
+        if (book != null) {
             model.addAttribute("book", book);
 
             // Authorized user
-            if (user != null){
+            if (user != null) {
                 bookService.setViewedBook(user.getId(), book.getId());
+                if (bookService.isBookPaid(book.getId(), user.getId())) {
+                    return "books/slugmy";
+                }
             }
 
             // Unauthorized user

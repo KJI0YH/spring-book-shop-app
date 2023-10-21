@@ -241,7 +241,7 @@ public class BookService {
         bookReviewRateRepository.save(reviewLike);
     }
 
-    private boolean isBookPaid(Integer bookId, Integer userId) {
+    public boolean isBookPaid(Integer bookId, Integer userId) {
         return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
     }
 
