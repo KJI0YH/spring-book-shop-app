@@ -172,38 +172,6 @@ p.error-browser
                             <!--+div.-cartElement.-cartElement_amount-->
                             <!--    +Amount._product-->
                             <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline"
-                                        data-alttext="Отложена"
-                                        data-bookid="[1111]" data-btnradio="buyblock"
-                                        data-btntype="check"
-                                        data-check="false"
-                                        data-sendstatus="KEPT"
-                                        th:attr="data-bookid=${'[' + book.id + ']'}">
-                                    <span class="btn-icon">
-                                        <img alt="heart.svg" src="/assets/img/icons/heart.svg"/>
-                                    </span>
-                                    <span class="btn-content" th:text="#{book.postpone}">Отложить</span>
-                                </button>
-                            </div>
-                            <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline"
-                                        data-alttext="В корзине"
-                                        data-bookid="[1111]" data-btnradio="buyblock"
-                                        data-btntype="check"
-                                        data-check="false"
-                                        data-sendstatus="CART"
-                                        th:attr="data-bookid=${'[' + book.id + ']'}">
-                                    <span class="btn-icon">
-                                        <img alt="shopping-basket.svg" src="/assets/img/icons/shopping-basket.svg"/>
-                                    </span>
-                                    <span class="btn-content" th:text="#{book.buy}">Купить</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="ProductCard-cart">
-                            <!--+div.-cartElement.-cartElement_amount-->
-                            <!--    +Amount._product-->
-                            <div class="ProductCard-cartElement">
                                 <a class="btn btn_primary btn_outline" href="#">
                                 <span class="btn-icon">
                                     <img alt="download.svg" src="/assets/img/icons/download.svg"/>
