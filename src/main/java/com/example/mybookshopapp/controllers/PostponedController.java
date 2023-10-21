@@ -40,7 +40,7 @@ public class PostponedController extends AbstractHeaderFooterController {
     @GetMapping
     public String postponedPage(@CookieValue(value = "postponedContents", required = false) String postponedContents,
                                 Model model) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         List<BookEntity> booksInPostponed;
 
         // Authorized user

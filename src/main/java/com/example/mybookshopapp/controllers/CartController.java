@@ -44,7 +44,7 @@ public class CartController extends AbstractHeaderFooterController {
     @GetMapping
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
                                     Model model) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         List<BookEntity> booksInCart;
 
         // Authorized user

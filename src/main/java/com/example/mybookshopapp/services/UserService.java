@@ -73,7 +73,7 @@ public class UserService {
         return response;
     }
 
-    public Object getCurrentUser() {
+    public UserEntity getCurrentUser() {
         try {
             EmailUserDetails userDetails = (EmailUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUserEntity();
@@ -94,15 +94,19 @@ public class UserService {
         return user;
     }
 
-    // TODO check existing email
-    public UserEntity changeEmail(UserEntity user, String newEmail) {
+    public UserEntity changeEmail(UserEntity user, String newEmail) throws UserAlreadyExistException {
+        if (userRepository.findUserEntityByEmail(newEmail) != null) {
+            throw new UserAlreadyExistException("User with email " + newEmail + " already exists");
+        }
         user.setEmail(newEmail);
         userRepository.save(user);
         return user;
     }
 
-    // TODO check existing phone
-    public UserEntity changePhone(UserEntity user, String newPhone) {
+    public UserEntity changePhone(UserEntity user, String newPhone) throws UserAlreadyExistException {
+        if (userRepository.findUserEntityByPhone(newPhone) != null){
+            throw new UserAlreadyExistException("User with phone " + newPhone + " already exists");
+        }
         user.setPhone(newPhone);
         userRepository.save(user);
         return user;

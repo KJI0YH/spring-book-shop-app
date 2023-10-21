@@ -38,7 +38,7 @@ public class BookController extends AbstractHeaderFooterController {
                               @CookieValue(value = "viewedContents", required = false) String viewedContents,
                               Model model,
                               HttpServletResponse response){
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
 
         if (book != null){

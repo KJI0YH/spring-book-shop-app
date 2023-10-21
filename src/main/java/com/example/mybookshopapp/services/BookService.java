@@ -119,7 +119,7 @@ public class BookService {
 
     // TODO refactor
     private List<BookEntity> setBook2UserStatus(List<BookEntity> books) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user != null) {
             Book2UserIdEntity id = new Book2UserIdEntity();
             id.setUserId(user.getId());

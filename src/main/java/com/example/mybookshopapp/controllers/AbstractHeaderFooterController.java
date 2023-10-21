@@ -33,7 +33,7 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("cartAmount")
     public Long cartAmount(@CookieValue(value = "cartContents", required = false) String cartContents) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
 
         // Authorized user
         if (user != null) {
@@ -47,7 +47,7 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("postponedAmount")
     public Long postponedAmount(@CookieValue(value = "postponedContents", required = false) String postponedContents) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
 
         // Authorized user
         if (user != null) {
@@ -62,7 +62,7 @@ public abstract class AbstractHeaderFooterController {
 
     @ModelAttribute("myAmount")
     public Long myAmount() {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user != null) {
             return bookService.getCountOfBooksByUserStatus(user.getId(), "PAID") +
                     bookService.getCountOfBooksByUserStatus(user.getId(), "ARCHIVED");

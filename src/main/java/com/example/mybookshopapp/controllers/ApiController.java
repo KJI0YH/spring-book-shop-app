@@ -53,7 +53,7 @@ public class ApiController {
     @GetMapping("/books/viewed")
     public ResponseEntity<BooksPageDto> getBooksViewedPage(@RequestParam("offset") Integer offset,
                                                            @RequestParam("limit") Integer limit) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         return ResponseEntity.ok(new BooksPageDto((bookService.getPageOfViewedBooks(user.getId(), offset, limit))));
     }
 
@@ -81,14 +81,14 @@ public class ApiController {
     @GetMapping("/books/my")
     public ResponseEntity<BooksPageDto> getBooksMyPage(@RequestParam("offset") Integer offset,
                                                        @RequestParam("limit") Integer limit) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", offset, limit)));
     }
 
     @GetMapping("/books/my/archive")
     public ResponseEntity<BooksPageDto> getBooksMyArchivePage(@RequestParam("offset") Integer offset,
                                                               @RequestParam("limit") Integer limit) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", offset, limit)));
     }
 
@@ -97,7 +97,7 @@ public class ApiController {
                                                               @RequestBody BookStatusDto bookStatusDto,
                                                               @CookieValue(value = "cartContents", required = false) String cartContents,
                                                               @CookieValue(value = "postponedContents", required = false) String keptContents) throws ApiWrongParameterException {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
 
         // Authorized user
         if (user != null) {
@@ -115,7 +115,7 @@ public class ApiController {
 
     @PostMapping("/rateBook")
     public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) throws ApiWrongParameterException {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book"));
@@ -126,7 +126,7 @@ public class ApiController {
 
     @PostMapping("/bookReview")
     public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can review the book"));
@@ -138,7 +138,7 @@ public class ApiController {
 
     @PostMapping("/rateBookReview")
     public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(false, "Only authorised users can rate the book review"));
@@ -168,7 +168,7 @@ public class ApiController {
     public ResponseEntity<TransactionPageDto> handleTransactions(@RequestParam(name = "sort", required = false) String sort,
                                                                  @RequestParam(name = "offset") Integer offset,
                                                                  @RequestParam(name = "limit") Integer limit) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

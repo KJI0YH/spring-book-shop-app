@@ -27,7 +27,7 @@ public class PaymentController {
 
     @PostMapping("/payment/cart")
     public String handlePaymentBooks() throws BalanceNotEnoughException {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         transactionService.cartBooksPayment(user);
         return "redirect:/my";
     }

@@ -28,48 +28,43 @@ public class LoggingPathsAspect {
     public void loggingPathsAspectPointcut() {
     }
 
-
     @Before("loggingPathsAspectPointcut()")
-    public void logBeforeMapping(JoinPoint joinPoint) throws JsonProcessingException {
+    public void logBeforeMapping(JoinPoint joinPoint) {
 
-        // Get information about method, host and path of the request
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String requestPath = request.getRequestURI();
-        String requestMethod = request.getMethod();
-        String requestHost = request.getHeader("host");
-        StringBuilder builder = new StringBuilder(MessageFormat.format("{0} {1}{2}", requestMethod, requestHost, requestPath));
-
-        // Get query parameters of the request
-        String queryParams = request.getQueryString();
-        if (queryParams != null && !queryParams.isEmpty()) {
-            builder.append('?').append(queryParams);
-        }
-
-        Object[] args = joinPoint.getArgs();
-
-        // Get method arguments of the request
-        if (args != null) {
-            builder.append(" Args: ");
-        }
-        for (Object arg : args) {
-            try {
-                builder.append(mapper.writeValueAsString(arg));
-            } catch (JsonProcessingException ex) {
-                //
-            }
-        }
-
-        logger.info(builder.toString());
+//        // Get information about method, host and path of the request
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+//        String requestPath = request.getRequestURI();
+//        String requestMethod = request.getMethod();
+//        String requestHost = request.getHeader("host");
+//        StringBuilder builder = new StringBuilder(MessageFormat.format("{0} {1}{2}", requestMethod, requestHost, requestPath));
+//
+//        // Get query parameters of the request
+//        String queryParams = request.getQueryString();
+//        if (queryParams != null && !queryParams.isEmpty()) {
+//            builder.append('?').append(queryParams);
+//        }
+//
+//        Object[] args = joinPoint.getArgs();
+//
+//        // Get method arguments of the request
+//        if (args != null) {
+//            builder.append(" Args: ");
+//            for (Object arg : args) {
+//                try {
+//                    builder.append(mapper.writeValueAsString(arg));
+//                } catch (JsonProcessingException ignored) {
+//                }
+//            }
+//        }
+//        logger.info(builder.toString());
     }
 
     @AfterReturning(pointcut = "loggingPathsAspectPointcut()", returning = "result")
     public void logAfterReturningMapping(JoinPoint joinPoint, Object result) {
         try {
             logger.info(("Return: " + mapper.writeValueAsString(result)));
-        } catch (JsonProcessingException e) {
-            //
+        } catch (JsonProcessingException ignored) {
         }
-
     }
 
     @AfterThrowing(pointcut = "loggingPathsAspectPointcut()", throwing = "exception")

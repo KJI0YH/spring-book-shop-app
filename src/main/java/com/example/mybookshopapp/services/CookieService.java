@@ -1,6 +1,10 @@
 package com.example.mybookshopapp.services;
 
+import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.security.CustomUserDetailsService;
+import com.example.mybookshopapp.security.EmailUserDetails;
+import com.example.mybookshopapp.security.jwt.JWTUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +19,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CookieService {
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JWTUtil jwtUtil;
 
     public String[] getStringIds(String cookie) {
         if (cookie == null || cookie.isEmpty()) {
@@ -76,9 +82,17 @@ public class CookieService {
 
     public void deleteAllCookies(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) return;
         for (Cookie cookie : cookies) {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
+    }
+
+    public Cookie getJwtTokenCookie(UserEntity user) {
+        EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(user.getEmail());
+        Cookie cookie = new Cookie("token", jwtUtil.generateToken(userDetails));
+        cookie.setPath("/");
+        return cookie;
     }
 }

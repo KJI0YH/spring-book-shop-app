@@ -70,7 +70,7 @@ public class CommonPageController extends AbstractHeaderFooterController {
     @GetMapping("/books/viewed")
     public String viewedBooksPage(@CookieValue(value = "viewedContents", required = false) String viewedContents,
                                   Model model) {
-        UserEntity user = (UserEntity) userService.getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
         if (user != null) {
             model.addAttribute("booksList", bookService.getPageOfViewedBooks(user.getId(), 0, 20));
         } else {
