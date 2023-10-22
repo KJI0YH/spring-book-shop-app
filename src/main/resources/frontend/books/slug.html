@@ -124,12 +124,14 @@ p.error-browser
                                     </div>
                                 </button>
                             </div>
-                            <div class="ProductCard-assessment">
-                                <span class="ProductCard-titleProp" th:text="#{book.rate}">Оцените книгу:</span>
-                                <span class="Rating Rating_input" data-bookid="2121" th:attr="data-bookid=${book.id}">
-                                    <span th:replace="~{fragments/rating_stars_input_fragment :: rating_stars}"></span>
-                                </span>
-                            </div>
+                            <th:block th:if="${curUsr != null}">
+                                <div class="ProductCard-assessment">
+                                    <span class="ProductCard-titleProp" th:text="#{book.rate}">Оцените книгу:</span>
+                                    <span class="Rating Rating_input" data-bookid="2121" th:attr="data-bookid=${book.id}">
+                                        <span th:replace="~{fragments/rating_stars_input_fragment :: rating_stars}"></span>
+                                    </span>
+                                </div>
+                            </th:block>
                             <div class="ProductCard-tags">
                                 <span class="ProductCard-titleProp" th:text="#{book.tags}">Тэги:</span><br>
                                 <th:block th:each="tag : ${book.tagList}">
@@ -207,19 +209,26 @@ p.error-browser
                     </div>
                 </div>
                 <div class="Comments">
-                    <strong class="Comments-title">Написать отзыв</strong>
-                    <div class="Comments-addComment">
-                        <form action="#" class="form" data-bookid="1111" method="post" th:attr="data-bookid=${book.id}">
-                            <div class="form-group">
-                                <textarea class="form-textarea Comments-review" data-validate="require" id="review"
-                                          name="review" placeholder="Текст отзыва"></textarea>
-                            </div>
-                            <div class="form-group Comments-sendReview">
-                                <button class="btn btn_warning" type="submit">Отправить отзыв
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <th:block th:if="${curUsr == null}">
+                        <h3>Only authorised users can leave reviews</h3>
+                        <div><a th:href="@{/signin}" th:text="Signin"></a></div>
+                        <div><a th:href="@{/signup}" th:text="Signup"></a></div>
+                    </th:block>
+                    <th:block th:unless="${curUsr == null}">
+                        <strong class="Comments-title">Написать отзыв</strong>
+                        <div class="Comments-addComment">
+                            <form action="#" class="form" data-bookid="1111" method="post" th:attr="data-bookid=${book.id}">
+                                <div class="form-group">
+                                    <textarea class="form-textarea Comments-review" data-validate="require" id="review"
+                                              name="review" placeholder="Текст отзыва"></textarea>
+                                </div>
+                                <div class="form-group Comments-sendReview">
+                                    <button class="btn btn_warning" type="submit">Отправить отзыв
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </th:block>
                     <div class="Comment" th:each="review : ${book.reviewList}">
                         <div class="Comment-column Comment-column_pict">
                             <div class="Comment-avatar">

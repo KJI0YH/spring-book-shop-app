@@ -88,7 +88,7 @@ public class BookService {
     }
 
     public BookEntity getBookBySlug(String slug) {
-        return bookRepository.findBookEntityBySlug(slug);
+        return setBook2UserStatus(bookRepository.findBookEntityBySlug(slug));
     }
 
     public List<BookEntity> getAllBooksByUserStatus(Integer userId, String status) {
@@ -132,6 +132,18 @@ public class BookService {
             }
         }
         return books;
+    }
+
+    private BookEntity setBook2UserStatus(BookEntity book) {
+        UserEntity user = userService.getCurrentUser();
+        if (user != null) {
+            Book2UserIdEntity id = new Book2UserIdEntity(book.getId(), user.getId());
+            Book2UserEntity book2user = book2UserRepository.findBook2UserEntityById(id);
+            if (book2user != null) {
+                book.setStatus(book2user.getType().getCode());
+            }
+        }
+        return book;
     }
 
     public Book2UserViewedEntity setViewedBook(Integer userId, Integer bookId) {

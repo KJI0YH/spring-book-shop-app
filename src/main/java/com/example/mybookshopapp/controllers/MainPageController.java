@@ -51,7 +51,7 @@ public class MainPageController extends AbstractHeaderFooterController {
     public String getSearchResults(@PathVariable(value = "searchWord", required = false) String searchWord,
                                    Model model) {
         model.addAttribute("searchWordDto", new SearchWordDto(searchWord));
-        model.addAttribute("searchResults", bookService.getPageOfBooksByTitle(searchWord, 0, 20));
+        model.addAttribute("booksList", bookService.getPageOfBooksByTitle(searchWord, 0, 20));
         return "search/index";
     }
 }
