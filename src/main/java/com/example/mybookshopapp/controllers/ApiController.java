@@ -29,6 +29,7 @@ public class ApiController {
     private final PaymentService paymentService;
     private final UserService userService;
     private final DateService dateService;
+    private final BookSearchService bookSearchService;
 
     @GetMapping("/books/recent")
     public ResponseEntity<BooksPageDto> getRecentBooksPage(@RequestParam("offset") Integer offset,
@@ -149,10 +150,10 @@ public class ApiController {
     }
 
     @GetMapping("/search/{searchWord}")
-    public ResponseEntity<BooksPageDto> getSearchPage(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto,
+    public ResponseEntity<BooksPageDto> getSearchPage(@PathVariable(value = "searchWord", required = false) String searchWord,
                                                       @RequestParam("offset") Integer offset,
                                                       @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTitle(searchWordDto.getExample(), offset, limit)));
+        return ResponseEntity.ok(new BooksPageDto(bookSearchService.getPageOfBooksByQuery(searchWord, offset, limit)));
     }
 
     @PostMapping(value = "/contacts/message", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})

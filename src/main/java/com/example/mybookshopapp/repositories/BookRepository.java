@@ -1,7 +1,6 @@
 package com.example.mybookshopapp.repositories;
 
 import com.example.mybookshopapp.data.BookEntity;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +13,21 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     Page<BookEntity> findBookEntitiesByTitleContainingIgnoreCase(String bookTitle, Pageable nextPage);
+
+    @Query(value = "select id from book where lower(title) like lower(concat('%', ?1, '%'))", nativeQuery = true)
+    List<Integer> findBookEntitiesIdByTitleContainingIgnoreCase(String title);
+
+    @Query(value = "select id from book where lower(description) like lower(concat('%', ?1, '%'))", nativeQuery = true)
+    List<Integer> findBookEntitiesIdByDescriptionContainingIgnoreCase(String description);
+
+    @Query(value = "select distinct b.id from book as b inner join book2genre as b2g on b.id = b2g.book_id where b2g.genre_id in ?1", nativeQuery = true)
+    List<Integer> findBookEntitiesIdByGenreIdIn(List<Integer> genreIds);
+
+    @Query(value = "select distinct b.id from book as b inner join book2tag as b2t on b.id = b2t.book_id where b2t.tag_id in ?1", nativeQuery = true)
+    List<Integer> findBookEntitiesIdByTagIdIn(List<Integer> tagIds);
+
+    @Query(value = "select distinct b.id from book as b inner join book2author as b2a on b.id = b2a.book_id where b2a.author_id in ?1", nativeQuery = true)
+    List<Integer> findBookEntitiesIdByAuthorIdIn(List<Integer> authorIds);
 
     @Query(value = "select * FROM book WHERE pub_date BETWEEN COALESCE(?1, date '0001-01-01') AND COALESCE(?2, date '9999-12-31') ORDER BY pub_date DESC", nativeQuery = true)
     Page<BookEntity> findBooksByPubDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);

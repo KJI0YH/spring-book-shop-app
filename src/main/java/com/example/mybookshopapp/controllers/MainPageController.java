@@ -3,6 +3,7 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.dto.TagDto;
+import com.example.mybookshopapp.services.BookSearchService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.TagService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class MainPageController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final TagService tagService;
+    private final BookSearchService bookSearchService;
 
     @ModelAttribute("recommendedBooks")
     public List<BookEntity> recommendedBooks() {
@@ -50,8 +52,10 @@ public class MainPageController extends AbstractHeaderFooterController {
     @GetMapping(value = {"/search", "/search/{searchWord}"})
     public String getSearchResults(@PathVariable(value = "searchWord", required = false) String searchWord,
                                    Model model) {
+        List<Integer> bookIds = bookSearchService.getBooksIdsByQuery(searchWord);
         model.addAttribute("searchWordDto", new SearchWordDto(searchWord));
-        model.addAttribute("booksList", bookService.getPageOfBooksByTitle(searchWord, 0, 20));
+        model.addAttribute("booksFound", bookIds.size());
+        model.addAttribute("booksList", bookSearchService.getPageOfBooks(bookIds, 0, 20));
         return "search/index";
     }
 }
