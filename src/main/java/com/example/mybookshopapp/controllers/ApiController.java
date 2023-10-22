@@ -30,6 +30,7 @@ public class ApiController {
     private final UserService userService;
     private final DateService dateService;
     private final BookSearchService bookSearchService;
+    private final BookRecommendedService bookRecommendedService;
 
     @GetMapping("/books/recent")
     public ResponseEntity<BooksPageDto> getRecentBooksPage(@RequestParam("offset") Integer offset,
@@ -42,7 +43,7 @@ public class ApiController {
     @GetMapping("/books/recommended")
     public ResponseEntity<BooksPageDto> getRecommendedBooksPage(@RequestParam("offset") Integer offset,
                                                                 @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit)));
+        return ResponseEntity.ok(new BooksPageDto(bookRecommendedService.getPageOfRecommendedBooks(offset, limit)));
     }
 
     @GetMapping("/books/popular")

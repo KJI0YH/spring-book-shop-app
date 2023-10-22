@@ -72,6 +72,7 @@ public class BookController extends AbstractHeaderFooterController {
         return ("redirect:/books/" + bookSlug);
     }
 
+    // TODO check paid and authorization
     @GetMapping("/download/{bookFileHash}")
     public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws IOException {
         Path path = storage.getBookFilePath(hash);

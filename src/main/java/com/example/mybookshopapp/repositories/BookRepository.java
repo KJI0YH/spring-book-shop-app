@@ -63,4 +63,20 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = "SELECT COUNT(distinct b.id) FROM book AS b JOIN book2user AS b2u ON b2u.book_id = b.id JOIN users AS u ON b2u.user_id = ?1 WHERE b2u.type_id = ?2", nativeQuery = true)
     Long getCountOfBooksByUserType(Integer userId, Integer typeId);
+
+    @Query(value = "SELECT id FROM ( " +
+            "SELECT " +
+            "b.id, b.pub_date, " +
+            "MAX(CASE WHEN b2a.author_id IN ?1 THEN 1 ELSE 0 END) AS author_match, " +
+            "MAX(CASE WHEN b2g.genre_id IN ?2 THEN 1 ELSE 0 END) AS genre_match, " +
+            "MAX(CASE WHEN b2t.tag_id IN ?3 THEN 1 ELSE 0 END) AS tag_match " +
+            "FROM book AS b " +
+            "LEFT JOIN book2author AS b2a ON b.id = b2a.book_id " +
+            "LEFT JOIN book2genre AS b2g ON b.id = b2g.book_id " +
+            "LEFT JOIN book2tag AS b2t ON b.id = b2t.book_id " +
+            "GROUP BY b.id ) AS subquery " +
+            "WHERE (author_match + genre_match + tag_match) > 0 " +
+            "ORDER BY (author_match + genre_match + tag_match) DESC, pub_date DESC", nativeQuery = true)
+    List<Integer> findBookEntitiesIdsByAuthorIdsGenreIdsTagIds(List<Integer> authorIds, List<Integer> genreIds, List<Integer> tagIds);
+
 }

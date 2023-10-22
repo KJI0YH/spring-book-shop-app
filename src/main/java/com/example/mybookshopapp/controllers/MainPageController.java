@@ -3,6 +3,7 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
 import com.example.mybookshopapp.dto.TagDto;
+import com.example.mybookshopapp.services.BookRecommendedService;
 import com.example.mybookshopapp.services.BookSearchService;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.TagService;
@@ -23,10 +24,11 @@ public class MainPageController extends AbstractHeaderFooterController {
     private final BookService bookService;
     private final TagService tagService;
     private final BookSearchService bookSearchService;
+    private final BookRecommendedService bookRecommendedService;
 
     @ModelAttribute("recommendedBooks")
     public List<BookEntity> recommendedBooks() {
-        return bookService.getPageOfRecommendedBooks(0, 6);
+        return bookRecommendedService.getPageOfRecommendedBooks(0, 6);
     }
 
     @ModelAttribute("recentBooks")

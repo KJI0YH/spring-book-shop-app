@@ -32,16 +32,6 @@ public class BookService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public List<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
-        Pageable nextPage = PageRequest.of(offset, limit);
-        return setBook2UserStatus(bookRepository.findAll(nextPage).getContent());
-    }
-
-    public List<BookEntity> getPageOfBooksByTitle(String searchWord, Integer offset, Integer limit) {
-        Pageable nextPage = PageRequest.of(offset, limit);
-        return setBook2UserStatus(bookRepository.findBookEntitiesByTitleContainingIgnoreCase(searchWord, nextPage).getContent());
-    }
-
     public List<BookEntity> getPageOfRecentBooks(LocalDate from, LocalDate to, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return setBook2UserStatus(bookRepository.findBooksByPubDateBetween(from, to, nextPage).getContent());
