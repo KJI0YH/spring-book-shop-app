@@ -2,6 +2,10 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.FileDownloadException;
+import com.example.mybookshopapp.errors.PaymentRequiredException;
+import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.BookRepository;
 import com.example.mybookshopapp.services.BookService;
 import com.example.mybookshopapp.services.CookieService;
@@ -72,20 +76,15 @@ public class BookController extends AbstractHeaderFooterController {
         return ("redirect:/books/" + bookSlug);
     }
 
-    // TODO check paid and authorization
     @GetMapping("/download/{bookFileHash}")
-    public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws IOException {
+    public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws PaymentRequiredException, UserUnauthorizedException, ApiWrongParameterException, FileDownloadException {
         Path path = storage.getBookFilePath(hash);
-
         MediaType mediaType = storage.getBookFileMime(hash);
-
         byte[] data = storage.getBookFileByteArray(hash);
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
                 .contentType(mediaType)
                 .contentLength(data.length)
                 .body(new ByteArrayResource(data));
-
     }
 }

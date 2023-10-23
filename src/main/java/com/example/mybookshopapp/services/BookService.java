@@ -2,6 +2,7 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,7 +202,7 @@ public class BookService {
         bookRateRepository.save(bookRate);
     }
 
-    public void reviewBook(Integer bookId, Integer userId, String reviewText) throws ApiWrongParameterException {
+    public void reviewBook(Integer bookId, Integer userId, String reviewText) throws ApiWrongParameterException, UserUnauthorizedException {
 
         if (reviewText.isEmpty())
             throw new ApiWrongParameterException("The text of the review can not be empty");
@@ -212,7 +213,7 @@ public class BookService {
 
         UserEntity user = userRepository.findUserEntityById(userId);
         if (user == null)
-            throw new ApiWrongParameterException("Only authorised users can review the book");
+            throw new UserUnauthorizedException("Only authorised users can review the book");
 
         BookReviewEntity bookReview = new BookReviewEntity();
         bookReview.setBook(book);
@@ -222,7 +223,7 @@ public class BookService {
         bookReviewRepository.save(bookReview);
     }
 
-    public void rateBookReview(Integer reviewId, Integer userId, Integer value) throws ApiWrongParameterException {
+    public void rateBookReview(Integer reviewId, Integer userId, Integer value) throws ApiWrongParameterException, UserUnauthorizedException {
 
         if (value != -1 && value != 1)
             throw new ApiWrongParameterException("Invalid rate value of a book review");
@@ -233,7 +234,7 @@ public class BookService {
 
         UserEntity user = userRepository.findUserEntityById(userId);
         if (user == null)
-            throw new ApiWrongParameterException("Only authorised users can rate the book review");
+            throw new UserUnauthorizedException("Only authorised users can rate the book review");
 
         BookReviewLikeIdEntity reviewLikeId = new BookReviewLikeIdEntity(reviewId, userId);
         BookReviewLikeEntity reviewLike = new BookReviewLikeEntity();

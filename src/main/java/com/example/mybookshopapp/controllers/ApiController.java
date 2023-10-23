@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentInitiateException;
+import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
@@ -127,7 +128,7 @@ public class ApiController {
     }
 
     @PostMapping("/bookReview")
-    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException {
+    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException, UserUnauthorizedException {
         UserEntity user = userService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -139,7 +140,7 @@ public class ApiController {
     }
 
     @PostMapping("/rateBookReview")
-    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException {
+    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException, UserUnauthorizedException {
         UserEntity user = userService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
