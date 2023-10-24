@@ -19,8 +19,8 @@ INSERT INTO book2user_type (id, code, name) VALUES (3, 'PAID', 'PAID');
 INSERT INTO book2user_type (id, code, name) VALUES (4, 'ARCHIVED', 'ARCHIVED');
 INSERT INTO book2user_type (id, code, name) VALUES (5, 'UNLINK', 'UNLINK');
 
-insert into users (id, hash, password_hash, reg_time, email, phone, name) values (1, 'hash1', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'email@email.com', '+711111111111', 'name1');
-insert into users (id, hash, password_hash, reg_time, email, phone, name) values (2, 'hash2', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'mail@mail.com', '+722222222222', 'name2');
+insert into users (id, hash, password_hash, reg_time, email, phone, name) values (1, 'hash1', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'email@email.com', '+375336810213', 'name1');
+insert into users (id, hash, password_hash, reg_time, email, phone, name) values (2, 'hash2', '$2a$10$kkW783J8YXI5TXmM6Ll0h.8fW0kwS8KYtskGhbbcsErYG85QOf4RK', now(), 'mail@mail.com', '+375336810214', 'name2');
 
 insert into book2user (book_id, user_id, time, type_id) VALUES (1, 1, now(), 1);
 insert into book2user (book_id, user_id, time, type_id) VALUES (2, 1, now(), 2);
