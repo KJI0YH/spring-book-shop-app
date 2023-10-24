@@ -31,7 +31,6 @@ public class BookService {
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewRateRepository bookReviewRateRepository;
     private final BalanceTransactionRepository transactionRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     public List<BookEntity> getPageOfRecentBooks(LocalDate from, LocalDate to, Integer offset, Integer limit) {
