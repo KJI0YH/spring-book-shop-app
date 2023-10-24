@@ -33,12 +33,7 @@ spring:
     user:
       name: root
       password: root
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 1037836045908-rnrkakvced2rm0obdq4kdj90obesjrev.apps.googleusercontent.com
-            client-secret: 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
+
   flyway:
     user: test
     password: test
@@ -47,19 +42,6 @@ spring:
 #    init:
 #      data-locations: classpath:/data.sql
 #      mode: always
-
-twilio:
-  ACCOUNT_SID: ACabb2cf0b0e1c9b52489d4403616e9634
-  AUTH_TOKEN: 825e1c358f91ab58406d271c8bb2d2c8
-  PHONE_NUMBER: +18163483992
-
-appEmail:
-  email: bookstore.test@mail.ru
-  password: y4y3cGBP5K8jdsT9xqbG
-
-yookassa:
-  SECRET_KEY: test_cNFKV9OtMSJcRLhJlrDTRKv8K_y9TgcCM_sBg-LWrA0
-  shopId: 254029
 
 contact:
   confirmation:

@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml, classpath:application-dev-test.yml"})
 public class SpringBootApplicationTest {
 
     private static final String DATABASE_NAME = "book-shop-db-test";
