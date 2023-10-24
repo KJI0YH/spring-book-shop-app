@@ -2,6 +2,7 @@ package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,11 @@ public class BookService {
         return setBook2UserStatus(bookRepository.findBooksByTagSlug(tagSlug, nextPage).getContent());
     }
 
+    public List<BookEntity> getPageOfBooksByTagId(Integer tagId, Integer offset, Integer limit) {
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return setBook2UserStatus(bookRepository.findBooksByTagId(tagId, nextPage).getContent());
+    }
+
     public List<BookEntity> getPageOfBooksByGenreSlug(String genreSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return setBook2UserStatus(bookRepository.findBooksByGenreSlug(genreSlug, nextPage).getContent());
@@ -90,10 +96,13 @@ public class BookService {
         return new ArrayList<>();
     }
 
-    public List<BookEntity> getPageOfBooksByUserStatus(Integer userId, String status, Integer offset, Integer limit) {
+    public List<BookEntity> getPageOfBooksByUserStatus(String status, Integer offset, Integer limit) throws UserUnauthorizedException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("User not authorized");
         Pageable nextPage = PageRequest.of(offset, limit);
         Book2UserTypeEntity book2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
-        return setBook2UserStatus(bookRepository.findBooksByUserType(userId, book2UserType.getId(), nextPage).getContent());
+        return setBook2UserStatus(bookRepository.findBooksByUserType(user.getId(), book2UserType.getId(), nextPage).getContent());
     }
 
     public Long getCountOfBooksByUserStatus(Integer userId, String status) {
@@ -145,7 +154,7 @@ public class BookService {
         return book2UserViewedRepository.save(book2UserViewed);
     }
 
-    public void updateBook2UserStatus(Integer bookId, Integer userId, String status) throws ApiWrongParameterException {
+    public void updateBook2UserStatus(Integer bookId, Integer userId, String status) throws ApiWrongParameterException, PaymentRequiredException {
         Book2UserTypeEntity newBook2UserType = book2UserTypeRepository.findBook2UserTypeEntityByCodeEqualsIgnoreCase(status);
         if (newBook2UserType == null)
             throw new ApiWrongParameterException("Invalid status parameter value");
@@ -156,7 +165,7 @@ public class BookService {
 
         // Catch invalid statuses updates
         if ((newStatusCode.equals("PAID") || newStatusCode.equals("ARCHIVED")) && !isBookPaid) {
-            throw new ApiWrongParameterException("You need to pay for the book");
+            throw new PaymentRequiredException("You need to pay for the book");
         } else if ((newStatusCode.equals("CART") ||
                 newStatusCode.equals("KEPT") ||
                 newStatusCode.equals("UNLINK")) &&
@@ -179,13 +188,16 @@ public class BookService {
         }
     }
 
-    public void updateBook2UserStatuses(Collection<Integer> booksIds, Integer userId, String status) throws ApiWrongParameterException {
+    public void updateBook2UserStatuses(Collection<Integer> booksIds, Integer userId, String status) throws ApiWrongParameterException, PaymentRequiredException {
         for (Integer bookId : booksIds) {
             updateBook2UserStatus(bookId, userId, status);
         }
     }
 
-    public void rateBook(Integer bookId, Integer userId, Integer value) throws ApiWrongParameterException {
+    public void rateBook(Integer bookId, Integer value) throws ApiWrongParameterException, UserUnauthorizedException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("Only authorized users can rate the book");
 
         if (value < 1 || value > 5)
             throw new ApiWrongParameterException("Invalid rate value");
@@ -195,14 +207,17 @@ public class BookService {
             throw new ApiWrongParameterException("Invalid book id value");
         }
 
-        BookRateIdEntity bookRateId = new BookRateIdEntity(bookId, userId);
+        BookRateIdEntity bookRateId = new BookRateIdEntity(bookId, user.getId());
         BookRateEntity bookRate = new BookRateEntity();
         bookRate.setId(bookRateId);
         bookRate.setRate(value);
         bookRateRepository.save(bookRate);
     }
 
-    public void reviewBook(Integer bookId, Integer userId, String reviewText) throws ApiWrongParameterException, UserUnauthorizedException {
+    public void reviewBook(Integer bookId, String reviewText) throws ApiWrongParameterException, UserUnauthorizedException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("Only authorized users can review the book");
 
         if (reviewText.isEmpty())
             throw new ApiWrongParameterException("The text of the review can not be empty");
@@ -210,10 +225,6 @@ public class BookService {
         BookEntity book = bookRepository.findBookEntityById(bookId);
         if (book == null)
             throw new ApiWrongParameterException("Invalid book id parameter");
-
-        UserEntity user = userRepository.findUserEntityById(userId);
-        if (user == null)
-            throw new UserUnauthorizedException("Only authorised users can review the book");
 
         BookReviewEntity bookReview = new BookReviewEntity();
         bookReview.setBook(book);
@@ -223,7 +234,10 @@ public class BookService {
         bookReviewRepository.save(bookReview);
     }
 
-    public void rateBookReview(Integer reviewId, Integer userId, Integer value) throws ApiWrongParameterException, UserUnauthorizedException {
+    public void rateBookReview(Integer reviewId, Integer value) throws ApiWrongParameterException, UserUnauthorizedException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("Only authorized users can rate the book review");
 
         if (value != -1 && value != 1)
             throw new ApiWrongParameterException("Invalid rate value of a book review");
@@ -232,11 +246,7 @@ public class BookService {
         if (review.isEmpty())
             throw new ApiWrongParameterException("Invalid review id parameter");
 
-        UserEntity user = userRepository.findUserEntityById(userId);
-        if (user == null)
-            throw new UserUnauthorizedException("Only authorised users can rate the book review");
-
-        BookReviewLikeIdEntity reviewLikeId = new BookReviewLikeIdEntity(reviewId, userId);
+        BookReviewLikeIdEntity reviewLikeId = new BookReviewLikeIdEntity(reviewId, user.getId());
         BookReviewLikeEntity reviewLike = new BookReviewLikeEntity();
         reviewLike.setId(reviewLikeId);
         reviewLike.setValue(value);
@@ -252,7 +262,7 @@ public class BookService {
         for (Integer bookId : bookIds) {
             try {
                 updateBook2UserStatus(bookId, userId, "CART");
-            } catch (ApiWrongParameterException ignored) {
+            } catch (ApiWrongParameterException | PaymentRequiredException ignored) {
             }
         }
     }
@@ -261,7 +271,7 @@ public class BookService {
         for (Integer bookId : bookIds) {
             try {
                 updateBook2UserStatus(bookId, userId, "KEPT");
-            } catch (ApiWrongParameterException ignored) {
+            } catch (ApiWrongParameterException | PaymentRequiredException ignored) {
             }
         }
     }

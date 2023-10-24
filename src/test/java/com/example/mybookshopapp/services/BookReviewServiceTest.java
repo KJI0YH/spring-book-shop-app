@@ -30,7 +30,7 @@ class BookReviewServiceTest extends SpringBootApplicationTest {
         entityManager.getTransaction().begin();
 
         TypedQuery<BookReviewEntity> reviewQuery = entityManager.createQuery(
-                "SELECT r FROM BookReviewEntity r LEFT JOIN FETCH r.reviewLikeList WHERE r.book.id = 1"   , BookReviewEntity.class);
+                "SELECT r FROM BookReviewEntity r LEFT JOIN FETCH r.reviewLikeList WHERE r.book.id = 1", BookReviewEntity.class);
         List<BookReviewEntity> reviews = reviewQuery.getResultList();
 
         entityManager.getTransaction().commit();
@@ -41,7 +41,7 @@ class BookReviewServiceTest extends SpringBootApplicationTest {
         Collections.sort(reviews);
 
         long previousValue = reviews.get(0).getPopularityValue();
-        for (BookReviewEntity bookReview: reviews) {
+        for (BookReviewEntity bookReview : reviews) {
             Assertions.assertTrue(previousValue <= bookReview.getPopularityValue());
             previousValue = bookReview.getPopularityValue();
         }

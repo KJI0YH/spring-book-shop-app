@@ -119,7 +119,7 @@ class BookServiceTest extends SpringBootApplicationTest {
     @Test
     void getBooksByIds() {
         Integer[] bookIds = new Integer[]{1, 2, 3};
-        List<BookEntity> bookList = bookRepository.findBookEntitiesByIdIn(bookIds);
+        List<BookEntity> bookList = bookRepository.findBookEntitiesByIdIn(List.of(bookIds));
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
 

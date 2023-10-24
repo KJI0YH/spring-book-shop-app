@@ -84,29 +84,20 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @GetMapping("/my")
-    public String handleMy(Model model) {
-        UserEntity user = userService.getCurrentUser();
-        if (user != null) {
-            model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", 0, 20));
-        }
+    public String handleMy(Model model) throws UserUnauthorizedException {
+        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus( "PAID", 0, 20));
         return "my";
     }
 
     @GetMapping("/my/archive")
-    public String handleMyArchive(Model model) {
-        UserEntity user = userService.getCurrentUser();
-        if (user != null) {
-            model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", 0, 20));
-        }
+    public String handleMyArchive(Model model) throws UserUnauthorizedException {
+        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus( "ARCHIVED", 0, 20));
         return "myarchive";
     }
 
     @GetMapping("/profile")
-    public String handleProfile(Model model) {
-        UserEntity user = userService.getCurrentUser();
-        if (user != null) {
-            model.addAttribute("transactions", transactionService.getTransactionByUser(user, 0, 50, "desc"));
-        }
+    public String handleProfile(Model model) throws UserUnauthorizedException {
+        model.addAttribute("transactions", transactionService.getTransactionByUser( 0, 50, "desc"));
         return "profile";
     }
 

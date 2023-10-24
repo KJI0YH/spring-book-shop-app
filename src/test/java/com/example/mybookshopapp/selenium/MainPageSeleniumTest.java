@@ -16,13 +16,13 @@ class MainPageSeleniumTest {
     private static FirefoxDriver driver;
 
     @BeforeAll
-    static void setup(){
+    static void setup() {
         System.setProperty("webdriver.gecko.driver", "D:\\Personal projects\\JavaSpring\\Code\\spring-book-shop-app\\geckodriver.exe");
         driver = new FirefoxDriver();
     }
 
     @AfterAll
-    static void tearDown(){
+    static void tearDown() {
         driver.quit();
     }
 
@@ -99,7 +99,7 @@ class MainPageSeleniumTest {
         String[] authorNames = author.getText().split(" ");
         author.findElement(By.tagName("a")).click();
         mainPage.pause();
-        for (String name: authorNames) {
+        for (String name : authorNames) {
             assertTrue(driver.getPageSource().contains(name));
         }
     }

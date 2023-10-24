@@ -3,8 +3,8 @@ package com.example.mybookshopapp.services;
 import com.example.mybookshopapp.data.BalanceTransactionEntity;
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
-import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.BalanceNotEnoughException;
+import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.BalanceTransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TransactionService {
     private final BookService bookService;
+    private final UserService userService;
     private final BalanceTransactionRepository transactionRepository;
 
     private Page<BalanceTransactionEntity> getTransactionsByUserAsc(UserEntity user, Integer offset, Integer limit) {
@@ -32,8 +33,12 @@ public class TransactionService {
         return transactionRepository.findAllByUserOrderByTimeDesc(user, nextPage);
     }
 
-    public Page<BalanceTransactionEntity> getTransactionByUser(UserEntity user, Integer offset, Integer limit, String order) {
-        if (order.equals("asc"))
+    public Page<BalanceTransactionEntity> getTransactionByUser(Integer offset, Integer limit, String order) throws UserUnauthorizedException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("Only authorized users can view transactions");
+
+        if (order != null && order.equals("asc"))
             return getTransactionsByUserAsc(user, offset, limit);
         else
             return getTransactionsByUserDesc(user, offset, limit);

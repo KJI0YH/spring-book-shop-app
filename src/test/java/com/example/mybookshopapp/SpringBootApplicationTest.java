@@ -21,7 +21,7 @@ public class SpringBootApplicationTest {
             .withDatabaseName(DATABASE_NAME);
 
     @DynamicPropertySource
-    static void datasoutceProperties(DynamicPropertyRegistry registry){
+    static void datasourceProperties(DynamicPropertyRegistry registry){
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);

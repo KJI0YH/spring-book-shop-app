@@ -10,7 +10,8 @@ import java.time.ZoneId;
 @Service
 public class DateService {
 
-    public LocalDate convertToLocalDate(String date){
+    public LocalDate convertToLocalDate(String date) {
+        if (date == null || date.isEmpty()) return null;
         try {
             return DateUtils.parseDate(date, "dd.MM.yyyy", "dd-MM-yyyy", "yyyy-MM-dd").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         } catch (ParseException e) {

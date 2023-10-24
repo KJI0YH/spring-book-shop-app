@@ -47,3 +47,22 @@ spring:
 #    init:
 #      data-locations: classpath:/data.sql
 #      mode: always
+
+twilio:
+  ACCOUNT_SID: ACabb2cf0b0e1c9b52489d4403616e9634
+  AUTH_TOKEN: 825e1c358f91ab58406d271c8bb2d2c8
+  PHONE_NUMBER: +18163483992
+
+appEmail:
+  email: bookstore.test@mail.ru
+  password: y4y3cGBP5K8jdsT9xqbG
+
+yookassa:
+  SECRET_KEY: test_cNFKV9OtMSJcRLhJlrDTRKv8K_y9TgcCM_sBg-LWrA0
+  shopId: 254029
+
+contact:
+  confirmation:
+    max-attempts: 3
+    expiration-seconds: 600
+    resend-seconds: 300

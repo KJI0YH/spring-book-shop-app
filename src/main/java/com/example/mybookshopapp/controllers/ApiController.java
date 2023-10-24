@@ -4,8 +4,8 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentInitiateException;
+import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
-import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -55,22 +55,32 @@ public class ApiController {
 
     @GetMapping("/books/viewed")
     public ResponseEntity<BooksPageDto> getBooksViewedPage(@RequestParam("offset") Integer offset,
-                                                           @RequestParam("limit") Integer limit) {
+                                                           @RequestParam("limit") Integer limit,
+                                                           @CookieValue(value = "cartContents", required = false) String viewedContents) {
         UserEntity user = userService.getCurrentUser();
-        return ResponseEntity.ok(new BooksPageDto((bookService.getPageOfViewedBooks(user.getId(), offset, limit))));
+
+        // Authorized user
+        if (user != null) {
+            return ResponseEntity.ok(new BooksPageDto((bookService.getPageOfViewedBooks(user.getId(), offset, limit))));
+        }
+
+        // Unauthorized user
+        else {
+            return ResponseEntity.ok(new BooksPageDto((bookService.getBooksByIds(cookieService.getIntegerIds(viewedContents)))));
+        }
     }
 
-    @GetMapping("/books/tag/{tagSlug}")
-    public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagSlug") String tagSlug,
+    @GetMapping("/books/tag/{tagId}")
+    public ResponseEntity<BooksPageDto> getBooksByTagPage(@PathVariable("tagId") Integer tagId,
                                                           @RequestParam("offset") Integer offset,
                                                           @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagSlug(tagSlug, offset, limit)));
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByTagId(tagId, offset, limit)));
     }
 
     @GetMapping("/books/genre/{genreId}")
-    public ResponseEntity<BooksPageDto> getBooksByGenrePage(@PathVariable("genreId") Integer genreId,
-                                                            @RequestParam("offset") Integer offset,
-                                                            @RequestParam("limit") Integer limit) {
+    public ResponseEntity<BooksPageDto> getBooksByGenreIdPage(@PathVariable("genreId") Integer genreId,
+                                                              @RequestParam("offset") Integer offset,
+                                                              @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByGenreId(genreId, offset, limit)));
     }
 
@@ -83,23 +93,21 @@ public class ApiController {
 
     @GetMapping("/books/my")
     public ResponseEntity<BooksPageDto> getBooksMyPage(@RequestParam("offset") Integer offset,
-                                                       @RequestParam("limit") Integer limit) {
-        UserEntity user = userService.getCurrentUser();
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "PAID", offset, limit)));
+                                                       @RequestParam("limit") Integer limit) throws UserUnauthorizedException {
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus("PAID", offset, limit)));
     }
 
     @GetMapping("/books/my/archive")
     public ResponseEntity<BooksPageDto> getBooksMyArchivePage(@RequestParam("offset") Integer offset,
-                                                              @RequestParam("limit") Integer limit) {
-        UserEntity user = userService.getCurrentUser();
-        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus(user.getId(), "ARCHIVED", offset, limit)));
+                                                              @RequestParam("limit") Integer limit) throws UserUnauthorizedException {
+        return ResponseEntity.ok(new BooksPageDto(bookService.getPageOfBooksByUserStatus("ARCHIVED", offset, limit)));
     }
 
     @PostMapping("/changeBookStatus")
     public ResponseEntity<ApiResponse> handleChangeBookStatus(HttpServletResponse response,
                                                               @RequestBody BookStatusDto bookStatusDto,
                                                               @CookieValue(value = "cartContents", required = false) String cartContents,
-                                                              @CookieValue(value = "postponedContents", required = false) String keptContents) throws ApiWrongParameterException {
+                                                              @CookieValue(value = "postponedContents", required = false) String keptContents) throws ApiWrongParameterException, PaymentRequiredException {
         UserEntity user = userService.getCurrentUser();
 
         // Authorized user
@@ -117,44 +125,27 @@ public class ApiController {
     }
 
     @PostMapping("/rateBook")
-    public ResponseEntity<ApiResponse> rateBook(@RequestBody BookRateDto bookRateDto) throws ApiWrongParameterException {
-        UserEntity user = userService.getCurrentUser();
-        if (user == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(false, "Only authorised users can rate the book"));
-
-        bookService.rateBook(bookRateDto.getBookId(), user.getId(), bookRateDto.getValue());
+    public ResponseEntity<ApiResponse> handleRateBook(@RequestBody BookRateDto bookRateDto) throws ApiWrongParameterException, UserUnauthorizedException {
+        bookService.rateBook(bookRateDto.getBookId(), bookRateDto.getValue());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/bookReview")
-    public ResponseEntity<ApiResponse> bookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException, UserUnauthorizedException {
-        UserEntity user = userService.getCurrentUser();
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(false, "Only authorised users can review the book"));
-        }
-
-        bookService.reviewBook(bookReviewDto.getBookId(), user.getId(), bookReviewDto.getText());
+    public ResponseEntity<ApiResponse> handleBookReview(@RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException, UserUnauthorizedException {
+        bookService.reviewBook(bookReviewDto.getBookId(), bookReviewDto.getText());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/rateBookReview")
-    public ResponseEntity<ApiResponse> rateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException, UserUnauthorizedException {
-        UserEntity user = userService.getCurrentUser();
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(false, "Only authorised users can rate the book review"));
-        }
-
-        bookService.rateBookReview(reviewLikeDto.getReviewId(), user.getId(), reviewLikeDto.getValue());
+    public ResponseEntity<ApiResponse> handleRateBookReview(@RequestBody ReviewLikeDto reviewLikeDto) throws ApiWrongParameterException, UserUnauthorizedException {
+        bookService.rateBookReview(reviewLikeDto.getReviewId(), reviewLikeDto.getValue());
         return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @GetMapping("/search/{searchWord}")
-    public ResponseEntity<BooksPageDto> getSearchPage(@PathVariable(value = "searchWord", required = false) String searchWord,
-                                                      @RequestParam("offset") Integer offset,
-                                                      @RequestParam("limit") Integer limit) {
+    public ResponseEntity<BooksPageDto> getSearchResultPage(@PathVariable(value = "searchWord", required = false) String searchWord,
+                                                            @RequestParam("offset") Integer offset,
+                                                            @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(new BooksPageDto(bookSearchService.getPageOfBooksByQuery(searchWord, offset, limit)));
     }
 
@@ -168,14 +159,10 @@ public class ApiController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<TransactionPageDto> handleTransactions(@RequestParam(name = "sort", required = false) String sort,
-                                                                 @RequestParam(name = "offset") Integer offset,
-                                                                 @RequestParam(name = "limit") Integer limit) {
-        UserEntity user = userService.getCurrentUser();
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok(new TransactionPageDto(transactionService.getTransactionByUser(user, offset, limit, sort).getContent()));
+    public ResponseEntity<TransactionPageDto> getTransactionsPage(@RequestParam(name = "sort", required = false) String sort,
+                                                                  @RequestParam(name = "offset") Integer offset,
+                                                                  @RequestParam(name = "limit") Integer limit) throws UserUnauthorizedException {
+        return ResponseEntity.ok(new TransactionPageDto(transactionService.getTransactionByUser(offset, limit, sort).getContent()));
     }
 
     // TODO fix redirect
