@@ -4,6 +4,8 @@ delete from book2user_viewed;
 delete from book2genre;
 delete from book2tag;
 delete from book2user_type;
+delete from book_file_type;
+delete from book_file;
 delete from book_review_like;
 delete from book_review;
 delete from book_rate;

@@ -32,6 +32,15 @@ insert into book2user_viewed (user_id, book_id, time) values (1, 2, now());
 insert into book2user_viewed (user_id, book_id, time) values (1, 3, now());
 insert into book2user_viewed (user_id, book_id, time) values (1, 4, now());
 
+insert into book_file_type (id, name, description) values (1, 'PDF', 'PDF');
+insert into book_file_type (id, name, description) values (2, 'EPUB', 'EPUB');
+insert into book_file_type (id, name, description) values (3, 'FB2', 'FB2');
+
+insert into book_file (hash, book_id, type_id, path) values ('hash1', 1, 1, '1.pdf');
+insert into book_file (hash, book_id, type_id, path) values ('hash2', 2, 1, '1.pdf');
+insert into book_file (hash, book_id, type_id, path) values ('hash3', 3, 1, '1.pdf');
+insert into book_file (hash, book_id, type_id, path) values ('hash4', 4, 1, '1.pdf');
+
 insert into genre (id, parent_id, slug, name) VALUES (1, null, 'Genre-1', 'GenreName');
 
 insert into book2genre (book_id, genre_id) VALUES (1, 1);

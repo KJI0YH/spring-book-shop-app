@@ -77,7 +77,7 @@ public class BookController extends AbstractHeaderFooterController {
     }
 
     @GetMapping("/download/{bookFileHash}")
-    public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws PaymentRequiredException, UserUnauthorizedException, ApiWrongParameterException, FileDownloadException {
+    public ResponseEntity<ByteArrayResource> handleDownloadBookFile(@PathVariable("bookFileHash") String hash) throws PaymentRequiredException, UserUnauthorizedException, ApiWrongParameterException, FileDownloadException {
         Path path = storage.getBookFilePath(hash);
         MediaType mediaType = storage.getBookFileMime(hash);
         byte[] data = storage.getBookFileByteArray(hash);
