@@ -1,5 +1,8 @@
 package com.example.mybookshopapp.services;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -22,6 +25,8 @@ public class PhoneService {
 
     @Value("${twilio.PHONE_NUMBER}")
     private String PHONE_NUMBER;
+
+    private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 
     public void sendPhoneMessage(String phone, String message){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
@@ -56,5 +61,13 @@ public class PhoneService {
             builder.append(String.format("%02x", b));
         }
         return builder.toString();
+    }
+
+    public boolean isValidPhone(String phone){
+        try {
+            return phoneNumberUtil.isValidNumber(phoneNumberUtil.parse(phone, "BY"));
+        } catch (NumberParseException e) {
+            return false;
+        }
     }
 }

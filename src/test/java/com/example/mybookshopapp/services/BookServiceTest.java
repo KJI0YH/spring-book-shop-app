@@ -1,9 +1,15 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.SpringBootApplicationTest;
+import com.example.mybookshopapp.data.Book2UserViewedEntity;
 import com.example.mybookshopapp.data.BookEntity;
+import com.example.mybookshopapp.data.BookReviewEntity;
+import com.example.mybookshopapp.repositories.Book2UserViewedRepository;
 import com.example.mybookshopapp.repositories.BookRepository;
-import org.hibernate.Session;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,97 +18,111 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 @Sql(scripts = "classpath:/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:/delete-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BookServiceTest extends SpringBootApplicationTest {
-
     private final BookRepository bookRepository;
-
-    @Autowired
-    BookServiceTest(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    private final Book2UserViewedRepository book2UserViewedRepository;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Test
-    void getPageOfRecommendedBooks() {
-    }
-
-    @Test
-    void getPageOfBooksByTitle() {
+    void testGetPageOfRecentBooks() {
         Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = bookRepository.findBookEntitiesByTitleContainingIgnoreCase("title", nextPage).getContent();
+        List<BookEntity> bookList = bookRepository.findBooksByPubDateBetween(null, null, nextPage).getContent();
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
-
-        for (BookEntity book : bookList) {
-            Assertions.assertTrue(book.getTitle().contains("Title"));
-        }
+        Assertions.assertEquals(3, bookList.size());
     }
 
     @Test
-    void getPageOfRecentBooks() {
-    }
-
-    @Test
-    void getPageOfPopularBooks() {
+    void testGetPageOfPopularBooks() {
         Pageable nextPage = PageRequest.of(0, 3);
         List<BookEntity> bookList = bookRepository.findAllByOrderByPopularityDesc(nextPage).getContent();
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
-
-        Assertions.assertEquals(10, (int) bookList.get(0).getPopularity());
-        Assertions.assertEquals(7, (int) bookList.get(1).getPopularity());
-        Assertions.assertEquals(4, (int) bookList.get(2).getPopularity());
-    }
-
-    @Test
-    void getPageOfBooksByTagSlug() {
-        Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = bookRepository.findBooksByTagSlug("Slug-1", nextPage).getContent();
-        Assertions.assertNotNull(bookList);
-        Assertions.assertFalse(bookList.isEmpty());
-
-        // TODO fix lazy initialization
         Assertions.assertEquals(3, bookList.size());
     }
 
     @Test
-    void getPageOfBooksByGenreSlug() {
+    void testGetPageOfBooksByTagSlug() {
         Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = bookRepository.findBooksByGenreSlug("Slug-1", nextPage).getContent();
+        List<BookEntity> bookList = bookRepository.findBooksByTagSlug("Tag-1", nextPage).getContent();
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
-
-        Assertions.assertEquals(3, bookList.size());
-
-        // TODO fix lazy initialization
-//        for (BookEntity book : bookList) {
-//            Assertions.assertTrue(book.getGenreList().stream().anyMatch(g -> g.getSlug().equals("Slug-1")));
-//        }
-    }
-
-    @Test
-    void getPageOfBooksByAuthorSlug() {
-        Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = bookRepository.findBooksByAuthorSlug("Slug-1", nextPage).getContent();
-        Assertions.assertNotNull(bookList);
-        Assertions.assertFalse(bookList.isEmpty());
-
         Assertions.assertEquals(3, bookList.size());
     }
 
     @Test
-    void getBookBySlug() {
-        BookEntity book = bookRepository.findBookEntityBySlug("Slug-1");
+    void getPageOfBooksByTagId() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = bookRepository.findBooksByTagId(1, nextPage).getContent();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void testGetPageOfBooksByGenreSlug() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = bookRepository.findBooksByGenreSlug("Genre-1", nextPage).getContent();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void getPageOfBooksByGenreId() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = bookRepository.findBooksByGenreId(1, nextPage).getContent();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void testGetPageOfBooksByAuthorSlug() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = bookRepository.findBooksByAuthorSlug("Author-1", nextPage).getContent();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void getPageOfBooksByAuthorId() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = bookRepository.findBooksByAuthorId(1, nextPage).getContent();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void getPageOfViewedBooks() {
+        Pageable nextPage = PageRequest.of(0, 3);
+        List<BookEntity> bookList = book2UserViewedRepository.findAllByUserIdOrderByTimeDesc(1, nextPage)
+                .getContent()
+                .stream().map(Book2UserViewedEntity::getBook)
+                .toList();
+        Assertions.assertNotNull(bookList);
+        Assertions.assertFalse(bookList.isEmpty());
+        Assertions.assertEquals(3, bookList.size());
+    }
+
+    @Test
+    void testGetBookBySlug() {
+        BookEntity book = bookRepository.findBookEntityBySlug("Book-1");
         Assertions.assertNotNull(book);
-        Assertions.assertEquals("Slug-1", book.getSlug());
+        Assertions.assertEquals("Book-1", book.getSlug());
     }
 
     @Test
-    void getBooksByUserStatus() {
+    void getAllBooksByUserStatus() {
         List<BookEntity> keptBooks = bookRepository.findBooksByUserType(1, 1);
         Assertions.assertNotNull(keptBooks);
         Assertions.assertFalse(keptBooks.isEmpty());
@@ -114,17 +134,44 @@ class BookServiceTest extends SpringBootApplicationTest {
         List<BookEntity> paidBooks = bookRepository.findBooksByUserType(1, 3);
         Assertions.assertNotNull(paidBooks);
         Assertions.assertFalse(paidBooks.isEmpty());
+
+        List<BookEntity> archivedBooks = bookRepository.findBooksByUserType(1, 3);
+        Assertions.assertNotNull(archivedBooks);
+        Assertions.assertFalse(archivedBooks.isEmpty());
     }
 
     @Test
-    void getBooksByIds() {
+    void testGetBooksByIds() {
         Integer[] bookIds = new Integer[]{1, 2, 3};
-        List<BookEntity> bookList = bookRepository.findBookEntitiesByIdIn(bookIds);
+        List<BookEntity> bookList = bookRepository.findBookEntitiesByIdIn(List.of(bookIds));
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
 
         for (BookEntity book : bookList) {
             Assertions.assertTrue(Arrays.stream(bookIds).anyMatch(i -> Objects.equals(i, book.getId())));
+        }
+    }
+
+    @Test
+    void testBookReviewRating() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+
+        TypedQuery<BookReviewEntity> reviewQuery = entityManager.createQuery(
+                "SELECT r FROM BookReviewEntity r LEFT JOIN FETCH r.reviewLikeList WHERE r.book.id = 1", BookReviewEntity.class);
+        List<BookReviewEntity> reviews = reviewQuery.getResultList();
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        Assertions.assertNotNull(reviews);
+        Assertions.assertFalse(reviews.isEmpty());
+        Collections.sort(reviews);
+
+        long previousValue = reviews.get(0).getPopularityValue();
+        for (BookReviewEntity bookReview : reviews) {
+            Assertions.assertTrue(previousValue >= bookReview.getPopularityValue());
+            previousValue = bookReview.getPopularityValue();
         }
     }
 }

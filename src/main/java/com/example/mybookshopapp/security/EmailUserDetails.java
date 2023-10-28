@@ -5,15 +5,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class BookstoreUserDetails implements UserDetails {
+public class EmailUserDetails implements UserDetails {
 
     private final UserEntity userEntity;
 
-    public BookstoreUserDetails(UserEntity userEntity) {
+    public EmailUserDetails(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 

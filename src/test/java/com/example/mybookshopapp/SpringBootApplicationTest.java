@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml, classpath:application-dev-test.yml"})
 public class SpringBootApplicationTest {
 
     private static final String DATABASE_NAME = "book-shop-db-test";
@@ -21,7 +21,7 @@ public class SpringBootApplicationTest {
             .withDatabaseName(DATABASE_NAME);
 
     @DynamicPropertySource
-    static void datasoutceProperties(DynamicPropertyRegistry registry){
+    static void datasourceProperties(DynamicPropertyRegistry registry){
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);

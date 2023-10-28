@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,13 +21,27 @@ public class UserEntity {
     private Integer id;
     private String hash;
     private LocalDateTime regTime;
+    @JsonIgnore
     private Integer balance;
+
+    @JsonGetter("balance")
+    public String getBalanceJson(){
+        return balance / 100 + "." + String.format("%02d", balance % 100);
+    }
+
     private String name;
 
     @Column(name = "password_hash")
     private String password;
     private String email;
     private String phone;
+
+    public Integer getRating(){
+        long likesCount = reviewList.stream().mapToLong(BookReviewEntity::getLikesCount).sum();
+        long dislikesCount = reviewList.stream().mapToLong(BookReviewEntity::getDislikesCount).sum();
+        if (likesCount == 0 && dislikesCount == 0) return 0;
+        return Math.toIntExact(Math.round((double) likesCount / (likesCount + dislikesCount) * 5.0));
+    }
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
@@ -38,8 +53,7 @@ public class UserEntity {
     @ToString.Exclude
     private List<Book2UserEntity> book2userList;
 
-    @OneToMany
-    @JoinColumn(name = "review_id")
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore
     private List<BookReviewEntity> reviewList;

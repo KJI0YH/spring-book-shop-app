@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class BookstoreUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -18,12 +19,12 @@ public class BookstoreUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findUserEntityByEmail(username);
         if (userEntity != null) {
-            return new BookstoreUserDetails(userEntity);
+            return new EmailUserDetails(userEntity);
         }
         userEntity = userRepository.findUserEntityByPhone(username);
         if (userEntity != null) {
-            return new PhoneNumberUserDetails(userEntity);
+            return new PhoneUserDetails(userEntity);
         }
-        throw new UsernameNotFoundException("User not found");
+        throw new UsernameNotFoundException("User with username " + username + " not found");
     }
 }

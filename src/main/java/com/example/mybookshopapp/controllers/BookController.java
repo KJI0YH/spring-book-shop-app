@@ -2,11 +2,16 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.errors.FileDownloadException;
+import com.example.mybookshopapp.errors.PaymentRequiredException;
+import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.BookRepository;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.BookViewedService;
+import com.example.mybookshopapp.services.CookieService;
 import com.example.mybookshopapp.services.ResourceStorage;
+import com.example.mybookshopapp.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,27 +34,34 @@ public class BookController extends AbstractHeaderFooterController {
     private final BookService bookService;
     private final ResourceStorage storage;
     private final BookRepository bookRepository;
-    private final BookstoreUserRegister userRegister;
-    private final BookViewedService bookViewedService;
+    private final UserService userService;
+    private final CookieService cookieService;
 
     @GetMapping("/{bookSlug}")
-    public String getBookPage(@PathVariable("bookSlug") String bookSlug, Model model){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+    public String getBookPage(@PathVariable("bookSlug") String bookSlug,
+                              @CookieValue(value = "viewedContents", required = false) String viewedContents,
+                              Model model,
+                              HttpServletResponse response) {
+        UserEntity user = userService.getCurrentUser();
         BookEntity book = bookService.getBookBySlug(bookSlug);
 
-        if (book != null){
+        if (book != null) {
             model.addAttribute("book", book);
 
-            if (user != null){
-                bookViewedService.setViewedBook(user.getId(), book.getId());
+            // Authorized user
+            if (user != null) {
+                bookService.setViewedBook(user.getId(), book.getId());
+                if (bookService.isBookPaid(book.getId(), user.getId())) {
+                    return "books/slugmy";
+                }
+            }
+
+            // Unauthorized user
+            else {
+                response.addCookie(cookieService.addBookId(viewedContents, book.getId().toString()));
             }
         }
-
-        if (user == null){
-            return "books/slug";
-        } else {
-            return "books/slugmy";
-        }
+        return "books/slug";
     }
 
     @PostMapping("/{bookSlug}/img/save")
@@ -65,18 +77,14 @@ public class BookController extends AbstractHeaderFooterController {
     }
 
     @GetMapping("/download/{bookFileHash}")
-    public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("bookFileHash") String hash) throws IOException {
+    public ResponseEntity<ByteArrayResource> handleDownloadBookFile(@PathVariable("bookFileHash") String hash) throws PaymentRequiredException, UserUnauthorizedException, ApiWrongParameterException, FileDownloadException {
         Path path = storage.getBookFilePath(hash);
-
         MediaType mediaType = storage.getBookFileMime(hash);
-
         byte[] data = storage.getBookFileByteArray(hash);
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
                 .contentType(mediaType)
                 .contentLength(data.length)
                 .body(new ByteArrayResource(data));
-
     }
 }

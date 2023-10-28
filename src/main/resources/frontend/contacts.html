@@ -81,7 +81,7 @@ p.error-browser
                         <div class="Contacts-form">
                             <h2 th:text="#{contacts.write}">Напишите нам:
                             </h2>
-                            <form action="#" th:action="@{/contacts/message}" class="form" method="post" th:object="${message}">
+                            <form action="#" th:action="@{/api/contacts/message}" class="form" method="post" th:object="${message}">
                                 <div class="form-group">
                                     <input class="form-input" data-validate="require" id="name" name="name" th:value="${curUsr?.name}"
                                            th:placeholder="#{contacts.enterName}" type="text" th:type="${curUsr == null ? 'text' : 'hidden'}"/>

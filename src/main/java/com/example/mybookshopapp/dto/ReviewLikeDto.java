@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ReviewLikeDto {
-    private Integer reviewId;
-    private Integer value;
+    private int reviewId;
+    private int value;
 }

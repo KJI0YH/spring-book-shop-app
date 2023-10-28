@@ -70,7 +70,7 @@ p.error-browser
                                 </div>
                                 <div class="Cart-rating">
                                     <span class="Rating">
-                                        <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(${book.getRate()})}"></span>
+                                        <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(${book.getRating()})}"></span>
                                     </span>
                                 </div>
                                 <div class="Cart-buttons">
@@ -125,7 +125,7 @@ p.error-browser
                         <a th:text="${paymentError}" th:href="@{/profile#topup}">Ошибка оплаты</a>
                     </div>
                     <div class="Cart-block">
-                        <a class="btn btn_success btn_md" href="/order.html" th:href="@{/payment/books}" th:text="#{cart.buy}">Купить</a>
+                        <a class="btn btn_success btn_md btnBuy" th:text="#{cart.buy}">Купить</a>
                     </div>
                 </div>
             </form>

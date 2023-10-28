@@ -1,4 +1,4 @@
-package com.example.mybookshopapp.security;
+package com.example.mybookshopapp.repositories;
 
 import com.example.mybookshopapp.data.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +9,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findUserEntityById(Integer id);
 
-    UserEntity findUserEntityByName(String name);
+    UserEntity findByHash(String hash);
 
     UserEntity findUserEntityByEmail(String email);
 

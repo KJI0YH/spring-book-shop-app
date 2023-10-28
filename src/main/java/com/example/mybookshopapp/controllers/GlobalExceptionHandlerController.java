@@ -1,35 +1,55 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.errors.UserAlreadyExistException;
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.BadCredentialsException;
+import com.example.mybookshopapp.dto.ApiResponse;
+import com.example.mybookshopapp.errors.*;
+import org.springframework.data.repository.config.RepositoryConfigurationSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalExceptionHandlerController {
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public String handleUsernameNotFoundException(UsernameNotFoundException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("loginError", e);
-        return "redirect:/signin";
+    @ExceptionHandler({
+            AuthenticationException.class,
+            UserAlreadyExistException.class,
+            UsernameNotFoundException.class,
+            ApiWrongParameterException.class,
+            ApproveContactException.class
+    })
+    public ResponseEntity<ApiResponse> handleApiException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse(false, e.getMessage()));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("authError", e);
-        return "redirect:/signin";
+    @ExceptionHandler({
+            PaymentInitiateException.class,
+            PaymentStatusException.class,
+            FileDownloadException.class
+    })
+    public ResponseEntity<ApiResponse> handlePaymentException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse(false, e.getMessage()));
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public String handleUserAlreadyExistException(UserAlreadyExistException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("regError", e);
-        return "redirect:/signup";
+    @ExceptionHandler(BalanceNotEnoughException.class)
+    public ResponseEntity<ApiResponse> handleBalanceNotEnoughException(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse(false, e.getMessage()));
+    }
+
+    @ExceptionHandler(PaymentRequiredException.class)
+    public ResponseEntity<ApiResponse> handlePaymentRequiredException(Exception e){
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED)
+                .body(new ApiResponse(false, e.getMessage()));
+    }
+
+    @ExceptionHandler(UserUnauthorizedException.class)
+    public ResponseEntity<ApiResponse> handleUserUnauthorizedException(Exception e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false, e.getMessage()));
     }
 }

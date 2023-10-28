@@ -1,10 +1,13 @@
-package com.example.mybookshopapp.security;
+package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
+import com.example.mybookshopapp.repositories.UserRepository;
+import com.example.mybookshopapp.security.CustomUserDetailsService;
+import com.example.mybookshopapp.security.EmailUserDetails;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,35 +25,32 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class BookstoreUserRegister {
-
+public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
 
-    public UserEntity registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException {
+    public void registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException {
 
         UserEntity userByEmail = userRepository.findUserEntityByEmail(registrationForm.getEmail());
-        UserEntity userByPhone = userRepository.findUserEntityByPhone(registrationForm.getPhone());
+        if (userByEmail != null)
+            throw new UserAlreadyExistException("User with email " + userByEmail.getEmail() + " already exists");
 
-        if (userByEmail == null && userByPhone == null) {
-            UserEntity user = new UserEntity();
-            user.setName(registrationForm.getName());
-            user.setEmail(registrationForm.getEmail());
-            user.setPhone(registrationForm.getPhone());
-            user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
-            user.setRegTime(LocalDateTime.now());
-            user.setHash(generateHash(user));
-            user.setBalance(0);
-            userRepository.save(user);
-            return user;
-        } else {
-            if (userByEmail != null)
-                throw new UserAlreadyExistException("User with email " + userByEmail.getEmail() + " already exists");
+        UserEntity userByPhone = userRepository.findUserEntityByPhone(registrationForm.getPhone());
+        if (userByPhone != null)
             throw new UserAlreadyExistException("User with phone " + userByPhone.getPhone() + " already exists");
-        }
+
+        UserEntity user = new UserEntity();
+        user.setName(registrationForm.getName());
+        user.setEmail(registrationForm.getEmail());
+        user.setPhone(registrationForm.getPhone());
+        user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+        user.setRegTime(LocalDateTime.now());
+        user.setHash(generateHash(user));
+        user.setBalance(0);
+        userRepository.save(user);
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
@@ -65,49 +65,54 @@ public class BookstoreUserRegister {
     }
 
     public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
-                payload.getCode()));
-        BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(payload.getContact());
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(), payload.getCode()));
+        EmailUserDetails userDetails = (EmailUserDetails) customUserDetailsService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult(jwtToken);
         return response;
     }
 
-    public Object getCurrentUser() {
+    public UserEntity getCurrentUser() {
         try {
-            BookstoreUserDetails userDetails = (BookstoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            EmailUserDetails userDetails = (EmailUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUserEntity();
         } catch (ClassCastException e) {
             return null;
         }
     }
 
-    public UserEntity changePassword(UserEntity user, String newPassword){
+    public UserEntity changePassword(UserEntity user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return user;
     }
 
-    public UserEntity changeName(UserEntity user, String newName){
+    public UserEntity changeName(UserEntity user, String newName) {
         user.setName(newName);
         userRepository.save(user);
         return user;
     }
 
-    public UserEntity changeEmail(UserEntity user, String newEmail){
+    public UserEntity changeEmail(UserEntity user, String newEmail) throws UserAlreadyExistException {
+        if (userRepository.findUserEntityByEmail(newEmail) != null) {
+            throw new UserAlreadyExistException("User with email " + newEmail + " already exists");
+        }
         user.setEmail(newEmail);
         userRepository.save(user);
         return user;
     }
 
-    public UserEntity changePhone(UserEntity user, String newPhone){
+    public UserEntity changePhone(UserEntity user, String newPhone) throws UserAlreadyExistException {
+        if (userRepository.findUserEntityByPhone(newPhone) != null){
+            throw new UserAlreadyExistException("User with phone " + newPhone + " already exists");
+        }
         user.setPhone(newPhone);
         userRepository.save(user);
         return user;
     }
 
-    private String generateHash(UserEntity user){
+    private String generateHash(UserEntity user) {
         String input = user.getName() + ":" + user.getEmail() + ":" + user.getPhone() + ":" + user.getRegTime();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -115,11 +120,11 @@ public class BookstoreUserRegister {
             messageDigest.update(inputBytes);
             byte[] digest = messageDigest.digest();
             StringBuilder builder = new StringBuilder();
-            for (byte b : digest){
+            for (byte b : digest) {
                 builder.append(String.format("%02x", b));
             }
             return builder.toString();
-        } catch (NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             return user.getRegTime().toString();
         }
     }

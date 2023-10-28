@@ -33,12 +33,7 @@ spring:
     user:
       name: root
       password: root
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 1037836045908-rnrkakvced2rm0obdq4kdj90obesjrev.apps.googleusercontent.com
-            client-secret: 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
+
   flyway:
     user: test
     password: test
@@ -47,3 +42,9 @@ spring:
 #    init:
 #      data-locations: classpath:/data.sql
 #      mode: always
+
+contact:
+  confirmation:
+    max-attempts: 3
+    expiration-seconds: 600
+    resend-seconds: 300

@@ -2,32 +2,28 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.MessageDto;
-import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.security.BookstoreUserRegister;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SimplePageController extends AbstractHeaderFooterController{
-    private final BookstoreUserRegister userRegister;
+public class CommonPageController extends AbstractHeaderFooterController {
+    private final UserService userService;
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
     private final TagService tagService;
-    private final BookViewedService bookViewedService;
     private final DocumentService documentService;
     private final FaqService faqService;
+    private final CookieService cookieService;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -48,7 +44,7 @@ public class SimplePageController extends AbstractHeaderFooterController{
 
     @GetMapping("/documents/{documentSlug}")
     public String documentPage(@PathVariable("documentSlug") String documentSlug,
-                               Model model){
+                               Model model) {
         model.addAttribute("document", documentService.getDocumentBySlug(documentSlug));
         return "documents/slug";
     }
@@ -72,10 +68,13 @@ public class SimplePageController extends AbstractHeaderFooterController{
     }
 
     @GetMapping("/books/viewed")
-    public String viewedBooksPage(Model model){
-        UserEntity user = (UserEntity) userRegister.getCurrentUser();
-        if (user != null){
-            model.addAttribute("booksList", bookViewedService.getPageOfViewedBooks(user.getId(), 0, 20));
+    public String viewedBooksPage(@CookieValue(value = "viewedContents", required = false) String viewedContents,
+                                  Model model) {
+        UserEntity user = userService.getCurrentUser();
+        if (user != null) {
+            model.addAttribute("booksList", bookService.getPageOfViewedBooks(user.getId(), 0, 20));
+        } else {
+            model.addAttribute("booksList", bookService.getBooksByIds(cookieService.getIntegerIds(viewedContents)));
         }
         return "books/viewed";
     }

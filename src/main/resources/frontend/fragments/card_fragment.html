@@ -10,6 +10,7 @@
             <span class="Card-ribbonText" th:if="${book.isBestseller}" th:text="#{main.bestseller}">Бестселлер</span>
         </div>
         <a th:if="${book.status?.equals('PAID')}" class="Card-status" title="Куплена"><img src="/assets/img/icons/check.svg" alt="Куплена"></a>
+        <a th:if="${book.status?.equals('ARCHIVED')}" class="Card-status" title="Куплена"><img src="/assets/img/icons/check.svg" alt="Куплена"></a>
         <a th:if="${book.status?.equals('CART')}" class="Card-status" title="В корзине"><img src="/assets/img/icons/shopping-basket.svg" alt="В корзине"></a>
         <a th:if="${book.status?.equals('KEPT')}" class="Card-status" title="Отложена"><img src="/assets/img/icons/heart.svg" alt="Отложена"></a>
     </a>
@@ -18,13 +19,12 @@
             <a href="/books/slug.html" th:href="${'/books/' + book.slug}" th:text="${book.title}">Техника</a>
         </strong>
         <div class="Card-description">
-            <span th:text="${book.authorList[0].toString() + ' '}">Кондратенко Александр Петрович</span>
-            <span th:if="${book.authorList.size > 1}">and others</span>
+            <span th:text="${book.authors}">Кондратенко Александр Петрович</span>
         </div>
         <div class="Card-cost">
-            <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽500.00</span>
-            <span class="Card-price" th:if="${book.discount == 0}" th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽390.00</span>
-            <span class="Card-price" th:unless="${book.discount == 0}" th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}">₽390.00</span>
+            <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="${'₽' + book.getPriceJson()}">₽500.00</span>
+            <span class="Card-price" th:if="${book.discount == 0}" th:text="${'₽' + book.getPriceJson()}">₽390.00</span>
+            <span class="Card-price" th:unless="${book.discount == 0}" th:text="${'₽' + book.getDiscountPriceJson()}">₽390.00</span>
         </div>
     </div>
 </div>
