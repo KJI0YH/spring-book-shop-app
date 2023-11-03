@@ -74,6 +74,10 @@
                     </li>
                     <li class="menu-item" th:classappend="${requestURI.equals('/books/viewed') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/books/viewed}">Просмотренные</a>
                     </li>
+                    <th:block th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
+                        <li class="menu-item" th:classappend="${requestURI.equals('/cms') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/cms}">CMS</a>
+                        </li>
+                    </th:block>
                 </ul>
             </nav>
         </div>

@@ -28,7 +28,8 @@ public class GlobalExceptionHandlerController {
     @ExceptionHandler({
             PaymentInitiateException.class,
             PaymentStatusException.class,
-            FileDownloadException.class
+            FileDownloadException.class,
+            RoleDoesNotExistsException.class
     })
     public ResponseEntity<ApiResponse> handlePaymentException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

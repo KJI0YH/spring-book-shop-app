@@ -58,7 +58,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
     }
 
     @PostMapping("/reg")
-    public String handleUserRegistration(RegistrationForm registrationForm, Model model) throws UserAlreadyExistException {
+    public String handleUserRegistration(RegistrationForm registrationForm, Model model) throws UserAlreadyExistException, RoleDoesNotExistsException {
         userService.registerNewUser(registrationForm);
         model.addAttribute("regOk", true);
         return "signin";

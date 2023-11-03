@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -57,4 +58,19 @@ public class UserEntity {
     @ToString.Exclude
     @JsonIgnore
     private List<BookReviewEntity> reviewList;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role2user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonIgnore
+    @ToString.Exclude
+    private List<RoleEntity> roleList;
+    
+    public List<String> getRoles(){
+        return roleList.stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.toList());
+    }
 }

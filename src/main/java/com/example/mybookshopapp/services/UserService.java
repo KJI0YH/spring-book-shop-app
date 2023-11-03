@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
+import com.example.mybookshopapp.errors.RoleDoesNotExistsException;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.security.CustomUserDetailsService;
@@ -31,8 +32,13 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
+    private final RoleService roleService;
 
-    public void registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException {
+    public void registerNewUser(RegistrationForm registrationForm) throws UserAlreadyExistException, RoleDoesNotExistsException {
+        registerNewUser(registrationForm, "USER");
+    }
+
+    public void registerNewUser(RegistrationForm registrationForm, String roleName) throws UserAlreadyExistException, RoleDoesNotExistsException {
 
         UserEntity userByEmail = userRepository.findUserEntityByEmail(registrationForm.getEmail());
         if (userByEmail != null)
@@ -50,7 +56,8 @@ public class UserService {
         user.setRegTime(LocalDateTime.now());
         user.setHash(generateHash(user));
         user.setBalance(0);
-        userRepository.save(user);
+        UserEntity newUser = userRepository.save(user);
+        roleService.addRoleToUser(roleName, newUser);
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
