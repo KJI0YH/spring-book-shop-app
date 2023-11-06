@@ -2,7 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.SearchWordDto;
-import com.example.mybookshopapp.dto.TagDto;
+import com.example.mybookshopapp.dto.TagPopularityDto;
 import com.example.mybookshopapp.services.BookRecommendedService;
 import com.example.mybookshopapp.services.BookSearchService;
 import com.example.mybookshopapp.services.BookService;
@@ -42,7 +42,7 @@ public class MainPageController extends AbstractHeaderFooterController {
     }
 
     @ModelAttribute("tags")
-    public List<TagDto> tags() {
+    public List<TagPopularityDto> tags() {
         return tagService.getTagsWithPopularityClasses();
     }
 

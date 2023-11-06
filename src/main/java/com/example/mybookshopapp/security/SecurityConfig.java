@@ -78,6 +78,7 @@ public class SecurityConfig {
                 .requestMatchers("/my/**").authenticated()
                 .requestMatchers("/profile/**").authenticated()
                 .requestMatchers("/payment/**").authenticated()
+                .requestMatchers("/api/cms/**").hasRole("ADMIN")
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/signin").permitAll()
                 .anyRequest().permitAll()

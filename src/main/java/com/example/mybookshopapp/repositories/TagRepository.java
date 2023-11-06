@@ -15,8 +15,10 @@ public interface TagRepository extends JpaRepository<TagEntity, Integer> {
     Integer getMinBooksCountByTag();
 
     TagEntity findTagEntityBySlug(String slug);
+    
+    TagEntity findTagEntityById(Integer id);
 
-    @Query(value = "SELECT COUNT(*) FROM book2tag b2t WHERE b2t.tag_id = ?1 GROUP BY b2t.tag_id", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) FROM (SELECT DISTINCT b2t.book_id FROM book2tag as b2t WHERE b2t.tag_id = ?1) as subquery;", nativeQuery = true)
     Integer getBooksCountByTagId(Integer id);
 
     @Query(value = "select id from tag where lower(name) like lower(concat('%', ?1, '%'))", nativeQuery = true)
