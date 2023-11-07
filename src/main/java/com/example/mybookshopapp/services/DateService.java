@@ -13,7 +13,7 @@ public class DateService {
     public LocalDate convertToLocalDate(String date) {
         if (date == null || date.isEmpty()) return null;
         try {
-            return DateUtils.parseDate(date, "dd.MM.yyyy", "dd-MM-yyyy", "yyyy-MM-dd").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            return DateUtils.parseDate(date, "dd.MM.yyyy", "yyyy-MM-dd").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         } catch (ParseException e) {
             return null;
         }

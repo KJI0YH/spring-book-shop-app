@@ -1,12 +1,15 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
+import com.example.mybookshopapp.dto.BookDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +35,9 @@ public class BookService {
     private final BookReviewRateRepository bookReviewRateRepository;
     private final BalanceTransactionRepository transactionRepository;
     private final UserService userService;
+    private final DateService dateService;
+    @Value("${upload.default-cover}")
+    private String defaultCover;
 
     public List<BookEntity> getPageOfRecentBooks(LocalDate from, LocalDate to, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
@@ -282,5 +288,80 @@ public class BookService {
                 setViewedBook(userId, bookId);
             }
         }
+    }
+
+    public List<BookEntity> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    public BookEntity getBookById(Integer bookId) throws ApiWrongParameterException {
+        BookEntity book = bookRepository.findBookEntityById(bookId);
+        if (book == null)
+            throw new ApiWrongParameterException("Book with id " + bookId + " does not exists");
+        return book;
+    }
+
+    public BookEntity createBook(BookDto bookDto) throws ApiWrongParameterException {
+        LocalDate pubDate = dateService.convertToLocalDate(bookDto.getPubDate());
+        if (!StringUtils.isNotBlank(bookDto.getTitle()) ||
+                !StringUtils.isNotBlank(bookDto.getSlug()) ||
+                pubDate == null ||
+                bookDto.getPrice() == null
+        )
+            throw new ApiWrongParameterException("Invalid book parameters");
+
+        BookEntity book = new BookEntity();
+        book.setTitle(bookDto.getTitle());
+        book.setDescription(bookDto.getDescription());
+        book.setPubDate(pubDate);
+        book.setBestseller(bookDto.getIsBestseller() != null && bookDto.getIsBestseller());
+        book.setSlug(bookDto.getSlug());
+        book.setPrice(bookDto.getPrice());
+        book.setDiscount(bookDto.getDiscount() == null ? 0 : bookDto.getDiscount());
+
+        if (StringUtils.isNotBlank(bookDto.getImage()))
+            book.setImage(bookDto.getImage());
+        else
+            book.setImage(defaultCover);
+
+        BookEntity newBook;
+        try {
+            newBook = bookRepository.save(book);
+        } catch (Exception e) {
+            throw new ApiWrongParameterException("Can not save the book: " + e.getMessage());
+        }
+        return newBook;
+    }
+
+    public BookEntity updateBook(Integer bookId, BookDto bookDto) throws ApiWrongParameterException {
+        BookEntity book = getBookById(bookId);
+        LocalDate pubDate = dateService.convertToLocalDate(bookDto.getPubDate());
+        if (pubDate != null)
+            book.setPubDate(pubDate);
+        if (bookDto.getIsBestseller() != null)
+            book.setBestseller(bookDto.getIsBestseller());
+        if (StringUtils.isNotBlank(bookDto.getSlug()))
+            book.setSlug(bookDto.getSlug());
+        if (StringUtils.isNotBlank(bookDto.getTitle()))
+            book.setTitle(bookDto.getTitle());
+        if (StringUtils.isNotBlank(bookDto.getImage()))
+            book.setImage(bookDto.getImage());
+        if (bookDto.getDescription() != null)
+            book.setDescription(bookDto.getDescription());
+        if (bookDto.getPrice() != null)
+            book.setPrice(bookDto.getPrice());
+        if (bookDto.getDiscount() != null)
+            book.setDiscount(bookDto.getDiscount());
+        try {
+            bookRepository.save(book);
+        } catch (Exception e) {
+            throw new ApiWrongParameterException("Can not update the book: " + e.getMessage());
+        }
+        return book;
+    }
+
+    public void deleteBook(Integer bookId) throws ApiWrongParameterException {
+        BookEntity book = getBookById(bookId);
+        bookRepository.delete(book);
     }
 }
