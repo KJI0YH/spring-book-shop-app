@@ -1,11 +1,14 @@
 package com.example.mybookshopapp.controllers;
 
+import com.example.mybookshopapp.data.AuthorEntity;
 import com.example.mybookshopapp.data.GenreEntity;
 import com.example.mybookshopapp.data.TagEntity;
 import com.example.mybookshopapp.dto.ApiResponse;
+import com.example.mybookshopapp.dto.AuthorDto;
 import com.example.mybookshopapp.dto.GenreDto;
 import com.example.mybookshopapp.dto.TagDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
+import com.example.mybookshopapp.services.AuthorService;
 import com.example.mybookshopapp.services.GenreService;
 import com.example.mybookshopapp.services.TagService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ import java.util.List;
 public class CmsController {
     private final TagService tagService;
     private final GenreService genreService;
+    private final AuthorService authorService;
 
     @GetMapping("/tag/all")
     public ResponseEntity<List<TagEntity>> getAllTags() {
@@ -71,10 +75,37 @@ public class CmsController {
                                                    @RequestBody GenreDto genreDto) throws ApiWrongParameterException {
         return ResponseEntity.ok(genreService.updateGenre(genreId, genreDto));
     }
-    
+
     @DeleteMapping("/genre/{genreId}")
     public ResponseEntity<ApiResponse> deleteGenre(@PathVariable("genreId") Integer genreId) throws ApiWrongParameterException {
         genreService.deleteGenreById(genreId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
+    }
+
+    @GetMapping("/author/all")
+    public ResponseEntity<List<AuthorEntity>> getAllAuthors() {
+        return ResponseEntity.ok(authorService.getAllAuthors());
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<AuthorEntity> getAuthor(@PathVariable("authorId") Integer authorId) throws ApiWrongParameterException {
+        return ResponseEntity.ok(authorService.getAuthorById(authorId));
+    }
+
+    @PostMapping("/author")
+    public ResponseEntity<AuthorEntity> createAuthor(@RequestBody AuthorDto authorDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(authorService.createAuthor(authorDto));
+    }
+
+    @PutMapping("/author/{authorId}")
+    public ResponseEntity<AuthorEntity> updateAuthor(@PathVariable("authorId") Integer authorId,
+                                                    @RequestBody AuthorDto authorDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(authorService.updateAuthor(authorId, authorDto));
+    }
+
+    @DeleteMapping("/author/{authorId}")
+    public ResponseEntity<ApiResponse> deleteAuthor(@PathVariable("authorId") Integer authorId) throws ApiWrongParameterException {
+        authorService.deleteAuthor(authorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
 }

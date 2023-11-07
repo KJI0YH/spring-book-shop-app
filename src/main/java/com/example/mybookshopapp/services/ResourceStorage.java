@@ -32,21 +32,21 @@ public class ResourceStorage {
     private final FileDownloadRepository fileDownloadRepository;
     private final UserService userService;
     private final BookService bookService;
-    @Value("${upload.path}")
-    String uploadPath;
-    @Value("${download.path}")
-    String downloadPath;
+    @Value("${upload.book-covers}")
+    String uploadBookCoversPath;
+    @Value("${download.book-files}")
+    String downloadBookFilesPath;
 
     public String saveNewBookImage(MultipartFile file, String bookSlug) throws IOException {
         String resourceURI = null;
 
         if (!file.isEmpty()) {
-            if (!new File(uploadPath).exists()) {
-                Files.createDirectories(Paths.get(uploadPath));
+            if (!new File(uploadBookCoversPath).exists()) {
+                Files.createDirectories(Paths.get(uploadBookCoversPath));
             }
 
             String fileName = bookSlug + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-            Path path = Paths.get(uploadPath, fileName);
+            Path path = Paths.get(uploadBookCoversPath, fileName);
             resourceURI = "/book-covers/" + fileName;
             file.transferTo(path);
         }
@@ -84,7 +84,7 @@ public class ResourceStorage {
         if (!bookService.isBookPaid(bookFile.getBook().getId(), user.getId()))
             throw new PaymentRequiredException("You have to pay to download the book");
 
-        Path path = Paths.get(downloadPath, bookFile.getPath());
+        Path path = Paths.get(downloadBookFilesPath, bookFile.getPath());
         byte[] fileBytes;
         try {
             fileBytes = Files.readAllBytes(path);

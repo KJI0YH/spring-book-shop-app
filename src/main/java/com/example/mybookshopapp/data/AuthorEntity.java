@@ -1,5 +1,6 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,10 +24,12 @@ public class AuthorEntity {
     private String description;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Book2AuthorEntity> book2AuthorList;
 
     @ManyToMany(mappedBy = "authorList")
     @ToString.Exclude
+    @JsonIgnore
     private List<BookEntity> bookList;
 
     @Override

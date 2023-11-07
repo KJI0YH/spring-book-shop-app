@@ -8,9 +8,11 @@ auth:
   secret: secret
 
 upload:
-  path: D:/Personal projects/JavaSpring/uploads/book-covers
+  book-covers: D:/Personal projects/JavaSpring/uploads/book-covers
+  author-covers: D:/Personal projects/JavaSpring/uploads/author-covers
+  default-cover: https://dummyimage.com/600x943.png/ffffff/000000
 download:
-  path: D:/Personal projects/JavaSpring/downloads/book-files
+  book-files: D:/Personal projects/JavaSpring/downloads/book-files
 
 spring:
   datasource:
