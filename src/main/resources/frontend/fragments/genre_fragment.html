@@ -3,7 +3,7 @@
 <body>
 <th:block th:fragment="genre(genre)">
   <th:block th:if="${#lists.isEmpty(genre.children)}">
-    <div th:replace="~{fragments/tag_fragment :: tag(${child})}"></div>
+    <div th:replace="~{fragments/tag_fragment :: tag(${genre})}"></div>
   </th:block>
   <th:block th:unless="${#lists.isEmpty(genre.children)}">
     <div class="Tags">

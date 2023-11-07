@@ -7,7 +7,6 @@ import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +34,11 @@ public class TagService {
         return tagRepository.findTagEntityBySlug(slug);
     }
 
-    public TagEntity getTagById(Integer id) {
-        return tagRepository.findTagEntityById(id);
+    public TagEntity getTagById(Integer id) throws ApiWrongParameterException {
+        TagEntity tag = tagRepository.findTagEntityById(id);
+        if (tag == null)
+            throw new ApiWrongParameterException("Tag with id " + id + " does not exists");
+        return tag;
     }
 
     public TagEntity createTag(TagDto tagDto) throws ApiWrongParameterException {
@@ -51,29 +53,24 @@ public class TagService {
         } catch (Exception e) {
             throw new ApiWrongParameterException("Can not save tag: " + e.getMessage());
         }
-            
+
         return newTag;
     }
 
-    public void deleteTagById(Integer id) {
+    public void deleteTagById(Integer id) throws ApiWrongParameterException {
         TagEntity tag = getTagById(id);
-        if (tag != null) {
-            tagRepository.delete(tag);
-        }
+        tagRepository.delete(tag);
     }
 
     public TagEntity updateTag(Integer tagId, TagDto tagDto) throws ApiWrongParameterException {
         TagEntity tag = getTagById(tagId);
-        if (tag == null)
-            throw new ApiWrongParameterException("Tag with this id does not exists");
-
         if (StringUtils.isNotBlank(tagDto.getName()))
             tag.setName(tagDto.getName());
         if (StringUtils.isNotBlank(tagDto.getSlug()))
             tag.setSlug(tagDto.getSlug());
         try {
             tagRepository.save(tag);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ApiWrongParameterException("Can not update tag: " + e.getMessage());
         }
         return tag;
