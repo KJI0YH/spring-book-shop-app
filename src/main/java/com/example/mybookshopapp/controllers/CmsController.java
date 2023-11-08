@@ -1,9 +1,6 @@
 package com.example.mybookshopapp.controllers;
 
-import com.example.mybookshopapp.data.AuthorEntity;
-import com.example.mybookshopapp.data.BookEntity;
-import com.example.mybookshopapp.data.GenreEntity;
-import com.example.mybookshopapp.data.TagEntity;
+import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.services.AuthorService;
@@ -133,6 +130,23 @@ public class CmsController {
     @DeleteMapping("/book/{bookId}")
     public ResponseEntity<ApiResponse> deleteBook(@PathVariable("bookId") Integer bookId) throws ApiWrongParameterException {
         bookService.deleteBook(bookId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
+    }
+
+    @GetMapping("/book/tag/{tagId}")
+    public ResponseEntity<List<BookEntity>> getBooksByTag(@PathVariable("tagId") Integer tagId) {
+        return ResponseEntity.ok(bookService.getBooksByTagId(tagId));
+    }
+
+    @PostMapping("/book/tag")
+    public ResponseEntity<List<Book2TagEntity>> createBook2Tag(@RequestBody Book2TagDto book2TagDto) {
+        return ResponseEntity.ok(bookService.createBook2Tag(book2TagDto.getBookIds(), book2TagDto.getTagIds()));
+    }
+
+    @DeleteMapping("/book/{bookId}/tag/{tagId}")
+    public ResponseEntity<ApiResponse> deleteBook2Tag(@PathVariable("bookId") Integer bookId,
+                                                      @PathVariable("tagId") Integer tagId) throws ApiWrongParameterException {
+        bookService.deleteBook2Tag(bookId, tagId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
 }

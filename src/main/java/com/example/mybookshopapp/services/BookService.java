@@ -30,12 +30,14 @@ public class BookService {
     private final Book2UserTypeRepository book2UserTypeRepository;
     private final Book2UserRepository book2UserRepository;
     private final Book2UserViewedRepository book2UserViewedRepository;
+    private final Book2TagRepository book2TagRepository;
     private final BookRateRepository bookRateRepository;
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewRateRepository bookReviewRateRepository;
     private final BalanceTransactionRepository transactionRepository;
     private final UserService userService;
     private final DateService dateService;
+    private final TagService tagService;
     @Value("${upload.default-cover}")
     private String defaultCover;
 
@@ -56,7 +58,7 @@ public class BookService {
 
     public List<BookEntity> getPageOfBooksByTagId(Integer tagId, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return setBook2UserStatus(bookRepository.findBooksByTagId(tagId, nextPage).getContent());
+        return setBook2UserStatus(bookRepository.findBooksPageByTagId(tagId, nextPage).getContent());
     }
 
     public List<BookEntity> getPageOfBooksByGenreSlug(String genreSlug, Integer offset, Integer limit) {
@@ -363,5 +365,33 @@ public class BookService {
     public void deleteBook(Integer bookId) throws ApiWrongParameterException {
         BookEntity book = getBookById(bookId);
         bookRepository.delete(book);
+    }
+
+    public List<BookEntity> getBooksByTagId(Integer tagId) {
+        return bookRepository.findBooksByTagId(tagId);
+    }
+
+    public List<Book2TagEntity> createBook2Tag(Integer[] bookIds, Integer[] tagIds) {
+        List<BookEntity> books = getBooksByIds(bookIds);
+        List<TagEntity> tags = tagService.getTagsByIds(tagIds);
+        List<Book2TagEntity> book2TagList = new ArrayList<>();
+        for (BookEntity book : books) {
+            for (TagEntity tag : tags) {
+                if (book2TagRepository.findBook2TagEntityByBookIdAndTagId(book.getId(), tag.getId()) == null) {
+                    Book2TagEntity book2Tag = new Book2TagEntity();
+                    book2Tag.setBook(book);
+                    book2Tag.setTag(tag);
+                    book2TagList.add(book2TagRepository.save(book2Tag));
+                }
+            }
+        }
+        return book2TagList;
+    }
+
+    public void deleteBook2Tag(Integer bookId, Integer tagId) throws ApiWrongParameterException {
+        Book2TagEntity book2Tag = book2TagRepository.findBook2TagEntityByBookIdAndTagId(bookId, tagId);
+        if (book2Tag == null)
+            throw new ApiWrongParameterException("Book id " + bookId + " with tag id " + tagId + " does not exists");
+        book2TagRepository.delete(book2Tag);
     }
 }

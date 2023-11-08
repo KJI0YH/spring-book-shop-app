@@ -57,10 +57,6 @@ public class TagService {
         return newTag;
     }
 
-    public void deleteTagById(Integer id) throws ApiWrongParameterException {
-        TagEntity tag = getTagById(id);
-        tagRepository.delete(tag);
-    }
 
     public TagEntity updateTag(Integer tagId, TagDto tagDto) throws ApiWrongParameterException {
         TagEntity tag = getTagById(tagId);
@@ -76,6 +72,11 @@ public class TagService {
         return tag;
     }
 
+    public void deleteTagById(Integer id) throws ApiWrongParameterException {
+        TagEntity tag = getTagById(id);
+        tagRepository.delete(tag);
+    }
+
     public List<TagPopularityDto> getTagsWithPopularityClasses() {
         List<TagEntity> tags = getAllTags();
         Integer maxBooksCount = tagRepository.getMaxBooksCountByTag();
@@ -87,5 +88,9 @@ public class TagService {
             tagsWithPopularity.add(new TagPopularityDto(tag, tagClasses[tagRange]));
         }
         return tagsWithPopularity;
+    }
+
+    public List<TagEntity> getTagsByIds(Integer[] tagIds) {
+        return tagRepository.findTagEntitiesByIdIn(List.of(tagIds));
     }
 }
