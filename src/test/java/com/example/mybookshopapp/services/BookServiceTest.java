@@ -96,7 +96,7 @@ class BookServiceTest extends SpringBootApplicationTest {
     @Test
     void getPageOfBooksByAuthorId() {
         Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = bookRepository.findBooksByAuthorId(1, nextPage).getContent();
+        List<BookEntity> bookList = bookRepository.findBooksPageByAuthorId(1, nextPage).getContent();
         Assertions.assertNotNull(bookList);
         Assertions.assertFalse(bookList.isEmpty());
         Assertions.assertEquals(3, bookList.size());

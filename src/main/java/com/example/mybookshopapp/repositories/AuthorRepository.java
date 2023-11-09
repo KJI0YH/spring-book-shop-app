@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.AuthorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<AuthorEntity, Integer> {
@@ -13,5 +14,7 @@ public interface AuthorRepository extends JpaRepository<AuthorEntity, Integer> {
     List<Integer> findAuthorEntitiesIdByFirstLastNameContainingIgnoreCase(String authorName);
     
     AuthorEntity findAuthorEntityById(Integer id);
+    
+    List<AuthorEntity> findAuthorEntitiesByIdIn(Collection<Integer> id);
             
 }

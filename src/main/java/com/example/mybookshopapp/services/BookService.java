@@ -1,6 +1,8 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
+import com.example.mybookshopapp.dto.AuthorSortIndexDto;
+import com.example.mybookshopapp.dto.Book2AuthorDto;
 import com.example.mybookshopapp.dto.BookDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -32,6 +31,7 @@ public class BookService {
     private final Book2UserViewedRepository book2UserViewedRepository;
     private final Book2TagRepository book2TagRepository;
     private final Book2GenreRepository book2GenreRepository;
+    private final Book2AuthorRepository book2AuthorRepository;
     private final BookRateRepository bookRateRepository;
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewRateRepository bookReviewRateRepository;
@@ -40,6 +40,7 @@ public class BookService {
     private final DateService dateService;
     private final TagService tagService;
     private final GenreService genreService;
+    private final AuthorService authorService;
     @Value("${upload.default-cover}")
     private String defaultCover;
 
@@ -80,7 +81,7 @@ public class BookService {
 
     public List<BookEntity> getPageOfBooksByAuthorId(Integer authorId, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return setBook2UserStatus(bookRepository.findBooksByAuthorId(authorId, nextPage).getContent());
+        return setBook2UserStatus(bookRepository.findBooksPageByAuthorId(authorId, nextPage).getContent());
     }
 
     public List<BookEntity> getPageOfViewedBooks(Integer userId, Integer offset, Integer limit) {
@@ -424,5 +425,55 @@ public class BookService {
         if (book2Genre == null)
             throw new ApiWrongParameterException("Book id " + bookId + " with genre id " + genreId + " does not exists");
         book2GenreRepository.delete(book2Genre);
+    }
+
+    public List<BookEntity> getBooksByAuthorId(Integer authorId) {
+        return bookRepository.findBooksByAuthorId(authorId);
+    }
+
+    public List<Book2AuthorEntity> createBook2Author(Integer[] bookIds, AuthorSortIndexDto[] authorSortIndexDtos) {
+        List<BookEntity> books = getBooksByIds(bookIds);
+        List<Book2AuthorEntity> book2AuthorList = new ArrayList<>();
+        for (BookEntity book : books) {
+            for (AuthorSortIndexDto authorSortIndex : authorSortIndexDtos) {
+                try {
+                    AuthorEntity author = authorService.getAuthorById(authorSortIndex.getAuthorId());
+                    Book2AuthorEntity book2Author = new Book2AuthorEntity();
+                    book2Author.setBook(book);
+                    book2Author.setAuthor(author);
+                    Integer index= authorSortIndex.getSortIndex();
+                    book2Author.setSortIndex(index == null ? 0 : index);
+                    book2AuthorList.add(book2AuthorRepository.save(book2Author));
+                } catch (ApiWrongParameterException ignored) {
+                }
+            }
+        }
+        return book2AuthorList;
+    }
+
+    public List<Book2AuthorEntity> updateBook2Author(Book2AuthorDto book2AuthorDto) throws ApiWrongParameterException {
+        List<Book2AuthorEntity> book2AuthorList = new ArrayList<>();
+        for (Integer bookId : book2AuthorDto.getBookIds()) {
+            for (AuthorSortIndexDto authorSortIndex : book2AuthorDto.getAuthors()) {
+                Book2AuthorEntity book2Author = book2AuthorRepository.findBook2AuthorEntityByBookIdAndAuthorId(bookId, authorSortIndex.getAuthorId());
+                if (book2Author != null) {
+                    Integer index = authorSortIndex.getSortIndex();
+                    book2Author.setSortIndex(index == null ? 0 : index);
+                    try {
+                        book2AuthorList.add(book2AuthorRepository.save(book2Author));
+                    } catch (Exception e) {
+                        throw new ApiWrongParameterException("Can not update book to author: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return book2AuthorList;
+    }
+
+    public void deleteBook2Author(Integer bookId, Integer authorId) throws ApiWrongParameterException {
+        Book2AuthorEntity book2Author = book2AuthorRepository.findBook2AuthorEntityByBookIdAndAuthorId(bookId, authorId);
+        if (book2Author == null)
+            throw new ApiWrongParameterException("Book id " + bookId + " with author id " + authorId + " does not exists");
+        book2AuthorRepository.delete(book2Author);
     }
 }

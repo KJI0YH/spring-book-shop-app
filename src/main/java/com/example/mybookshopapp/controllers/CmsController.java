@@ -9,6 +9,7 @@ import com.example.mybookshopapp.services.GenreService;
 import com.example.mybookshopapp.services.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -165,5 +166,27 @@ public class CmsController {
                                                         @PathVariable("genreId") Integer genreId) throws ApiWrongParameterException {
         bookService.deleteBook2Genre(bookId, genreId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
+    }
+    
+    @GetMapping("/book/author/{authorId}")
+    public ResponseEntity<List<BookEntity>> getBooksByAuthor(@PathVariable("authorId") Integer authorId){
+        return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
+    }
+    
+    @PostMapping("/book/author")
+    public ResponseEntity<List<Book2AuthorEntity>> createBook2Author(@RequestBody Book2AuthorDto book2AuthorDto){
+        return ResponseEntity.ok(bookService.createBook2Author(book2AuthorDto.getBookIds(), book2AuthorDto.getAuthors()));
+    }
+    
+    @PutMapping("/book/author")
+    public ResponseEntity<List<Book2AuthorEntity>> updateBook2Author(@RequestBody Book2AuthorDto book2AuthorDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(bookService.updateBook2Author(book2AuthorDto));
+    }
+    
+    @DeleteMapping("/book/{bookId}/author/{authorId}")
+    public ResponseEntity<ApiResponse> deleteBook2Author(@PathVariable("bookId") Integer bookId,
+                                                         @PathVariable("authorId") Integer authorId) throws ApiWrongParameterException {
+        bookService.deleteBook2Author(bookId, authorId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(false));
     }
 }

@@ -104,4 +104,8 @@ public class AuthorService {
         AuthorEntity author = getAuthorById(authorId);
         authorRepository.delete(author);
     }
+
+    public List<AuthorEntity> getAuthorsByIds(Integer[] authorIds) {
+        return authorRepository.findAuthorEntitiesByIdIn(List.of(authorIds));
+    }
 }
