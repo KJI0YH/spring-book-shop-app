@@ -149,4 +149,21 @@ public class CmsController {
         bookService.deleteBook2Tag(bookId, tagId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
+
+    @GetMapping("/book/genre/{genreId}")
+    public ResponseEntity<List<BookEntity>> getBooksByGenre(@PathVariable("genreId") Integer genreId) {
+        return ResponseEntity.ok(bookService.getBooksByGenreId(genreId));
+    }
+
+    @PostMapping("/book/genre")
+    public ResponseEntity<List<Book2GenreEntity>> createBook2Genre(@RequestBody Book2GenreDto book2GenreDto) {
+        return ResponseEntity.ok(bookService.createBook2Genre(book2GenreDto.getBookIds(), book2GenreDto.getGenreIds()));
+    }
+
+    @DeleteMapping("/book/{bookId}/genre/{genreId}")
+    public ResponseEntity<ApiResponse> deleteBook2Genre(@PathVariable("bookId") Integer bookId,
+                                                        @PathVariable("genreId") Integer genreId) throws ApiWrongParameterException {
+        bookService.deleteBook2Genre(bookId, genreId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
+    }
 }

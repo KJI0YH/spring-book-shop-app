@@ -31,6 +31,7 @@ public class BookService {
     private final Book2UserRepository book2UserRepository;
     private final Book2UserViewedRepository book2UserViewedRepository;
     private final Book2TagRepository book2TagRepository;
+    private final Book2GenreRepository book2GenreRepository;
     private final BookRateRepository bookRateRepository;
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewRateRepository bookReviewRateRepository;
@@ -38,6 +39,7 @@ public class BookService {
     private final UserService userService;
     private final DateService dateService;
     private final TagService tagService;
+    private final GenreService genreService;
     @Value("${upload.default-cover}")
     private String defaultCover;
 
@@ -68,7 +70,7 @@ public class BookService {
 
     public List<BookEntity> getPageOfBooksByGenreId(Integer genreId, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return setBook2UserStatus(bookRepository.findBooksByGenreId(genreId, nextPage).getContent());
+        return setBook2UserStatus(bookRepository.findBooksPageByGenreId(genreId, nextPage).getContent());
     }
 
     public List<BookEntity> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
@@ -393,5 +395,34 @@ public class BookService {
         if (book2Tag == null)
             throw new ApiWrongParameterException("Book id " + bookId + " with tag id " + tagId + " does not exists");
         book2TagRepository.delete(book2Tag);
+    }
+
+    public List<BookEntity> getBooksByGenreId(Integer genreId) {
+        return bookRepository.findBooksByGenreId(genreId);
+    }
+
+    public List<Book2GenreEntity> createBook2Genre(Integer[] bookIds, Integer[] genreIds) {
+        List<BookEntity> books = getBooksByIds(bookIds);
+        List<GenreEntity> genres = genreService.getGenresByIds(genreIds);
+        List<Book2GenreEntity> book2GenreList = new ArrayList<>();
+        for (BookEntity book : books) {
+            for (GenreEntity genre : genres) {
+                if (book2GenreRepository.findBook2GenreEntityByBookIdAndGenreId(book.getId(), genre.getId()) == null) {
+                    Book2GenreEntity book2Genre = new Book2GenreEntity();
+                    book2Genre.setBook(book);
+                    book2Genre.setGenre(genre);
+                    book2GenreList.add(book2GenreRepository.save(book2Genre));
+
+                }
+            }
+        }
+        return book2GenreList;
+    }
+
+    public void deleteBook2Genre(Integer bookId, Integer genreId) throws ApiWrongParameterException {
+        Book2GenreEntity book2Genre = book2GenreRepository.findBook2GenreEntityByBookIdAndGenreId(bookId, genreId);
+        if (book2Genre == null)
+            throw new ApiWrongParameterException("Book id " + bookId + " with genre id " + genreId + " does not exists");
+        book2GenreRepository.delete(book2Genre);
     }
 }

@@ -56,6 +56,10 @@ public class GenreService {
         return genreRepository.findAll();
     }
 
+    public List<GenreEntity> getGenresByIds(Integer[] genreIds) {
+        return genreRepository.findGenreEntitiesByIdIn(List.of(genreIds));
+    }
+
     public GenreEntity getGenreById(Integer genreId) throws ApiWrongParameterException {
         GenreEntity genre = genreRepository.findGenreEntityById(genreId);
         if (genre == null)

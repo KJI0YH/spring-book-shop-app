@@ -80,7 +80,9 @@ public class TagService {
     public List<TagPopularityDto> getTagsWithPopularityClasses() {
         List<TagEntity> tags = getAllTags();
         Integer maxBooksCount = tagRepository.getMaxBooksCountByTag();
+        if (maxBooksCount == null) maxBooksCount = 0;
         Integer minBooksCount = tagRepository.getMinBooksCountByTag();
+        if (minBooksCount == null) minBooksCount = 0;
         List<TagPopularityDto> tagsWithPopularity = new ArrayList<>();
         for (TagEntity tag : tags) {
             Integer booksCount = tagRepository.getBooksCountByTagId(tag.getId());
