@@ -3,13 +3,9 @@ package com.example.mybookshopapp.controllers;
 import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
-import com.example.mybookshopapp.services.AuthorService;
-import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.GenreService;
-import com.example.mybookshopapp.services.TagService;
+import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +21,7 @@ public class CmsController {
     private final GenreService genreService;
     private final AuthorService authorService;
     private final BookService bookService;
+    private final UserService userService;
 
     @GetMapping("/tag/all")
     public ResponseEntity<List<TagEntity>> getAllTags() {
@@ -167,26 +164,58 @@ public class CmsController {
         bookService.deleteBook2Genre(bookId, genreId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
-    
+
     @GetMapping("/book/author/{authorId}")
-    public ResponseEntity<List<BookEntity>> getBooksByAuthor(@PathVariable("authorId") Integer authorId){
+    public ResponseEntity<List<BookEntity>> getBooksByAuthor(@PathVariable("authorId") Integer authorId) {
         return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
     }
-    
+
     @PostMapping("/book/author")
-    public ResponseEntity<List<Book2AuthorEntity>> createBook2Author(@RequestBody Book2AuthorDto book2AuthorDto){
+    public ResponseEntity<List<Book2AuthorEntity>> createBook2Author(@RequestBody Book2AuthorDto book2AuthorDto) {
         return ResponseEntity.ok(bookService.createBook2Author(book2AuthorDto.getBookIds(), book2AuthorDto.getAuthors()));
     }
-    
+
     @PutMapping("/book/author")
     public ResponseEntity<List<Book2AuthorEntity>> updateBook2Author(@RequestBody Book2AuthorDto book2AuthorDto) throws ApiWrongParameterException {
         return ResponseEntity.ok(bookService.updateBook2Author(book2AuthorDto));
     }
-    
+
     @DeleteMapping("/book/{bookId}/author/{authorId}")
     public ResponseEntity<ApiResponse> deleteBook2Author(@PathVariable("bookId") Integer bookId,
                                                          @PathVariable("authorId") Integer authorId) throws ApiWrongParameterException {
         bookService.deleteBook2Author(bookId, authorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(false));
+    }
+
+    @GetMapping("/user/all")
+    public ResponseEntity<List<UserEntity>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserEntity> getUserById(@PathVariable("userId") Integer userId) throws ApiWrongParameterException {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @GetMapping("/book/user/{userId}")
+    public ResponseEntity<List<BookEntity>> getUserBooks(@PathVariable("userId") Integer userId) {
+        return ResponseEntity.ok(bookService.getAllUserBooks(userId));
+    }
+
+    @PostMapping("/book/user")
+    public ResponseEntity<List<Book2UserEntity>> createBook2User(@RequestBody Book2UserDto book2UserDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(bookService.createBook2User(book2UserDto));
+    }
+
+    @PutMapping("/book/user")
+    public ResponseEntity<List<Book2UserEntity>> updateBook2User(@RequestBody Book2UserDto book2UserDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(bookService.updateBook2User(book2UserDto));
+    }
+
+    @DeleteMapping("/user/{userId}/book/{bookId}")
+    public ResponseEntity<ApiResponse> deleteBook2User(@PathVariable("userId") Integer userId,
+                                                       @PathVariable("bookId") Integer bookId) throws ApiWrongParameterException {
+        bookService.deleteBook2User(bookId, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
 }

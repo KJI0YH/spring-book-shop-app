@@ -69,6 +69,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = "select distinct b.* from book as b join book2user as b2u on b2u.book_id = b.id join users as u on b2u.user_id = ?1 where b2u.type_id = ?2", nativeQuery = true)
     List<BookEntity> findBooksByUserType(Integer userId, Integer typeId);
+    
+    @Query(value = "select distinct b.* from book as b join book2user as b2u on b2u.book_id = b.id join users as u on b2u.user_id = ?1", nativeQuery = true)
+    List<BookEntity> findBooksByUserId(Integer userId);
 
     @Query(value = "select distinct b.* from book as b join book2user as b2u on b2u.book_id = b.id join users as u on b2u.user_id = ?1 where b2u.type_id = ?2", nativeQuery = true)
     Page<BookEntity> findBooksByUserType(Integer userId, Integer typeId, Pageable pageable);

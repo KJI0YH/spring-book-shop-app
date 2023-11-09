@@ -62,8 +62,8 @@ public class BookRecommendedService {
 
     private List<Integer> getAllAuthorIdsFromBooks(List<BookEntity> userBooks) {
         return userBooks.stream()
-                .flatMap(book -> book.getAuthorList().stream()
-                        .map(AuthorEntity::getId)
+                .flatMap(book -> book.getBook2AuthorList().stream()
+                        .map(Book2AuthorEntity::authorId)
                 )
                 .distinct()
                 .toList();

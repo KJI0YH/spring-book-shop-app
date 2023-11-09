@@ -4,6 +4,7 @@ import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.ContactConfirmationPayload;
 import com.example.mybookshopapp.dto.ContactConfirmationResponse;
 import com.example.mybookshopapp.dto.RegistrationForm;
+import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.RoleDoesNotExistsException;
 import com.example.mybookshopapp.errors.UserAlreadyExistException;
 import com.example.mybookshopapp.repositories.UserRepository;
@@ -23,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -111,7 +113,7 @@ public class UserService {
     }
 
     public UserEntity changePhone(UserEntity user, String newPhone) throws UserAlreadyExistException {
-        if (userRepository.findUserEntityByPhone(newPhone) != null){
+        if (userRepository.findUserEntityByPhone(newPhone) != null) {
             throw new UserAlreadyExistException("User with phone " + newPhone + " already exists");
         }
         user.setPhone(newPhone);
@@ -134,5 +136,16 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             return user.getRegTime().toString();
         }
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public UserEntity getUserById(Integer userId) throws ApiWrongParameterException {
+        UserEntity user = userRepository.findUserEntityById(userId);
+        if (user == null)
+            throw new ApiWrongParameterException("User with id " + userId + " does not exists");
+        return user;
     }
 }

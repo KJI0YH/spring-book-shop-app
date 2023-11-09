@@ -2,12 +2,14 @@ package com.example.mybookshopapp.data;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -40,33 +42,57 @@ public class BookEntity {
     @JsonIgnore
     private String description;
     private LocalDate pubDate;
+    
     @ManyToMany
     @JoinTable(name = "book2author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private List<AuthorEntity> authorList;
+    
+    public List<AuthorEntity> getAuthorList(){
+        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
+        return book2AuthorList.stream().map(Book2AuthorEntity::getAuthor).toList();
+    }
+    
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonProperty("book2author")
+    private List<Book2AuthorEntity> book2AuthorList;
+    
     @ManyToMany
     @JoinTable(name = "book2tag",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private List<TagEntity> tagList;
+    
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonProperty("book2tag")
+    private List<Book2TagEntity> book2TagList;
+    
     @ManyToMany
     @JoinTable(name = "book2genre",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private List<GenreEntity> genreList;
+    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ToString.Exclude
+    @JsonProperty("book2genre")
+    private List<Book2GenreEntity> book2GenreList;
+    
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonProperty("book2files")
     private List<BookFileEntity> bookFileList = new ArrayList<>();
-    @JsonIgnore
+    
     private Integer popularity = 0;
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -77,13 +103,14 @@ public class BookEntity {
     @ToString.Exclude
     private List<BookRateEntity> rateList;
 
-    @JsonGetter
+    @JsonGetter("authors")
     public String getAuthors() {
-        if (authorList == null || authorList.isEmpty())
+        if (book2AuthorList == null || book2AuthorList.isEmpty())
             return "";
         
-        String authors = authorList.get(0).toString();
-        if (authorList.size() > 1) {
+        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
+        String authors = book2AuthorList.get(0).getAuthor().toString();
+        if (book2AuthorList.size() > 1) {
             authors += " and others";
         }
 
