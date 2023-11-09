@@ -3,10 +3,12 @@ package com.example.mybookshopapp.repositories;
 import com.example.mybookshopapp.data.TagEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
 
+@Repository
 public interface TagRepository extends JpaRepository<TagEntity, Integer> {
 
     @Query(value = "SELECT MAX(books_count) FROM (SELECT COUNT(*) AS books_count FROM book2tag b2t GROUP BY b2t.tag_id) as subquery", nativeQuery = true)

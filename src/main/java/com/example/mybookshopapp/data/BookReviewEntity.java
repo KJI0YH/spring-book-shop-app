@@ -1,24 +1,40 @@
 package com.example.mybookshopapp.data;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
 @Table(name = "book_review")
 @Data
-public class BookReviewEntity implements Comparable<BookReviewEntity>{
+public class BookReviewEntity implements Comparable<BookReviewEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @JsonIgnore
     private LocalDateTime time;
+    private String text;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnore
+    private BookEntity book;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnore
+    private UserEntity user;
+    @OneToMany(mappedBy = "review")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<BookReviewLikeEntity> reviewLikeList;
 
-    public String getTime(){
+    @JsonGetter("time")
+    public String getTime() {
         return String.valueOf(String.format("%02d", time.getDayOfMonth())) + '.' +
                 String.format("%02d", time.getMonthValue()) + '.' +
                 time.getYear() + ' ' +
@@ -27,41 +43,40 @@ public class BookReviewEntity implements Comparable<BookReviewEntity>{
                 String.format("%02d", time.getSecond());
     }
 
-    private String text;
+    @JsonGetter("bookId")
+    public Integer bookId() {
+        return book.getId();
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private BookEntity book;
+    @JsonGetter("userId")
+    public Integer userId() {
+        return user.getId();
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private UserEntity user;
-
-    @OneToMany(mappedBy = "review")
-    @ToString.Exclude
-    private List<BookReviewLikeEntity> reviewLikeList;
-
-    public Long getLikesCount(){
+    @JsonIgnore
+    public Long getLikesCount() {
         return reviewLikeList.stream()
                 .filter(l -> l.getValue() == 1)
                 .count();
     }
 
-    public Long getDislikesCount(){
+    @JsonIgnore
+    public Long getDislikesCount() {
         return reviewLikeList.stream()
                 .filter(d -> d.getValue() == -1)
                 .count();
     }
 
-    public Long getPopularityValue(){
+    @JsonIgnore
+    public Long getPopularityValue() {
         return getLikesCount() - getDislikesCount();
     }
 
     @Override
     public int compareTo(BookReviewEntity o) {
-        if (getPopularityValue() > o.getPopularityValue()){
+        if (getPopularityValue() > o.getPopularityValue()) {
             return -1;
-        } else if (getPopularityValue() < o.getPopularityValue()){
+        } else if (getPopularityValue() < o.getPopularityValue()) {
             return 1;
         }
         return 0;

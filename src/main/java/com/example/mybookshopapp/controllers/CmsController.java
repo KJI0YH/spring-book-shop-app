@@ -22,6 +22,7 @@ public class CmsController {
     private final AuthorService authorService;
     private final BookService bookService;
     private final UserService userService;
+    private final BookReviewSerivce bookReviewSerivce;
 
     @GetMapping("/tag/all")
     public ResponseEntity<List<TagEntity>> getAllTags() {
@@ -216,6 +217,33 @@ public class CmsController {
     public ResponseEntity<ApiResponse> deleteBook2User(@PathVariable("userId") Integer userId,
                                                        @PathVariable("bookId") Integer bookId) throws ApiWrongParameterException {
         bookService.deleteBook2User(bookId, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
+    }
+
+    @GetMapping("/bookReview/all")
+    public ResponseEntity<List<BookReviewEntity>> getAllReviews() {
+        return ResponseEntity.ok(bookReviewSerivce.getAllReviews());
+    }
+
+    @GetMapping("/bookReview/{reviewId}")
+    public ResponseEntity<BookReviewEntity> getReviewById(@PathVariable("reviewId") Integer reviewId) throws ApiWrongParameterException {
+        return ResponseEntity.ok(bookReviewSerivce.getReviewById(reviewId));
+    }
+
+    @GetMapping("/book/{bookId}/bookReview")
+    public ResponseEntity<List<BookReviewEntity>> getReviewByBookId(@PathVariable("bookId") Integer bookId) {
+        return ResponseEntity.ok(bookReviewSerivce.getReviewsByBookId(bookId));
+    }
+
+    @PutMapping("/bookReview/{reviewId}")
+    public ResponseEntity<BookReviewEntity> updateBookReview(@PathVariable("reviewId") Integer reviewId,
+                                                             @RequestBody BookReviewDto bookReviewDto) throws ApiWrongParameterException {
+        return ResponseEntity.ok(bookReviewSerivce.updateBookReview(reviewId, bookReviewDto));
+    }
+
+    @DeleteMapping("/bookReview/{reviewId}")
+    public ResponseEntity<ApiResponse> deleteBookReview(@PathVariable("reviewId") Integer reviewId) throws ApiWrongParameterException {
+        bookReviewSerivce.deleteBookReview(reviewId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse(true));
     }
 }
