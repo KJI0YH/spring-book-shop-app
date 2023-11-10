@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.groupingBy;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
-    @Value("${upload.default-cover}")
+    @Value("${upload.default-author-cover}")
     private String defaultCover;
 
     public List<AuthorEntity> getAuthorsData() {

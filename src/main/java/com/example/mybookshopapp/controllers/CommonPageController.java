@@ -5,6 +5,7 @@ import com.example.mybookshopapp.dto.MessageDto;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -24,6 +25,12 @@ public class CommonPageController extends AbstractHeaderFooterController {
     private final DocumentService documentService;
     private final FaqService faqService;
     private final CookieService cookieService;
+    
+    @Value("${upload.default-book-cover}")
+    private String defaultBookImage;
+    
+    @Value("${upload.default-author-cover}")
+    private String defaultAuthorImage;
 
     @GetMapping("/about")
     public String aboutPage() {
@@ -121,5 +128,15 @@ public class CommonPageController extends AbstractHeaderFooterController {
         model.addAttribute("booksList", bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20));
         model.addAttribute("tag", tagService.getTagBySlug(tagSlug));
         return "tags/index";
+    }
+    
+    @GetMapping("/cms")
+    public String cmsPage(Model model){
+        model.addAttribute("tags", tagService.getAllTags());
+        model.addAttribute("genres", genreService.getAllGenres());
+        model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("defaultBookImage", defaultBookImage);
+        model.addAttribute("defaultAuthorImage", defaultAuthorImage);
+        return "cms";
     }
 }

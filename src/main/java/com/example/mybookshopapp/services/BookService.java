@@ -42,7 +42,7 @@ public class BookService {
     private final TagService tagService;
     private final GenreService genreService;
     private final AuthorService authorService;
-    @Value("${upload.default-cover}")
+    @Value("${upload.default-book-cover}")
     private String defaultCover;
 
     public List<BookEntity> getPageOfRecentBooks(LocalDate from, LocalDate to, Integer offset, Integer limit) {

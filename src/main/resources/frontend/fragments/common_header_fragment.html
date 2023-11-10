@@ -70,9 +70,9 @@
                     </li>
                     <li class="menu-item" th:classappend="${requestURI.equals('/books/popular') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/books/popular.html" th:href="@{/books/popular}" th:text="#{topbar.popular}">Популярное</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/authors') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}" th:text="#{topbar.authors}">Авторы</a>
-                    </li>
                     <li class="menu-item" th:classappend="${requestURI.equals('/books/viewed') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/books/viewed}">Просмотренные</a>
+                    </li>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/authors') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}" th:text="#{topbar.authors}">Авторы</a>
                     </li>
                     <th:block th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
                         <li class="menu-item" th:classappend="${requestURI.equals('/cms') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/cms}">CMS</a>
