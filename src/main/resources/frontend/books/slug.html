@@ -30,6 +30,7 @@
     <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script defer src="/assets/js/scripts.min.js?v=87821122"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="Site">
 <div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
@@ -56,18 +57,80 @@ p.error-browser
                     <span th:text="${book.title}">Мара и морок</span>
                 </li>
             </ul>
+            <form class="form Login Login_registration" id="bookForm" onsubmit="return false;"
+                  th:if="${curUsr != null && curUsr.isAdmin()}">
+                <div class="form-group">
+                    <label class="form-label Login-title">Изменить книгу
+                    </label>
+                </div>
+                <div class="form-group form-group_row">
+                    <div class="row-block">
+                        <input id="bookTitle" name="title" placeholder="Title" required th:value="${book.title}"
+                               type="text">
+                    </div>
+
+                    <div class="row-block">
+                        <input id="bookSlug" name="slug" placeholder="Slug" required th:value="${book.slug}"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="form-group form-group_row">
+                    <div class="row-block">
+                        <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
+                               th:value="${book.price / 100 + '.' + book.price % 100}" type="number">
+                    </div>
+                    <div class="row-block">
+                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
+                               th:value="${book.discount}" type="number">
+                    </div>
+                </div>
+
+                <div class="form-group form-group_row">
+                    <div class="form-group row-block">
+                        <label for="bookBestseller">Бестселлер</label>
+                        <input id="bookBestseller" name="bestseller" th:checked="${book.isBestseller}" type="checkbox">
+                    </div>
+
+                    <div class="form-group row-block">
+                        <label class="form-label" for="bookPubDate">Дата публикации</label>
+                        <input id="bookPubDate" name="pubDate" th:value="${book.pubDate}" type="date"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-textarea" id="bookDescription" name="description"
+                              placeholder="Description" th:text="${book.description}"></textarea>
+                </div>
+
+                <div class="form-group form-group_row">
+                    <label id="bookMessage"></label>
+                </div>
+
+                <div class="form-group form-group_center">
+                    <button class="btn btn_primary form-btn" id="updateBook" name="updateBook"
+                            th:attr="data-id=${book.id}"
+                            type="button">Update book
+                    </button>
+                    <button class="btn btn_primary form-btn" id="deleteBook" name="deleteBook"
+                            th:attr="data-id=${book.id}"
+                            type="button">Delete book
+                    </button>
+                </div>
+            </form>
             <div class="Product">
                 <div class="ProductCard">
                     <div class="ProductCard-look">
                         <form action="#" enctype="multipart/form-data" id="imgForm" method="POST"
-                              th:if="${curUsr != null && curUsr.isAdmin()}"
-                              th:action="${'/books/'+ book.slug +'/img/save'}">
+                              th:action="${'/books/'+ book.slug +'/img/save'}"
+                              th:if="${curUsr != null && curUsr.isAdmin()}">
                             <div class="ProductCard-photo" id="uploadButton">
                                 <img alt="card.jpg" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
                             </div>
                             <input id="dialog" name="file" style="display: none" type="file"/>
                         </form>
-                        <img th:unless="${curUsr != null && curUsr.isAdmin()}" alt="card.jpg" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
+                        <img alt="card.jpg" src="/assets/img/content/main/card.jpg"
+                             th:src="${book.image}" th:unless="${curUsr != null && curUsr.isAdmin()}"/>
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">
@@ -75,10 +138,42 @@ p.error-browser
                             </h1>
                             <div class="ProductCard-author">
                                 <span class="ProductCard-titleProp" th:text="#{book.author}">Автор:</span><br>
-                                <th:block th:each="author: ${book.authorList}">
-                                    <a href="#" th:href="${'/authors/' + author.slug}"
-                                       th:text="${author.toString()}">Борис Васильевич Бедный</a>
+                                <th:block th:each="b2a: ${book.book2AuthorList}">
+                                    <div>
+                                        <a href="#" th:href="${'/authors/' + b2a.author.slug}"
+                                           th:text="${b2a.author.toString()}">Борис Васильевич Бедный</a>
+                                        <input min="0" placeholder="Sort index" step="1"
+                                               th:id="${'sortIndex-' + b2a.author.id}"
+                                               th:if="${curUsr != null && curUsr.isAdmin()}"
+                                               th:value="${b2a.sortIndex}"
+                                               type="number">
+                                        <br>
+                                        <button
+                                                id="updateBook2Author"
+                                                th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
+                                                th:if="${curUsr != null && curUsr.isAdmin()}"
+                                        >update
+                                        </button>
+                                        <button
+                                                id="deleteBook2Author"
+                                                th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
+                                                th:if="${curUsr != null && curUsr.isAdmin()}"
+                                        >delete
+                                        </button>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <select id="bookAuthors" multiple multiselect-hide-x="true"
+                                            multiselect-search="true" name="authors"
+                                            th:placeholder="Authors">
+                                        <th:block th:each="author : ${authors}">
+                                            <option th:selected="${book.authorList != null && book.authorList.contains(author)}"
+                                                    th:text="${author.toString()}"
+                                                    th:value="${author.id}"></option>
+                                        </th:block>
+                                    </select>
                                     <br>
+                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}">Add authors</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-rating">
@@ -100,46 +195,96 @@ p.error-browser
                                             <div class="RatingGroup">
                                                 <span class="Rating">
                                                     <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(5)}"></span>
-                                                    <span class="Rating-title" th:text="${book.getRateCount(5)}">1</span>
+                                                    <span class="Rating-title"
+                                                          th:text="${book.getRateCount(5)}">1</span>
                                                 </span>
                                                 <br>
                                                 <span class="Rating">
                                                     <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(4)}"></span>
-                                                    <span class="Rating-title" th:text="${book.getRateCount(4)}">4</span>
+                                                    <span class="Rating-title"
+                                                          th:text="${book.getRateCount(4)}">4</span>
                                                 </span>
                                                 <br>
                                                 <span class="Rating">
                                                     <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(3)}"></span>
-                                                    <span class="Rating-title" th:text="${book.getRateCount(3)}">0</span>
+                                                    <span class="Rating-title"
+                                                          th:text="${book.getRateCount(3)}">0</span>
                                                 </span>
                                                 <br>
                                                 <span class="Rating">
                                                     <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(2)}"></span>
-                                                    <span class="Rating-title" th:text="${book.getRateCount(2)}">10</span>
+                                                    <span class="Rating-title"
+                                                          th:text="${book.getRateCount(2)}">10</span>
                                                 </span>
                                                 <br>
                                                 <span class="Rating">
                                                     <span th:replace="~{fragments/rating_stars_fragment :: rating_stars(1)}"></span>
-                                                    <span class="Rating-title" th:text="${book.getRateCount(1)}">3</span></span>
+                                                    <span class="Rating-title"
+                                                          th:text="${book.getRateCount(1)}">3</span></span>
                                             </div>
                                         </div>
                                     </div>
                                 </button>
                             </div>
-                            <th:block th:if="${curUsr != null}">
-                                <div class="ProductCard-assessment">
-                                    <span class="ProductCard-titleProp" th:text="#{book.rate}">Оцените книгу:</span>
-                                    <span class="Rating Rating_input" data-bookid="2121" th:attr="data-bookid=${book.id}">
+                            <div class="ProductCard-assessment" th:if="${curUsr != null}">
+                                <span class="ProductCard-titleProp" th:text="#{book.rate}">Оцените книгу:</span>
+                                <span class="Rating Rating_input" data-bookid="2121"
+                                      th:attr="data-bookid=${book.id}">
                                         <span th:replace="~{fragments/rating_stars_input_fragment :: rating_stars}"></span>
                                     </span>
-                                </div>
-                            </th:block>
+                            </div>
+                            <div class="ProductCard-tags">
+                                <span class="ProductCard-titleProp">Жанры:</span><br>
+                                <th:block th:each="genre : ${book.genreList}">
+                                    <a href="/genres/" th:href="${'/genres/' + genre.slug}"
+                                       th:text="${genre.name}">Современные</a>
+                                    <button
+                                            id="deleteBook2Genre"
+                                            th:attr="data-bookId=${book.id},data-genreId=${genre.id}"
+                                            th:if="${curUsr != null && curUsr.isAdmin()}"
+                                    >x
+                                    </button>
+                                    <br>
+                                </th:block>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <select id="bookGenres" multiple multiselect-hide-x="true" multiselect-search="true"
+                                            name="genres"
+                                            th:placeholder="Genres">
+                                        <th:block th:each="genre : ${genres}">
+                                            <option th:selected="${book.genreList != null && book.genreList.contains(genre)}"
+                                                    th:text="${genre.name}"
+                                                    th:value="${genre.id}"></option>
+                                        </th:block>
+                                    </select>
+                                    <br>
+                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}">Add genres</button>
+                                </th:block>
+                            </div>
                             <div class="ProductCard-tags">
                                 <span class="ProductCard-titleProp" th:text="#{book.tags}">Тэги:</span><br>
                                 <th:block th:each="tag : ${book.tagList}">
                                     <a href="/tags/" th:href="${'/tags/' + tag.slug}"
                                        th:text="${tag.name}">Современные</a>
+                                    <button
+                                            id="deleteBook2Tag"
+                                            th:attr="data-bookId=${book.id},data-tagId=${tag.id}"
+                                            th:if="${curUsr != null && curUsr.isAdmin()}"
+                                    >x
+                                    </button>
                                     <br>
+                                </th:block>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <select id="bookTags" multiple multiselect-hide-x="true" multiselect-search="true"
+                                            name="tags"
+                                            th:placeholder="Tags">
+                                        <th:block th:each="tag : ${tags}">
+                                            <option th:selected="${book.tagList != null && book.tagList.contains(tag)}"
+                                                    th:text="${tag.name}"
+                                                    th:value="${tag.id}"></option>
+                                        </th:block>
+                                    </select>
+                                    <br>
+                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}">Add tags</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
@@ -148,7 +293,7 @@ p.error-browser
                                 <span class="ProductCard-price" th:if="${book.discount == 0}"
                                       th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽180</span>
                                 <span class="ProductCard-price"
-                                      th:text="${'$' + book.discountPrice / 100 + '.' + book.discountPrice % 100}"
+                                      th:text="${'₽' + book.discountPrice / 100 + '.' + book.discountPrice % 100}"
                                       th:unless="${book.discount == 0}">₽180</span>
                             </div>
                             <!--+div.-info
@@ -219,7 +364,8 @@ p.error-browser
                     <th:block th:unless="${curUsr == null}">
                         <strong class="Comments-title">Написать отзыв</strong>
                         <div class="Comments-addComment">
-                            <form action="#" class="form" data-bookid="1111" method="post" th:attr="data-bookid=${book.id}">
+                            <form action="#" class="form" data-bookid="1111" method="post"
+                                  th:attr="data-bookid=${book.id}">
                                 <div class="form-group">
                                     <textarea class="form-textarea Comments-review" data-validate="require" id="review"
                                               name="review" placeholder="Текст отзыва"></textarea>
@@ -266,7 +412,8 @@ p.error-browser
                                                     <span class="btn-icon">
                                                         <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
                                                     </span>
-                                                    <span class="btn-content" th:text="${review.getLikesCount()}">500</span>
+                                                    <span class="btn-content"
+                                                          th:text="${review.getLikesCount()}">500</span>
                                                 </button>
                                                 <button class="btn btn_white btn_dislike"
                                                         data-btnradio="one1"
@@ -275,9 +422,11 @@ p.error-browser
                                                         data-likeid="333"
                                                         th:attr="data-likeid=${review.id}">
                                                     <span class="btn-icon">
-                                                        <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
+                                                        <img alt="dislike.svg"
+                                                             src="/assets/img/icons/comment/dislike.svg"/>
                                                     </span>
-                                                    <span class="btn-content" th:text="${review.getDislikesCount()}">50</span>
+                                                    <span class="btn-content"
+                                                          th:text="${review.getDislikesCount()}">50</span>
                                                 </button>
                                             </div>
                                             <button class="Spoiler-trigger btn btn_primary btn_nr"
@@ -328,5 +477,7 @@ p.error-browser
 <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/assets/js/UploadNewBookImageScript.js"></script>
+<script src="/assets/js/cmsController.js"></script>
+<script src="/assets/js/multiselect-dropdown.js"></script>
 </body>
 </html>

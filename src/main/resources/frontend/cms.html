@@ -51,42 +51,46 @@ p.error-browser
 <div class="Middle">
     <div class="wrap">
         <main class="Middle-main">
-            <form class="form Login Login_registration" id="bookForm">
+            <form class="form Login Login_registration" id="bookForm" onsubmit="return false;">
                 <div class="form-group">
                     <label class="form-label Login-title">Добавить книгу
                     </label>
                 </div>
-                <div class="pict pict_left">
-                    <img th:src="${defaultBookImage}">
-                </div>
-                <div class="form-group">
+                <div class="form-group form-group_row">
+                    <div class="row-block">
+                        <input id="bookTitle" name="title" placeholder="Title" required type="text">
+                    </div>
 
-                    <input id="bookTitle" name="title" placeholder="Title" required type="text">
-                </div>
-                <div class="form-group">
-                    <input id="bookSlug" name="slug" placeholder="Slug" required type="text">
-                </div>
-
-                <div class="form-group">
-                    <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
-                           type="number">
-                </div>
-                <div class="form-group">
-                    <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
-                           type="number">
+                    <div class="row-block">
+                        <input id="bookSlug" name="slug" placeholder="Slug" required type="text">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="bookBestseller">Бестселлер</label>
-                    <input id="bookBestseller" name="bestseller" type="checkbox">
+                <div class="form-group form-group_row">
+                    <div class="row-block">
+                        <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
+                               type="number">
+                    </div>
+                    <div class="row-block">
+                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
+                               type="number">
+                    </div>
+                </div>
+                
+                <div class="form-group form-group_row">
+                    <div class="form-group row-block">
+                        <label for="bookBestseller">Бестселлер</label>
+                        <input id="bookBestseller" name="bestseller" type="checkbox">
+                    </div>
+    
+                    <div class="form-group row-block">
+                        <label class="form-label" for="bookPubDate">Дата публикации</label>
+                        <input id="bookPubDate" name="pubDate" type="date"/>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="bookPubDate">Дата публикации</label>
-                    <input id="bookPubDate" name="pubDate" type="date"/>
-                </div>
 
-                <div class="form-group">
+                <div class="form-group form-group_row">
                     <select id="bookAuthors" multiple multiselect-hide-x="true" multiselect-search="true" name="authors"
                             th:placeholder="Authors">
                         <th:block th:each="author : ${authors}">
@@ -95,7 +99,7 @@ p.error-browser
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-group_row">
                     <select id="bookGenres" multiple multiselect-hide-x="true" multiselect-search="true" name="genres"
                             th:placeholder="Genres">
                         <th:block th:each="genre : ${genres}">
@@ -104,7 +108,7 @@ p.error-browser
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group form-group_row">
                     <select id="bookTags" multiple multiselect-hide-x="true" multiselect-search="true" name="tags"
                             th:placeholder="Tags">
                         <th:block th:each="tag : ${tags}">
@@ -118,8 +122,12 @@ p.error-browser
                               placeholder="Description"></textarea>
                 </div>
 
+                <div class="form-group form-group_row">
+                    <label id="bookMessage"></label>
+                </div>
+
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addBook" name="addBook" type="submit">Add book</button>
+                    <button class="btn btn_primary form-btn" id="addBook" name="addBook" type="button">Add book</button>
                 </div>
             </form>
             <form class="form Login Login_registration" id="authorForm" onsubmit="return false;">
@@ -127,7 +135,7 @@ p.error-browser
                     <label class="form-label Login-title">Добавить автора
                     </label>
                 </div>
-                
+
                 <div class="form-group_row">
                     <div class="row-block">
                         <input id="authorFirstName" name="firstName" placeholder="First Name" required type="text">
@@ -136,7 +144,7 @@ p.error-browser
                         <input id="authorLastName" name="lastName" placeholder="Last Name" required type="text">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <input id="authorSlug" name="slug" placeholder="Slug" required type="text">
                 </div>

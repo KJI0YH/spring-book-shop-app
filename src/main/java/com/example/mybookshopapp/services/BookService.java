@@ -150,7 +150,7 @@ public class BookService {
 
     private BookEntity setBook2UserStatus(BookEntity book) {
         UserEntity user = userService.getCurrentUser();
-        if (user != null) {
+        if (user != null && book != null) {
             Book2UserIdEntity id = new Book2UserIdEntity(book.getId(), user.getId());
             Book2UserEntity book2user = book2UserRepository.findBook2UserEntityById(id);
             if (book2user != null) {
@@ -336,6 +336,18 @@ public class BookService {
         BookEntity newBook;
         try {
             newBook = bookRepository.save(book);
+
+            if (bookDto.getTagIds() != null && bookDto.getTagIds().length > 0) {
+                createBook2Tag(new Integer[]{newBook.getId()}, bookDto.getTagIds());
+            }
+            if (bookDto.getGenreIds() != null && bookDto.getGenreIds().length > 0) {
+                createBook2Genre(new Integer[]{newBook.getId()}, bookDto.getGenreIds());
+            }
+            if (bookDto.getAuthorIds() != null && bookDto.getAuthorIds().length > 0) {
+                createBook2Author(new Integer[]{newBook.getId()}, bookDto.getAuthorIds());
+            }
+
+
         } catch (Exception e) {
             throw new ApiWrongParameterException("Can not save the book: " + e.getMessage());
         }
@@ -446,13 +458,15 @@ public class BookService {
         for (BookEntity book : books) {
             for (AuthorSortIndexDto authorSortIndex : authorSortIndexDtos) {
                 try {
-                    AuthorEntity author = authorService.getAuthorById(authorSortIndex.getAuthorId());
-                    Book2AuthorEntity book2Author = new Book2AuthorEntity();
-                    book2Author.setBook(book);
-                    book2Author.setAuthor(author);
-                    Integer index = authorSortIndex.getSortIndex();
-                    book2Author.setSortIndex(index == null ? 0 : index);
-                    book2AuthorList.add(book2AuthorRepository.save(book2Author));
+                    if (book2AuthorRepository.findBook2AuthorEntityByBookIdAndAuthorId(book.getId(), authorSortIndex.getAuthorId()) == null) {
+                        AuthorEntity author = authorService.getAuthorById(authorSortIndex.getAuthorId());
+                        Book2AuthorEntity book2Author = new Book2AuthorEntity();
+                        book2Author.setBook(book);
+                        book2Author.setAuthor(author);
+                        Integer index = authorSortIndex.getSortIndex();
+                        book2Author.setSortIndex(index == null ? 0 : index);
+                        book2AuthorList.add(book2AuthorRepository.save(book2Author));
+                    }
                 } catch (ApiWrongParameterException ignored) {
                 }
             }

@@ -14,4 +14,7 @@ public class BookDto {
     private String description;
     private Integer price;
     private Integer discount;    
+    private Integer[] tagIds;
+    private Integer[] genreIds;
+    private AuthorSortIndexDto[] authorIds;
 }

@@ -246,9 +246,9 @@ if (document.getElementById("updateAuthor")) {
         }
 
         let authorDescription = document.getElementById("authorDescription");
-        
+
         const id = document.getElementById("updateAuthor").dataset.id;
-        
+
         axios.put("/api/cms/author/" + id, {
             firstName: authorFirstName.value,
             lastName: authorLastName.value,
@@ -280,5 +280,289 @@ if (document.getElementById("deleteAuthor")) {
                 authorMessage.style.color = "red";
                 authorMessage.textContent = error.response.data.error;
             });
+    });
+}
+
+if (document.getElementById("addBook")) {
+    document.getElementById("addBook").addEventListener("click", function () {
+        let bookMessage = document.getElementById("bookMessage");
+        bookMessage.style.color = "red";
+
+        let bookTitle = document.getElementById("bookTitle");
+        if (bookTitle == null || bookTitle.value === "") {
+            bookMessage.textContent = "Title property can not be empty";
+            return;
+        }
+
+        let bookSlug = document.getElementById("bookSlug");
+        if (bookSlug == null || bookSlug.value === "") {
+            bookMessage.textContent = "Slug property can not be empty";
+            return;
+        }
+
+        let bookPrice = document.getElementById("bookPrice");
+        if (bookPrice == null || bookPrice.valueAsNumber <= 0) {
+            bookMessage.textContent = "Price property can not be less or equal than 0";
+            return;
+        }
+
+        let bookDiscount = document.getElementById("bookDiscount");
+        if (bookDiscount == null || bookDiscount.valueAsNumber < 0 || bookDiscount.valueAsNumber > 99) {
+            bookMessage.textContent = "Discount property can not be less than 0 and more then 99";
+            return;
+        }
+
+        let bookBestseller = document.getElementById("bookBestseller");
+        if (bookBestseller == null) {
+            bookMessage.textContent = "Bestseller property can not be null";
+            return;
+        }
+
+        let bookPubDate = document.getElementById("bookPubDate");
+        if (bookPubDate == null || bookPubDate.value === "") {
+            bookMessage.textContent = "Publication date can not be empty";
+            return;
+        }
+
+        let bookDescription = document.getElementById("bookDescription");
+
+        let authors = document.getElementById("bookAuthors");
+        let genres = document.getElementById("bookGenres");
+        let tags = document.getElementById("bookTags");
+
+        axios.post("/api/cms/book", {
+            title: bookTitle.value,
+            slug: bookSlug.value,
+            image: "",
+            price: parseInt(bookPrice.valueAsNumber * 100),
+            discount: bookDiscount.valueAsNumber,
+            isBestseller: bookBestseller.checked,
+            pubDate: bookPubDate.value,
+            description: bookDescription.value,
+            authorIds: Array.from(authors.selectedOptions).map((author, index) => ({
+                authorId: parseInt(author.value),
+                sortIndex: index,
+            })),
+            genreIds: Array.from(genres.selectedOptions).map(genre => parseInt(genre.value)),
+            tagIds: Array.from(tags.selectedOptions).map(tag => parseInt(tag.value)),
+        })
+            .then(function (response) {
+                bookMessage.style.color = "green";
+                bookMessage.textContent = JSON.stringify(response.data);
+                bookTitle.value = '';
+                bookSlug.value = '';
+                bookPrice.value = '';
+                bookDiscount.value = '';
+                bookBestseller.checked = false;
+                bookDescription = '';
+                bookPubDate.value = '';
+                authors.selectedOptions = '';
+                genres.selectedOptions = '';
+                tags.selectedOptions = '';
+            })
+            .catch(function (error) {
+                bookMessage.style.color = "red";
+                bookMessage.textContent = error.response.data.error;
+            })
+    });
+}
+
+if (document.getElementById("updateBook")) {
+    document.getElementById("updateBook").addEventListener("click", function () {
+        let bookMessage = document.getElementById("bookMessage");
+        bookMessage.style.color = "red";
+
+        let bookTitle = document.getElementById("bookTitle");
+        if (bookTitle == null || bookTitle.value === "") {
+            bookMessage.textContent = "Title property can not be empty";
+            return;
+        }
+
+        let bookSlug = document.getElementById("bookSlug");
+        if (bookSlug == null || bookSlug.value === "") {
+            bookMessage.textContent = "Slug property can not be empty";
+            return;
+        }
+
+        let bookPrice = document.getElementById("bookPrice");
+        if (bookPrice == null || bookPrice.valueAsNumber <= 0) {
+            bookMessage.textContent = "Price property can not be less or equal than 0";
+            return;
+        }
+
+        let bookDiscount = document.getElementById("bookDiscount");
+        if (bookDiscount == null || bookDiscount.valueAsNumber < 0 || bookDiscount.valueAsNumber > 99) {
+            bookMessage.textContent = "Discount property can not be less than 0 and more then 99";
+            return;
+        }
+
+        let bookBestseller = document.getElementById("bookBestseller");
+        if (bookBestseller == null) {
+            bookMessage.textContent = "Bestseller property can not be null";
+            return;
+        }
+
+        let bookPubDate = document.getElementById("bookPubDate");
+        if (bookPubDate == null || bookPubDate.value === "") {
+            bookMessage.textContent = "Publication date can not be empty";
+            return;
+        }
+
+        let bookDescription = document.getElementById("bookDescription");
+
+        const id = document.getElementById("updateBook").dataset.id;
+
+        axios.put("/api/cms/book/" + id, {
+            title: bookTitle.value,
+            slug: bookSlug.value,
+            price: parseInt(bookPrice.valueAsNumber * 100),
+            discount: bookDiscount.valueAsNumber,
+            isBestseller: bookBestseller.checked,
+            pubDate: bookPubDate.value,
+            description: bookDescription.value,
+        })
+            .then(function (response) {
+                window.location.replace("/books/" + response.data.slug);
+                bookMessage.style.color = "green";
+                bookMessage.textContent = JSON.stringify(response.data);
+            })
+            .catch(function (error) {
+                bookMessage.style.color = "red";
+                bookMessage.textContent = error.response.data.error;
+            })
+    });
+}
+
+if (document.getElementById("deleteBook")) {
+    document.getElementById("deleteBook").addEventListener("click", function () {
+        let bookMessage = document.getElementById("bookMessage");
+        bookMessage.style.color = "red";
+
+        const id = document.getElementById("deleteBook").dataset.id;
+
+        axios.delete("/api/cms/book/" + id)
+            .then(function (response) {
+                window.location.replace("/");
+            })
+            .catch(function (error) {
+                bookMessage.style.color = "red";
+                bookMessage.textContent = error.response.data.error;
+            })
+    });
+}
+
+if (document.getElementById("addBook2Tag")) {
+    document.getElementById("addBook2Tag").addEventListener("click", function () {
+        const bookId = document.getElementById("addBook2Tag").dataset.bookid;
+        let tags = document.getElementById("bookTags");
+
+        axios.post("/api/cms/book/tag", {
+            bookIds: [bookId],
+            tagIds: Array.from(tags.selectedOptions).map(tag => parseInt(tag.value))
+        })
+            .then(function (response) {
+                window.location.reload();
+            });
+    });
+}
+
+if (document.getElementById("deleteBook2Tag")) {
+    let deleteButtons = document.querySelectorAll('#deleteBook2Tag');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const bookId = button.getAttribute('data-bookId');
+            const tagId = button.getAttribute('data-tagId');
+
+            axios.delete("/api/cms/book/" + bookId + "/tag/" + tagId)
+                .then(function (response) {
+                    window.location.reload();
+                });
+        });
+    });
+}
+
+
+if (document.getElementById("addBook2Genre")) {
+    document.getElementById("addBook2Genre").addEventListener("click", function () {
+        const bookId = document.getElementById("addBook2Genre").dataset.bookid;
+        let genres = document.getElementById("bookGenres");
+
+        axios.post("/api/cms/book/genre", {
+            bookIds: [bookId],
+            genreIds: Array.from(genres.selectedOptions).map(genre => parseInt(genre.value))
+        })
+            .then(function (response) {
+                window.location.reload();
+            });
+    });
+}
+
+if (document.getElementById("deleteBook2Genre")) {
+    let deleteButtons = document.querySelectorAll('#deleteBook2Genre');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const bookId = button.getAttribute('data-bookId');
+            const genreId = button.getAttribute('data-genreId');
+
+            axios.delete("/api/cms/book/" + bookId + "/genre/" + genreId)
+                .then(function (response) {
+                    window.location.reload();
+                })
+        });
+    });
+}
+
+if (document.getElementById("addBook2Author")) {
+    document.getElementById("addBook2Author").addEventListener("click", function () {
+        const bookId = document.getElementById("addBook2Author").dataset.bookid;
+        let authors = document.getElementById("bookAuthors");
+
+        axios.post("/api/cms/book/author", {
+            bookIds: [bookId],
+            authors: Array.from(authors.selectedOptions).map((author, index) => ({
+                authorId: parseInt(author.value),
+                sortIndex: index,
+            })),
+        })
+            .then(function (response) {
+                window.location.reload();
+            });
+    });
+}
+
+if (document.getElementById("updateBook2Author")) {
+    let updateButtons = document.querySelectorAll('#updateBook2Author');
+    updateButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const bookId = button.getAttribute('data-bookId');
+            const authorId = button.getAttribute('data-authorId');
+            const sortIndex = document.getElementById("sortIndex-" + authorId).valueAsNumber;
+
+            axios.put("/api/cms/book/author", {
+                bookIds: [bookId],
+                authors: [{
+                    authorId: authorId,
+                    sortIndex: sortIndex,
+                }]
+            })
+                .then(function (response) {
+                    window.location.reload();
+                })
+        });
+    });
+}
+
+if (document.getElementById("deleteBook2Author")) {
+    let deleteButtons = document.querySelectorAll('#deleteBook2Author');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const bookId = button.getAttribute('data-bookId');
+            const authorId = button.getAttribute('data-authorId');
+
+            axios.delete("/api/cms/book/" + bookId + "/author/" + authorId)
+                .then(function (response) {
+                    window.location.reload();
+                })
+        });
     });
 }

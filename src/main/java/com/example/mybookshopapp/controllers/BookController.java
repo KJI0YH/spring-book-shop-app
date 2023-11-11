@@ -6,11 +6,7 @@ import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.FileDownloadException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
-import com.example.mybookshopapp.repositories.BookRepository;
-import com.example.mybookshopapp.services.BookService;
-import com.example.mybookshopapp.services.CookieService;
-import com.example.mybookshopapp.services.ResourceStorage;
-import com.example.mybookshopapp.services.UserService;
+import com.example.mybookshopapp.services.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +28,9 @@ import java.nio.file.Path;
 public class BookController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
+    private final TagService tagService;
+    private final GenreService genreService;
+    private final AuthorService authorService;
     private final ResourceStorage storage;
     private final UserService userService;
     private final CookieService cookieService;
@@ -53,6 +52,12 @@ public class BookController extends AbstractHeaderFooterController {
                 if (bookService.isBookPaid(book.getId(), user.getId())) {
                     return "books/slugmy";
                 }
+
+                if (user.isAdmin()) {
+                    model.addAttribute("tags", tagService.getAllTags());
+                    model.addAttribute("genres", genreService.getAllGenres());
+                    model.addAttribute("authors", authorService.getAllAuthors());
+                }
             }
 
             // Unauthorized user
@@ -69,7 +74,7 @@ public class BookController extends AbstractHeaderFooterController {
 
         String filePath = storage.saveNewBookImage(file, bookSlug);
         bookService.updateImage(bookSlug, filePath);
-        
+
         return ("redirect:/books/" + bookSlug);
     }
 

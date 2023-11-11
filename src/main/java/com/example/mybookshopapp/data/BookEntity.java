@@ -42,7 +42,7 @@ public class BookEntity {
     @JsonIgnore
     private String description;
     private LocalDate pubDate;
-    
+
     @ManyToMany
     @JoinTable(name = "book2author",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -51,17 +51,10 @@ public class BookEntity {
     @ToString.Exclude
     @JsonIgnore
     private List<AuthorEntity> authorList;
-    
-    public List<AuthorEntity> getAuthorList(){
-        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
-        return book2AuthorList.stream().map(Book2AuthorEntity::getAuthor).toList();
-    }
-    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonProperty("book2author")
     private List<Book2AuthorEntity> book2AuthorList;
-    
     @ManyToMany
     @JoinTable(name = "book2tag",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -69,12 +62,10 @@ public class BookEntity {
     @ToString.Exclude
     @JsonIgnore
     private List<TagEntity> tagList;
-    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonProperty("book2tag")
     private List<Book2TagEntity> book2TagList;
-    
     @ManyToMany
     @JoinTable(name = "book2genre",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -83,16 +74,13 @@ public class BookEntity {
     @ToString.Exclude
     @JsonIgnore
     private List<GenreEntity> genreList;
-    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonProperty("book2genre")
     private List<Book2GenreEntity> book2GenreList;
-    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonProperty("book2files")
     private List<BookFileEntity> bookFileList = new ArrayList<>();
-    
     private Integer popularity = 0;
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -103,11 +91,21 @@ public class BookEntity {
     @ToString.Exclude
     private List<BookRateEntity> rateList;
 
+    public List<AuthorEntity> getAuthorList() {
+        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
+        return book2AuthorList.stream().map(Book2AuthorEntity::getAuthor).toList();
+    }
+
+    public List<Book2AuthorEntity> getBook2AuthorList() {
+        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
+        return book2AuthorList;
+    }
+
     @JsonGetter("authors")
     public String getAuthors() {
         if (book2AuthorList == null || book2AuthorList.isEmpty())
             return "";
-        
+
         book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
         String authors = book2AuthorList.get(0).getAuthor().toString();
         if (book2AuthorList.size() > 1) {
