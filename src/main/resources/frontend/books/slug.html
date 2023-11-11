@@ -393,78 +393,94 @@ p.error-browser
                                 </div>
                             </header>
                             <div class="Comment-content">
-                                <th:block th:if="${review.text.length() >= 400}">
-                                    <div class="Spoiler">
-                                        <div class="Spoiler-visible">
-                                            <p th:text="${review.text.substring(0, 400)}"></p>
-                                        </div>
-                                        <div class="Spoiler-hide">
-                                            <p th:text="${review.text.substring(400)}"></p>
-                                        </div>
-                                        <div class="Comment-footer">
-                                            <div class="Comment-appeal">
-                                                <button class="btn btn_white btn_like"
-                                                        data-btnradio="one1"
-                                                        data-btntype="check"
-                                                        data-check="false"
-                                                        data-likeid="333"
-                                                        th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getLikesCount()}">500</span>
-                                                </button>
-                                                <button class="btn btn_white btn_dislike"
-                                                        data-btnradio="one1"
-                                                        data-btntype="check"
-                                                        data-check="false"
-                                                        data-likeid="333"
-                                                        th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="dislike.svg"
-                                                             src="/assets/img/icons/comment/dislike.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getDislikesCount()}">50</span>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <div class="form-group">
+                                        <textarea class="form-textarea" th:id="${'reviewText-' + review.id}"
+                                                  th:text="${review.text}"></textarea>
+                                    </div>
+                                    <button class="btn btn_primary form-btn" id="updateReview"
+                                            th:attr="data-id=${review.id}">Update review
+                                    </button>
+                                    <button class="btn btn_primary form-btn" id="deleteReview"
+                                            th:attr="data-id=${review.id}">Delete review
+                                    </button>
+                                </th:block>
+                                <th:block th:unless="${curUsr != null && curUsr.isAdmin()}">
+                                    <th:block th:if="${review.text.length() >= 400}">
+                                        <div class="Spoiler">
+                                            <div class="Spoiler-visible">
+                                                <p th:text="${review.text.substring(0, 400)}"></p>
+                                            </div>
+                                            <div class="Spoiler-hide">
+                                                <p th:text="${review.text.substring(400)}"></p>
+                                            </div>
+                                            <div class="Comment-footer">
+                                                <div class="Comment-appeal">
+                                                    <button class="btn btn_white btn_like"
+                                                            data-btnradio="one1"
+                                                            data-btntype="check"
+                                                            data-check="false"
+                                                            data-likeid="333"
+                                                            th:attr="data-likeid=${review.id}">
+                                                        <span class="btn-icon">
+                                                            <img alt="like.svg"
+                                                                 src="/assets/img/icons/comment/like.svg"/>
+                                                        </span>
+                                                        <span class="btn-content"
+                                                              th:text="${review.getLikesCount()}">500</span>
+                                                    </button>
+                                                    <button class="btn btn_white btn_dislike"
+                                                            data-btnradio="one1"
+                                                            data-btntype="check"
+                                                            data-check="false"
+                                                            data-likeid="333"
+                                                            th:attr="data-likeid=${review.id}">
+                                                        <span class="btn-icon">
+                                                            <img alt="dislike.svg"
+                                                                 src="/assets/img/icons/comment/dislike.svg"/>
+                                                        </span>
+                                                        <span class="btn-content"
+                                                              th:text="${review.getDislikesCount()}">50</span>
+                                                    </button>
+                                                </div>
+                                                <button class="Spoiler-trigger btn btn_primary btn_nr"
+                                                        data-hidetext="Показать отзыв полностью"
+                                                        data-showtext="Свернуть отзыв"
+                                                        th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
+                                                        type="button">
                                                 </button>
                                             </div>
-                                            <button class="Spoiler-trigger btn btn_primary btn_nr"
-                                                    data-hidetext="Показать отзыв полностью"
-                                                    data-showtext="Свернуть отзыв"
-                                                    th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
-                                                    type="button">
+                                        </div>
+                                    </th:block>
+                                    <p th:text="${review.text}" th:unless="${review.text.length() >= 400}"></p>
+                                    <div class="Comment-footer" th:unless="${review.text.length() >= 400}">
+                                        <div class="Comment-appeal">
+                                            <button class="btn btn_white btn_like"
+                                                    data-btnradio="two2"
+                                                    data-btntype="check"
+                                                    data-check="false"
+                                                    data-likeid="1111"
+                                                    th:attr="data-likeid=${review.id}">
+                                                <span class="btn-icon">
+                                                    <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
+                                                </span>
+                                                <span class="btn-content" th:text="${review.getLikesCount()}">200</span>
+                                            </button>
+                                            <button class="btn btn_white btn_dislike"
+                                                    data-btnradio="two2"
+                                                    data-btntype="check"
+                                                    data-check="false"
+                                                    data-likeid="1111"
+                                                    th:attr="data-likeid=${review.id}">
+                                                <span class="btn-icon">
+                                                    <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
+                                                </span>
+                                                <span class="btn-content"
+                                                      th:text="${review.getDislikesCount()}">100</span>
                                             </button>
                                         </div>
                                     </div>
                                 </th:block>
-                                <p th:text="${review.text}" th:unless="${review.text.length() >= 400}"></p>
-                                <div class="Comment-footer" th:unless="${review.text.length() >= 400}">
-                                    <div class="Comment-appeal">
-                                        <button class="btn btn_white btn_like"
-                                                data-btnradio="two2"
-                                                data-btntype="check"
-                                                data-check="false"
-                                                data-likeid="1111"
-                                                th:attr="data-likeid=${review.id}">
-                                            <span class="btn-icon">
-                                                <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
-                                            </span>
-                                            <span class="btn-content" th:text="${review.getLikesCount()}">200</span>
-                                        </button>
-                                        <button class="btn btn_white btn_dislike"
-                                                data-btnradio="two2"
-                                                data-btntype="check"
-                                                data-check="false"
-                                                data-likeid="1111"
-                                                th:attr="data-likeid=${review.id}">
-                                            <span class="btn-icon">
-                                                <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
-                                            </span>
-                                            <span class="btn-content" th:text="${review.getDislikesCount()}">100</span>
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

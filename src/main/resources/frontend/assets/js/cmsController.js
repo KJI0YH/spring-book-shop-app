@@ -566,3 +566,34 @@ if (document.getElementById("deleteBook2Author")) {
         });
     });
 }
+
+if (document.getElementById("updateReview")) {
+    let updateReview = document.querySelectorAll('#updateReview');
+    updateReview.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const id = button.getAttribute('data-id');
+            const text = document.getElementById("reviewText-" + id).value;
+
+            axios.put("/api/cms/bookReview/" + id, {
+                text: text
+            })
+                .then(function (response) {
+                    window.location.reload();
+                })
+        });
+    });
+}
+
+if (document.getElementById("deleteReview")) {
+    let deleteButtons = document.querySelectorAll('#deleteReview');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const id = button.getAttribute('data-id');
+
+            axios.delete("/api/cms/bookReview/" + id)
+                .then(function (response) {
+                    window.location.reload();
+                })
+        });
+    });
+}
