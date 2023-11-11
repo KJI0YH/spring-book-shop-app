@@ -25,10 +25,10 @@ public class CommonPageController extends AbstractHeaderFooterController {
     private final DocumentService documentService;
     private final FaqService faqService;
     private final CookieService cookieService;
-    
+
     @Value("${upload.default-book-cover}")
     private String defaultBookImage;
-    
+
     @Value("${upload.default-author-cover}")
     private String defaultAuthorImage;
 
@@ -119,6 +119,9 @@ public class CommonPageController extends AbstractHeaderFooterController {
         model.addAttribute("booksList", bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20));
         model.addAttribute("genre", genreService.getGenreBySlug(genreSlug));
         model.addAttribute("breadcrumbs", genreService.getGenresBreadcrumbs(genreSlug));
+        if (userService.getCurrentUser().isAdmin()) {
+            model.addAttribute("genres", genreService.getAllGenres());
+        }
         return "genres/slug";
     }
 
@@ -129,9 +132,9 @@ public class CommonPageController extends AbstractHeaderFooterController {
         model.addAttribute("tag", tagService.getTagBySlug(tagSlug));
         return "tags/index";
     }
-    
+
     @GetMapping("/cms")
-    public String cmsPage(Model model){
+    public String cmsPage(Model model) {
         model.addAttribute("tags", tagService.getAllTags());
         model.addAttribute("genres", genreService.getAllGenres());
         model.addAttribute("authors", authorService.getAllAuthors());

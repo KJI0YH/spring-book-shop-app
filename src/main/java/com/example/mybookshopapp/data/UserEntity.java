@@ -24,42 +24,24 @@ public class UserEntity {
     private LocalDateTime regTime;
     @JsonIgnore
     private Integer balance;
-
-    @JsonGetter("balance")
-    public String getBalanceJson(){
-        return balance / 100 + "." + String.format("%02d", balance % 100);
-    }
-
     private String name;
-
     @Column(name = "password_hash")
     @JsonIgnore
     private String password;
     private String email;
     private String phone;
-
-    public Integer getRating(){
-        long likesCount = reviewList.stream().mapToLong(BookReviewEntity::getLikesCount).sum();
-        long dislikesCount = reviewList.stream().mapToLong(BookReviewEntity::getDislikesCount).sum();
-        if (likesCount == 0 && dislikesCount == 0) return 0;
-        return Math.toIntExact(Math.round((double) likesCount / (likesCount + dislikesCount) * 5.0));
-    }
-
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore
     private List<UserContactEntity> contactList;
-
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     @ToString.Exclude
     private List<Book2UserEntity> book2userList;
-
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore
     private List<BookReviewEntity> reviewList;
-    
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role2user",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -68,10 +50,29 @@ public class UserEntity {
     @JsonIgnore
     @ToString.Exclude
     private List<RoleEntity> roleList;
-    
-    public List<String> getRoles(){
+
+    @JsonGetter("balance")
+    public String getBalanceJson() {
+        return balance / 100 + "." + String.format("%02d", balance % 100);
+    }
+
+    public Integer getRating() {
+        long likesCount = reviewList.stream().mapToLong(BookReviewEntity::getLikesCount).sum();
+        long dislikesCount = reviewList.stream().mapToLong(BookReviewEntity::getDislikesCount).sum();
+        if (likesCount == 0 && dislikesCount == 0) return 0;
+        return Math.toIntExact(Math.round((double) likesCount / (likesCount + dislikesCount) * 5.0));
+    }
+
+    public List<String> getRoles() {
         return roleList.stream()
                 .map(RoleEntity::getName)
                 .collect(Collectors.toList());
+    }
+
+    public boolean isAdmin() {
+        if (!roleList.isEmpty()) {
+            return getRoles().contains("ADMIN");
+        }
+        return false;
     }
 }
