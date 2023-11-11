@@ -122,24 +122,21 @@ p.error-browser
                     <button class="btn btn_primary form-btn" id="addBook" name="addBook" type="submit">Add book</button>
                 </div>
             </form>
-            <form class="form Login Login_registration" id="authorForm">
+            <form class="form Login Login_registration" id="authorForm" onsubmit="return false;">
                 <div class="form-group">
                     <label class="form-label Login-title">Добавить автора
                     </label>
                 </div>
-                <div class="pict pict_left">
-                    <img height="250" th:src="${defaultAuthorImage}" width="250">
+                
+                <div class="form-group_row">
+                    <div class="row-block">
+                        <input id="authorFirstName" name="firstName" placeholder="First Name" required type="text">
+                    </div>
+                    <div class="row-block">
+                        <input id="authorLastName" name="lastName" placeholder="Last Name" required type="text">
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <input id="authorFirstName" name="firstName" placeholder="First Name" required type="text">
-                </div>
-
-                <div class="form-group">
-                    <input id="authorLastName" name="lastName" placeholder="Last Name" required type="text">
-                </div>
-
-
+                
                 <div class="form-group">
                     <input id="authorSlug" name="slug" placeholder="Slug" required type="text">
                 </div>
@@ -149,9 +146,12 @@ p.error-browser
                               placeholder="Description"></textarea>
                 </div>
 
+                <div class="form-group form-group_row">
+                    <label id="authorMessage"></label>
+                </div>
 
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addAuthor" name="addAuthor" type="submit">Add author
+                    <button class="btn btn_primary form-btn" id="addAuthor" name="addAuthor" type="button">Add author
                     </button>
                 </div>
             </form>

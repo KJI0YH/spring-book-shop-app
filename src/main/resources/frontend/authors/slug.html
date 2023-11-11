@@ -1,4 +1,3 @@
-
 <!--END-->
 <!--END--><!DOCTYPE html><!--[if IE 7]>
 <html class="ie7" lang="ru">
@@ -9,119 +8,196 @@
 <!--[if IE 9]>
 <html class="ie9" lang="ru">
 <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
-  <meta name="description" content="Описание страницы">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <!--meta( http-equiv="cache-control" content="no-cache")-->
-  <!--meta( http-equiv="expires" content="0")-->
-  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
-  <link href="favicon.ico" rel="shortcut icon">
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
-  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=93601584">
-  <link rel="stylesheet" href="/assets/css/basic.min.css?v=93601584">
-  <link rel="stylesheet" href="/assets/css/extra.min.css?v=93601584"><!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <script defer src="/assets/js/scripts.min.js?v=93601584"></script>
+    <title>Тут название страницы написать</title>
+    <meta content="Описание страницы" name="description">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
+    <!--meta( http-equiv="cache-control" content="no-cache")-->
+    <!--meta( http-equiv="expires" content="0")-->
+    <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+    <link href="favicon.ico" rel="shortcut icon">
+    <link as="font" crossorigin="anonymous" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" rel="preload">
+    <link as="font" crossorigin="anonymous" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" rel="preload">
+    <link as="font" crossorigin="anonymous" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" rel="preload">
+    <link as="font" crossorigin="anonymous" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" rel="preload">
+    <link href="/assets/css/fonts.min.css?v=93601584" rel="stylesheet">
+    <link href="/assets/css/basic.min.css?v=93601584" rel="stylesheet">
+    <link href="/assets/css/extra.min.css?v=93601584" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script defer src="/assets/js/scripts.min.js?v=93601584"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="Site">
 <div th:replace="~{fragments/locale_selector :: localeSelector}"></div>
-  <!--if lt IE 8
-  p.error-browser
-      | Ваш браузер&nbsp;
-      em устарел!&nbsp;
-      a(href="http://browsehappy.com/") Выберите новую версию
-          +s
-          | браузера здесь&nbsp;
-      | для правильного отображения сайта.
-  -->
-  <header th:replace="~{fragments/common_header_fragment :: headFragment}"></header>
-  <div class="Middle">
+<!--if lt IE 8
+p.error-browser
+    | Ваш браузер&nbsp;
+    em устарел!&nbsp;
+    a(href="http://browsehappy.com/") Выберите новую версию
+        +s
+        | браузера здесь&nbsp;
+    | для правильного отображения сайта.
+-->
+<header th:replace="~{fragments/common_header_fragment :: headFragment}"></header>
+<div class="Middle">
     <div class="wrap">
-      <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item"><a href="/authors/index.html" th:href="@{/authors}" th:text="#{topbar.authors}">Авторы</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный</span>
-          </li>
-        </ul>
-        <h1 class="Middle-title" th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный
-        </h1>
-        <article class="Article">
-          <div class="sdf">
-          </div>
-          <div class="Spoiler">
-            <div class="Spoiler-visible">
-              <div class="pict pict_left"><img src="/assets/img/content/main/card.jpg" th:src="${author.photo}" alt="card.jpg"/>
-              </div>
-              <div>
-                <h2 th:text="#{author.biography}">Биография
-                </h2>
-                <p th:text="${author.description.substring(0, author.description.length() < 400 ? author.description.length() : 400)}">Борис Бедный родился в семье учителя в 1916 году в станице Ярославская Краснодарского края. Окончил Майкопский лесной техникум и был послан учиться в Ленинградскую лесотехническую академию. Стал специалистом по сплаву леса и приехал в Республику Коми, работать на сплавных предприятиях.
-                </p>
-<!--                <p>В октябре 1941 года Борис пошёл на фронт, а в августе 1942 года попал в плен, и находился там до апреля 1945 года.-->
-<!--                </p>-->
-              </div>
-            </div>
-            <div class="Spoiler-hide">
-              <p th:if="${author.description.length() >= 400}" th:text="${author.description.substring(400)}">"Писать он начал до войны, в академии,- рассказал о нем в предисловии к книге "Первое дело" поэт К.Ваншенкин.- Был участником литературных кружков и студий. Но всерьез вернулся к этому в сорок шестом, в далекой сплавконторе, на Трехозерной запани. Печатался в Коми республиканской газете "За новый Север" ("Красное знамя") и наконец решился вновь переломить судьбу, поступив в Литературный институт" в 1952г.
-              </p>
-<!--              <p>Борис Бедный широко печатался, особенно в журнале "Огонек".-->
-<!--              </p>-->
-<!--              <p>Первая книга - сборник повестей и рассказов "Большой поток" - посвящена людям леспромхоза. Автор книг "Рассказы" (1954), "Неразменное счастье. Повести и рассказы" (1962). Наиболее известная его повесть "Девчата" (1961) переведена на пятнадцать языков. По написанному им же сценарию был поставлен одноименный фильм, до сих пор имеющий огромный успех.-->
-<!--              </p>-->
-<!--              <p>С литературным институтом Б.Бедный был связан еще более двадцати лет, уже как преподаватель. Вел он семинар и на Высших литературных курсах. У него занимались Михаил Алексеев, Чингиз Айтматов, Анатолий Аграновский, Игнатий Дворжецкий.-->
-<!--              </p>-->
-<!--              <p>В жизни Бориса Бедного была одна постоянная горькая боль. Летом сорок первого, в жестоких боях под Воронежем он, командуя стрелковым взводом, попал в окружение, а потом в плен. Был отправлен в Германию, в лагерь, на тяжелейшие работы, прошел настоящий ад, не потеряв себя и не уронив достоинства. В октябре 1945 г. после проверки он был демобилизован в своем же офицерском звании младшего лейтенанта запаса и вскоре приступил к работе по специальности.-->
-<!--              </p>-->
-<!--              <p>Есть в аннотации Константина Ваншенкина и детали, позволяющие выйти на родственные связи писателя с нашей республикой. Ведь жену он привез в Москву из Сыктывкара. Звали ее Маша. Она работала стюардессой на авиалинии Сыктывкар-Быково.-->
-<!--              </p>-->
-<!--              <p>Поселок Седкыркещ построен бывшими военнопленными и "власовцами", многие из которых даже оружия в руках не держали. Они одевались плохо, часто болели, жили, в основном, в землянках. В такой атмосфере и вращался писатель Борис Бедный.-->
-<!--              </p>-->
-<!--              <p>Борис Васильевич Бедный умер в 1976 г. в Москве. Шел по улице, почувствовал себя плохо. Острый обширный инфаркт, до больницы не довезли…-->
-<!--              </p>-->
-            </div>
-            <div class="Spoiler-footer">
-              <button class="Spoiler-trigger btn btn_primary btn_nr" type="button" th:attr="data-showtext=#{author.hide},data-hidetext=#{author.showAll}" data-showtext="Свернуть" data-hidetext="Показать полностью">
-              </button>
-            </div>
-          </div>
-        </article>
-        <div class="Section">
-          <header class="Section-header">
-            <h2 class="Section-title" th:text="#{author.authorBooks}">Книги автора
-            </h2>
-          </header>
-          <div class="Slider Slider_carousel">
-            <div class="Slider-box Cards">
-              <div class="Slider-item" th:each="book : ${author.bookList}">
-                <div class="Slider-content">
-                  <div th:replace="~{fragments/card_fragment :: card(${book})}"></div>
+        <main class="Middle-main">
+            <ul class="breadcrumbs">
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                </li>
+                <li class="breadcrumbs-item"><a href="/authors/index.html" th:href="@{/authors}"
+                                                th:text="#{topbar.authors}">Авторы</a>
+                </li>
+                <li class="breadcrumbs-item breadcrumbs-item_current"><span
+                        th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный</span>
+                </li>
+            </ul>
+            <form class="form Login Login_registration" id="authorForm" onsubmit="return false;"
+                  th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
+                <div class="form-group">
+                    <label class="form-label Login-title">Изменить автора
+                    </label>
                 </div>
-              </div>
+
+                <div class="form-group_row">
+                    <div class="row-block">
+                        <input id="authorFirstName" name="firstName" placeholder="First Name" required
+                               th:value="${author.firstName}"
+                               type="text">
+                    </div>
+                    <div class="row-block">
+                        <input id="authorLastName" name="lastName" placeholder="Last Name" required
+                               th:value="${author.lastName}"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input id="authorSlug" name="slug" placeholder="Slug" required th:value="${author.slug}"
+                           type="text">
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-textarea" id="authorDescription" name="description"
+                              placeholder="Description"
+                              th:text="${author.description}"></textarea>
+                </div>
+
+                <div class="form-group form-group_row">
+                    <label id="authorMessage"></label>
+                </div>
+
+                <div class="form-group form-group_center">
+                    <button class="btn btn_primary form-btn" id="updateAuthor" name="updateAuthor"
+                            th:attr="data-id=${author.id}"
+                            type="button">Update author
+                    </button>
+                    <button class="btn btn_primary form-btn" id="deleteAuthor" name="deleteAuthor"
+                            th:attr="data-id=${author.id}"
+                            type="button">Delete author
+                    </button>
+                </div>
+            </form>
+            <h1 class="Middle-title" th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный
+            </h1>
+            <article class="Article">
+                <div class="Spoiler">
+                    <div class="Spoiler-visible">
+                        <div class="pict pict_left">
+                            <form action="#" enctype="multipart/form-data" id="imgForm" method="POST"
+                                  th:action="${'/author/'+ author.slug +'/img/save'}"
+                                  th:if="${curUsr != null && curUsr.isAdmin()}">
+                                <div class="ProductCard-photo" id="uploadButton">
+                                    <img alt="card.jpg" src="/assets/img/content/main/card.jpg"
+                                         th:src="${author.photo}"/>
+                                </div>
+                                <input id="dialog" name="file" style="display: none" type="file"/>
+                            </form>
+                            <img alt="card.jpg" src="/assets/img/content/main/card.jpg"
+                                 th:src="${author.photo}" th:unless="${curUsr != null && curUsr.getRoles.contains('ADMIN')}"/>
+                        </div>
+                        <div>
+                            <h2 th:text="#{author.biography}">Биография
+                            </h2>
+                            <p th:text="${author.description.substring(0, author.description.length() < 400 ? author.description.length() : 400)}">
+                                Борис Бедный родился в семье учителя в 1916 году в станице Ярославская Краснодарского
+                                края. Окончил Майкопский лесной техникум и был послан учиться в Ленинградскую
+                                лесотехническую академию. Стал специалистом по сплаву леса и приехал в Республику Коми,
+                                работать на сплавных предприятиях.
+                            </p>
+                            <!--                <p>В октябре 1941 года Борис пошёл на фронт, а в августе 1942 года попал в плен, и находился там до апреля 1945 года.-->
+                            <!--                </p>-->
+                        </div>
+                    </div>
+                    <div class="Spoiler-hide">
+                        <p th:if="${author.description.length() >= 400}" th:text="${author.description.substring(400)}">
+                            "Писать он начал до войны, в академии,- рассказал о нем в предисловии к книге "Первое дело"
+                            поэт К.Ваншенкин.- Был участником литературных кружков и студий. Но всерьез вернулся к этому
+                            в сорок шестом, в далекой сплавконторе, на Трехозерной запани. Печатался в Коми
+                            республиканской газете "За новый Север" ("Красное знамя") и наконец решился вновь переломить
+                            судьбу, поступив в Литературный институт" в 1952г.
+                        </p>
+                        <!--              <p>Борис Бедный широко печатался, особенно в журнале "Огонек".-->
+                        <!--              </p>-->
+                        <!--              <p>Первая книга - сборник повестей и рассказов "Большой поток" - посвящена людям леспромхоза. Автор книг "Рассказы" (1954), "Неразменное счастье. Повести и рассказы" (1962). Наиболее известная его повесть "Девчата" (1961) переведена на пятнадцать языков. По написанному им же сценарию был поставлен одноименный фильм, до сих пор имеющий огромный успех.-->
+                        <!--              </p>-->
+                        <!--              <p>С литературным институтом Б.Бедный был связан еще более двадцати лет, уже как преподаватель. Вел он семинар и на Высших литературных курсах. У него занимались Михаил Алексеев, Чингиз Айтматов, Анатолий Аграновский, Игнатий Дворжецкий.-->
+                        <!--              </p>-->
+                        <!--              <p>В жизни Бориса Бедного была одна постоянная горькая боль. Летом сорок первого, в жестоких боях под Воронежем он, командуя стрелковым взводом, попал в окружение, а потом в плен. Был отправлен в Германию, в лагерь, на тяжелейшие работы, прошел настоящий ад, не потеряв себя и не уронив достоинства. В октябре 1945 г. после проверки он был демобилизован в своем же офицерском звании младшего лейтенанта запаса и вскоре приступил к работе по специальности.-->
+                        <!--              </p>-->
+                        <!--              <p>Есть в аннотации Константина Ваншенкина и детали, позволяющие выйти на родственные связи писателя с нашей республикой. Ведь жену он привез в Москву из Сыктывкара. Звали ее Маша. Она работала стюардессой на авиалинии Сыктывкар-Быково.-->
+                        <!--              </p>-->
+                        <!--              <p>Поселок Седкыркещ построен бывшими военнопленными и "власовцами", многие из которых даже оружия в руках не держали. Они одевались плохо, часто болели, жили, в основном, в землянках. В такой атмосфере и вращался писатель Борис Бедный.-->
+                        <!--              </p>-->
+                        <!--              <p>Борис Васильевич Бедный умер в 1976 г. в Москве. Шел по улице, почувствовал себя плохо. Острый обширный инфаркт, до больницы не довезли…-->
+                        <!--              </p>-->
+                    </div>
+                    <div class="Spoiler-footer">
+                        <button class="Spoiler-trigger btn btn_primary btn_nr" data-hidetext="Показать полностью"
+                                data-showtext="Свернуть"
+                                th:attr="data-showtext=#{author.hide},data-hidetext=#{author.showAll}" type="button">
+                        </button>
+                    </div>
+                </div>
+            </article>
+            <div class="Section">
+                <header class="Section-header">
+                    <h2 class="Section-title" th:text="#{author.authorBooks}">Книги автора
+                    </h2>
+                </header>
+                <div class="Slider Slider_carousel">
+                    <div class="Slider-box Cards">
+                        <div class="Slider-item" th:each="book : ${author.bookList}">
+                            <div class="Slider-content">
+                                <div th:replace="~{fragments/card_fragment :: card(${book})}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Slider-navigateWrap">
+                        <div class="Slider-navigate">
+                        </div>
+                    </div>
+                    <div class="Slider-load">
+                        <div class="Slider-load-text" th:text="#{main.loading}">Идет загрузка данных
+                        </div>
+                    </div>
+                </div>
+                <footer class="Section-footer"><a class="Author-books" href="/books/author.html"
+                                                  th:href="${'/books/author/' + author.slug}"
+                                                  th:text="#{author.allAuthorBooks(${author.bookList.size()})}">Все
+                    книги автора<span class="Author-amount">(55)</span></a>
+                </footer>
             </div>
-            <div class="Slider-navigateWrap">
-              <div class="Slider-navigate">
-              </div>
-            </div>
-            <div class="Slider-load">
-              <div class="Slider-load-text" th:text="#{main.loading}">Идет загрузка данных
-              </div>
-            </div>
-          </div>
-          <footer class="Section-footer"><a class="Author-books" th:href="${'/books/author/' + author.slug}" href="/books/author.html" th:text="#{author.allAuthorBooks(${author.bookList.size()})}">Все книги автора<span class="Author-amount">(55)</span></a>
-          </footer>
-        </div>
-      </main>
+        </main>
     </div>
-  </div>
-  <footer th:replace="~{fragments/common_footer_fragment :: footFragment}"></footer>
-  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
-</body></html>
+</div>
+<footer th:replace="~{fragments/common_footer_fragment :: footFragment}"></footer>
+<script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cmsController.js"></script>
+<script src="/assets/js/UploadNewBookImageScript.js"></script>
+</body>
+</html>

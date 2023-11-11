@@ -150,8 +150,8 @@ if (document.getElementById("updateGenre")) {
         })
             .then(function (response) {
                 window.location.replace("/genres/" + response.data.slug);
-                tagMessage.style.color = "green";
-                tagMessage.textContent = JSON.stringify(response.data);
+                genreMessage.style.color = "green";
+                genreMessage.textContent = JSON.stringify(response.data);
             })
             .catch(function (error) {
                 genreMessage.style.color = "red";
@@ -172,6 +172,113 @@ if (document.getElementById("deleteGenre")) {
             .catch(function (error) {
                 genreMessage.style.color = "red";
                 genreMessage.textContent = error.response.data.error;
+            });
+    });
+}
+
+if (document.getElementById("addAuthor")) {
+    document.getElementById("addAuthor").addEventListener("click", function () {
+        let authorMessage = document.getElementById("authorMessage");
+        authorMessage.style.color = "red";
+
+        let authorFirstName = document.getElementById("authorFirstName");
+        if (authorFirstName == null || authorFirstName.value === "") {
+            authorMessage.textContent = "First name property can not be empty";
+            return;
+        }
+
+        let authorLastName = document.getElementById("authorLastName");
+        if (authorLastName == null || authorLastName.value === "") {
+            authorMessage.textContent = "Last name property can not be empty";
+            return;
+        }
+
+        let authorSlug = document.getElementById("authorSlug");
+        if (authorSlug == null || authorSlug.value === "") {
+            authorMessage.textContent = "Slug property can not be empty";
+            return;
+        }
+
+        let authorDescription = document.getElementById("authorDescription");
+
+        axios.post("/api/cms/author", {
+            firstName: authorFirstName.value,
+            lastName: authorLastName.value,
+            slug: authorSlug.value,
+            description: authorDescription.value
+        })
+            .then(function (response) {
+                authorMessage.style.color = "green";
+                authorMessage.textContent = JSON.stringify(response.data);
+                authorFirstName.value = '';
+                authorLastName.value = '';
+                authorSlug.value = '';
+                authorDescription.value = '';
+            })
+            .catch(function (error) {
+                authorMessage.style.color = "red";
+                authorMessage.textContent = error.response.data.error;
+            });
+    });
+}
+
+if (document.getElementById("updateAuthor")) {
+    document.getElementById("updateAuthor").addEventListener("click", function () {
+        let authorMessage = document.getElementById("authorMessage");
+        authorMessage.style.color = "red";
+
+        let authorFirstName = document.getElementById("authorFirstName");
+        if (authorFirstName == null || authorFirstName.value === "") {
+            authorMessage.textContent = "First name property can not be empty";
+            return;
+        }
+
+        let authorLastName = document.getElementById("authorLastName");
+        if (authorLastName == null || authorLastName.value === "") {
+            authorMessage.textContent = "Last name property can not be empty";
+            return;
+        }
+
+        let authorSlug = document.getElementById("authorSlug");
+        if (authorSlug == null || authorSlug.value === "") {
+            authorMessage.textContent = "Slug property can not be empty";
+            return;
+        }
+
+        let authorDescription = document.getElementById("authorDescription");
+        
+        const id = document.getElementById("updateAuthor").dataset.id;
+        
+        axios.put("/api/cms/author/" + id, {
+            firstName: authorFirstName.value,
+            lastName: authorLastName.value,
+            slug: authorSlug.value,
+            description: authorDescription.value
+        })
+            .then(function (response) {
+                window.location.replace("/authors/" + response.data.slug);
+                authorMessage.style.color = "green";
+                authorMessage.textContent = JSON.stringify(response.data);
+            })
+            .catch(function (error) {
+                authorMessage.style.color = "red";
+                authorMessage.textContent = error.response.data.error;
+            });
+    });
+}
+
+if (document.getElementById("deleteAuthor")) {
+    document.getElementById("deleteAuthor").addEventListener("click", function () {
+        let authorMessage = document.getElementById("authorMessage");
+        const id = document.getElementById("deleteAuthor").dataset.id;
+
+        axios.delete("/api/cms/author/" + id)
+            .then(function (response) {
+                window.location.replace("/authors");
+            })
+            .catch(function (error) {
+                authorMessage.style.color = "red";
+                authorMessage.textContent = error.response.data.error;
             });
     });
 }

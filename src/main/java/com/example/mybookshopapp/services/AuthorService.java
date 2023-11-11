@@ -1,6 +1,7 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.AuthorEntity;
+import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.AuthorDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.AuthorRepository;
@@ -107,5 +108,12 @@ public class AuthorService {
 
     public List<AuthorEntity> getAuthorsByIds(Integer[] authorIds) {
         return authorRepository.findAuthorEntitiesByIdIn(List.of(authorIds));
+    }
+
+    public void updatePhoto(String authorSlug, String filePath) {
+        AuthorEntity author = authorRepository.findAuthorEntityBySlug(authorSlug);
+        if (author == null) return;
+        author.setPhoto(filePath);
+        authorRepository.save(author);
     }
 }

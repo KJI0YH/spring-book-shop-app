@@ -34,6 +34,8 @@ public class ResourceStorage {
     private final BookService bookService;
     @Value("${upload.book-covers}")
     String uploadBookCoversPath;
+    @Value("${upload.author-covers}")
+    String uploadAuthorCoversPath;
     @Value("${download.book-files}")
     String downloadBookFilesPath;
 
@@ -48,6 +50,22 @@ public class ResourceStorage {
             String fileName = bookSlug + "." + FilenameUtils.getExtension(file.getOriginalFilename());
             Path path = Paths.get(uploadBookCoversPath, fileName);
             resourceURI = "/book-covers/" + fileName;
+            file.transferTo(path);
+        }
+        return resourceURI;
+    }
+    
+    public String saveNewAuthorImage(MultipartFile file, String authorSlug) throws IOException{
+        String resourceURI = null;
+
+        if (!file.isEmpty()) {
+            if (!new File(uploadAuthorCoversPath).exists()) {
+                Files.createDirectories(Paths.get(uploadAuthorCoversPath));
+            }
+
+            String fileName = authorSlug + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+            Path path = Paths.get(uploadAuthorCoversPath, fileName);
+            resourceURI = "/author-covers/" + fileName;
             file.transferTo(path);
         }
         return resourceURI;

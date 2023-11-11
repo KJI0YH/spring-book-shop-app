@@ -1,7 +1,10 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.*;
-import com.example.mybookshopapp.dto.*;
+import com.example.mybookshopapp.dto.AuthorSortIndexDto;
+import com.example.mybookshopapp.dto.Book2AuthorDto;
+import com.example.mybookshopapp.dto.Book2UserDto;
+import com.example.mybookshopapp.dto.BookDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
@@ -538,5 +541,12 @@ public class BookService {
         if (book2User == null)
             throw new ApiWrongParameterException("User with id " + userId + " does not have a book with id " + bookId);
         book2UserRepository.delete(book2User);
-    }   
+    }
+
+    public void updateImage(String bookSlug, String filePath) {
+        BookEntity book = bookRepository.findBookEntityBySlug(bookSlug);
+        if (book == null) return;
+        book.setImage(filePath);
+        bookRepository.save(book);
+    }
 }

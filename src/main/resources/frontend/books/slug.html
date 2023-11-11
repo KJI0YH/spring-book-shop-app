@@ -60,12 +60,14 @@ p.error-browser
                 <div class="ProductCard">
                     <div class="ProductCard-look">
                         <form action="#" enctype="multipart/form-data" id="imgForm" method="POST"
+                              th:if="${curUsr != null && curUsr.isAdmin()}"
                               th:action="${'/books/'+ book.slug +'/img/save'}">
                             <div class="ProductCard-photo" id="uploadButton">
                                 <img alt="card.jpg" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
                             </div>
                             <input id="dialog" name="file" style="display: none" type="file"/>
                         </form>
+                        <img th:unless="${curUsr != null && curUsr.isAdmin()}" alt="card.jpg" src="/assets/img/content/main/card.jpg" th:src="${book.image}"/>
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">

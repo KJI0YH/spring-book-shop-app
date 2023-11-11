@@ -33,7 +33,6 @@ public class BookController extends AbstractHeaderFooterController {
 
     private final BookService bookService;
     private final ResourceStorage storage;
-    private final BookRepository bookRepository;
     private final UserService userService;
     private final CookieService cookieService;
 
@@ -68,11 +67,9 @@ public class BookController extends AbstractHeaderFooterController {
     public String saveNewBookImage(@PathVariable("bookSlug") String bookSlug,
                                    @RequestParam("file") MultipartFile file) throws IOException {
 
-        String savePath = storage.saveNewBookImage(file, bookSlug);
-        BookEntity bookToUpdate = bookService.getBookBySlug(bookSlug);
-        bookToUpdate.setImage(savePath);
-        bookRepository.save(bookToUpdate);
-
+        String filePath = storage.saveNewBookImage(file, bookSlug);
+        bookService.updateImage(bookSlug, filePath);
+        
         return ("redirect:/books/" + bookSlug);
     }
 
