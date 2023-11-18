@@ -58,7 +58,7 @@ p.error-browser
                     <span th:text="${book.title}">Мара и морок</span>
                 </li>
             </ul>
-            <form class="form Login Login_registration" id="bookForm" onsubmit="return false;"
+            <div class="form Login Login_registration" id="bookForm" onsubmit="return false;"
                   th:if="${curUsr != null && curUsr.isAdmin()}">
                 <div class="form-group">
                     <label class="form-label Login-title" th:text="#{book.update}">Изменить книгу
@@ -118,7 +118,7 @@ p.error-browser
                             type="button" th:text="#{book.delete}">Delete book
                     </button>
                 </div>
-            </form>
+            </div>
             <div class="Product">
                 <div class="ProductCard">
                     <div class="ProductCard-look">
@@ -300,7 +300,7 @@ p.error-browser
                                         <br>
                                     </th:block>
                                     <br>
-                                    <form enctype="multipart/form-data" method="POST"
+                                    <form id="bookFileForm" enctype="multipart/form-data" method="POST"
                                           th:action="${'/books/' + book.slug + '/upload'}">
                                         <input accept="*.pdf,*.epub,*.fb2" id="bookFile" name="file" size="5000000"
                                                type="file"/>

@@ -462,6 +462,9 @@ if (document.getElementById("addBook2Tag")) {
         })
             .then(function (response) {
                 window.location.reload();
+            })
+            .catch(function (error) {
+                window.location.reload();
             });
     });
 }
@@ -475,6 +478,9 @@ if (document.getElementById("deleteBook2Tag")) {
 
             axios.delete("/api/cms/book/" + bookId + "/tag/" + tagId)
                 .then(function (response) {
+                    window.location.reload();
+                })
+                .catch(function (error) {
                     window.location.reload();
                 });
         });
@@ -493,6 +499,9 @@ if (document.getElementById("addBook2Genre")) {
         })
             .then(function (response) {
                 window.location.reload();
+            })
+            .catch(function (error) {
+                window.location.reload();
             });
     });
 }
@@ -508,6 +517,9 @@ if (document.getElementById("deleteBook2Genre")) {
                 .then(function (response) {
                     window.location.reload();
                 })
+                .catch(function (error) {
+                    window.location.reload();
+                });
         });
     });
 }
@@ -525,6 +537,9 @@ if (document.getElementById("addBook2Author")) {
             })),
         })
             .then(function (response) {
+                window.location.reload();
+            })
+            .catch(function (error) {
                 window.location.reload();
             });
     });
@@ -548,6 +563,9 @@ if (document.getElementById("updateBook2Author")) {
                 .then(function (response) {
                     window.location.reload();
                 })
+                .catch(function (error) {
+                    window.location.reload();
+                })
         });
     });
 }
@@ -561,6 +579,9 @@ if (document.getElementById("deleteBook2Author")) {
 
             axios.delete("/api/cms/book/" + bookId + "/author/" + authorId)
                 .then(function (response) {
+                    window.location.reload();
+                })
+                .catch(function (error) {
                     window.location.reload();
                 })
         });
@@ -580,6 +601,9 @@ if (document.getElementById("updateReview")) {
                 .then(function (response) {
                     window.location.reload();
                 })
+                .catch(function (error) {
+                    window.location.reload();
+                })
         });
     });
 }
@@ -592,6 +616,9 @@ if (document.getElementById("deleteReview")) {
 
             axios.delete("/api/cms/bookReview/" + id)
                 .then(function (response) {
+                    window.location.reload();
+                })
+                .catch(function (error) {
                     window.location.reload();
                 })
         });

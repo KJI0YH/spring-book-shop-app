@@ -13,7 +13,9 @@ delete from balance_transaction;
 delete from payment_status;
 delete from book;
 delete from author;
+delete from role2user;
 delete from users;
+delete from role;
 delete from genre;
 delete from tag;
 

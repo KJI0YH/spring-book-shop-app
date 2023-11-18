@@ -50,11 +50,11 @@ class AuthUserControllerTest extends SpringBootApplicationTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:/delete-data.sql")
+//    @Sql(scripts = "classpath:/delete-users.sql")
     public void registerNewUserTest() throws Exception {
         mockMvc.perform(post("/reg")
                         .param("name", "potato")
-                        .param("phone", "+375000000000")
+                        .param("phone", "+375123456789")
                         .param("email", "newemail@email.com")
                         .param("pass", "password")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

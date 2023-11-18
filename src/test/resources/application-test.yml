@@ -8,17 +8,25 @@ auth:
   secret: secret
 
 upload:
-  path: D:/Personal projects/JavaSpring/uploads/book-covers
+  book-covers: D:/Personal projects/JavaSpring/uploads/book-covers
+  author-covers: D:/Personal projects/JavaSpring/uploads/author-covers
+  default-book-cover: https://dummyimage.com/600x943.png/000000/ffffff
+  default-author-cover: https://dummyimage.com/250x250.png/000000/ffffff
 download:
-  path: D:/Personal projects/JavaSpring/downloads/book-files
+  book-files: D:/Personal projects/JavaSpring/downloads/book-files
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
   datasource:
     url: jdbc:tc:postgresql:latest:///book-shop-db-test
     username: test
     password: test
   messages:
     basename: lang.messages
+    encoding: WINDOWS-1251
   web:
     resources:
       static-locations: classpath:/frontend/

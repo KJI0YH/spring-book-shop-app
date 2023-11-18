@@ -78,8 +78,10 @@ public class BookEntity {
     @ToString.Exclude
     @JsonProperty("book2genre")
     private List<Book2GenreEntity> book2GenreList;
+    
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonProperty("book2files")
+    @ToString.Exclude
     private List<BookFileEntity> bookFileList = new ArrayList<>();
     private Integer popularity = 0;
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)

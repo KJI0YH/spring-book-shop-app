@@ -314,7 +314,7 @@ p.error-browser
                                     <br>
                                 </th:block>
                                 <br>
-                                <form enctype="multipart/form-data" method="POST"
+                                <form id="bookFileForm" enctype="multipart/form-data" method="POST"
                                       th:action="${'/books/' + book.slug + '/upload'}">
                                     <input accept="*.pdf,*.epub,*.fb2" id="bookFile" name="file" size="5000000"
                                            type="file"/>
