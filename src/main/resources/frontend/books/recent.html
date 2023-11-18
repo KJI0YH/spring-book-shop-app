@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{recent.name}">Тут название страницы написать</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -45,16 +45,16 @@
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
           </li>
           <li class="breadcrumbs-item"><a href="/genres/index.html" th:href="@{/genres}" th:text="#{main.books}">Книги</a>
           </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{topbar.news}">Новинки</span>
+          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{header.news}">Новинки</span>
           </li>
         </ul>
         <div class="Section">
           <div class="Section-header">
-            <h1 class="Section-title" th:text="#{topbar.news}">Новинки
+            <h1 class="Section-title" th:text="#{header.news}">Новинки
             </h1>
             <form class="form form_inline Section-header-form" action="#" method="post">
               <div class="form-group">

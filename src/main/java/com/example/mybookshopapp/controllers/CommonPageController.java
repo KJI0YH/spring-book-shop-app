@@ -2,6 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.MessageDto;
+import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,8 @@ public class CommonPageController extends AbstractHeaderFooterController {
         model.addAttribute("booksList", bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20));
         model.addAttribute("genre", genreService.getGenreBySlug(genreSlug));
         model.addAttribute("breadcrumbs", genreService.getGenresBreadcrumbs(genreSlug));
-        if (userService.getCurrentUser().isAdmin()) {
+        UserEntity user = userService.getCurrentUser();
+        if (user != null && user.isAdmin()) {
             model.addAttribute("genres", genreService.getAllGenres());
         }
         return "genres/slug";

@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{postponed.name}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -47,7 +47,7 @@ p.error-browser
         <main class="Middle-main">
             <h1 class="Middle-title" th:text="#{postponed.postponed}">Отложенное
             </h1>
-            <h3 th:if="${isPostponedEmpty}">Отложенные книги отсутствуют</h3>
+            <h3 th:if="${isPostponedEmpty}" th:text="#{postponed.empty}">Отложенные книги отсутствуют</h3>
             <form action="#" class="form Cart Cart_postponed" method="post">
                 <div class="Cart-product" th:each="book : ${bookKept}">
                     <div class="Cart-block Cart-block_row">
@@ -93,13 +93,13 @@ p.error-browser
                                             <span class="btn-icon">
                                                 <img alt="trash.svg" src="/assets/img/icons/trash.svg"/>
                                             </span>
-                                            <span class="btn-content" th:text="#{cart.delete}">Удалить</span>
+                                            <span class="btn-content" th:text="#{postponed.delete}">Удалить</span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="Cart-block Cart-block_price">
-                                <div class="Cart-priceTitle" th:text="#{cart.price}">Цена:
+                                <div class="Cart-priceTitle" th:text="#{postponed.price}">Цена:
                                 </div>
                                 <div class="Cart-price Cart-price_old" th:if="${book.discount != 0}"
                                      th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">150 р.

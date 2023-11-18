@@ -24,6 +24,7 @@ spring:
 
   messages:
     basename: lang.messages
+    encoding: WINDOWS-1251
   web:
     resources:
       static-locations: classpath:/frontend/

@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${book.title}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -48,10 +48,10 @@ p.error-browser
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
-                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item"><a href="/genres/index.html" th:href="@{/genres}"
-                                                th:text="#{topbar.books}">Книги</a>
+                                                th:text="#{header.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
                     <span th:text="${book.title}">Мара и морок</span>
@@ -60,47 +60,52 @@ p.error-browser
             <form class="form Login Login_registration" id="bookForm" onsubmit="return false;"
                   th:if="${curUsr != null && curUsr.isAdmin()}">
                 <div class="form-group">
-                    <label class="form-label Login-title">Изменить книгу
+                    <label class="form-label Login-title" th:text="#{book.update}">Изменить книгу
                     </label>
                 </div>
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookTitle" name="title" placeholder="Title" required th:value="${book.title}"
+                        <input id="bookTitle" name="title" placeholder="Title" required th:placeholder="#{book.title}"
+                               th:value="${book.title}"
                                type="text">
                     </div>
 
                     <div class="row-block">
-                        <input id="bookSlug" name="slug" placeholder="Slug" required th:value="${book.slug}"
+                        <input id="bookSlug" name="slug" placeholder="Slug" required th:placeholder="#{book.slug}"
+                               th:value="${book.slug}"
                                type="text">
                     </div>
                 </div>
 
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
+                        <input id="bookPrice" min="1" name="price" placeholder="Price" required
+                               step="0.01" th:placeholder="#{book.price}"
                                th:value="${book.price / 100 + '.' + book.price % 100}" type="number">
                     </div>
                     <div class="row-block">
-                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
+                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount"
+                               required th:placeholder="#{book.discount}"
                                th:value="${book.discount}" type="number">
                     </div>
                 </div>
 
                 <div class="form-group form-group_row">
                     <div class="form-group row-block">
-                        <label for="bookBestseller">Бестселлер</label>
+                        <label for="bookBestseller" th:text="#{book.bestseller}">Бестселлер</label>
                         <input id="bookBestseller" name="bestseller" th:checked="${book.isBestseller}" type="checkbox">
                     </div>
 
                     <div class="form-group row-block">
-                        <label class="form-label" for="bookPubDate">Дата публикации</label>
+                        <label class="form-label" for="bookPubDate" th:text="#{book.pubDate}">Дата публикации</label>
                         <input id="bookPubDate" name="pubDate" th:value="${book.pubDate}" type="date"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <textarea class="form-textarea" id="bookDescription" name="description"
-                              placeholder="Description" th:text="${book.description}"></textarea>
+                              placeholder="Description"
+                              th:placeholder="#{book.description}" th:text="${book.description}"></textarea>
                 </div>
 
                 <div class="form-group form-group_row">
@@ -110,10 +115,12 @@ p.error-browser
                 <div class="form-group form-group_center">
                     <button class="btn btn_primary form-btn" id="updateBook" name="updateBook"
                             th:attr="data-id=${book.id}"
+                            th:text="#{book.update}"
                             type="button">Update book
                     </button>
                     <button class="btn btn_primary form-btn" id="deleteBook" name="deleteBook"
                             th:attr="data-id=${book.id}"
+                            th:text="#{book.delete}"
                             type="button">Delete book
                     </button>
                 </div>
@@ -142,7 +149,7 @@ p.error-browser
                                     <div>
                                         <a href="#" th:href="${'/authors/' + b2a.author.slug}"
                                            th:text="${b2a.author.toString()}">Борис Васильевич Бедный</a>
-                                        <input min="0" placeholder="Sort index" step="1"
+                                        <input min="0" placeholder="Sort index" th:placeholder="#{book.sortIndex}" step="1"
                                                th:id="${'sortIndex-' + b2a.author.id}"
                                                th:if="${curUsr != null && curUsr.isAdmin()}"
                                                th:value="${b2a.sortIndex}"
@@ -152,12 +159,14 @@ p.error-browser
                                                 id="updateBook2Author"
                                                 th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
                                                 th:if="${curUsr != null && curUsr.isAdmin()}"
+                                                th:text="#{book.updateAuthor}"
                                         >update
                                         </button>
                                         <button
                                                 id="deleteBook2Author"
                                                 th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
                                                 th:if="${curUsr != null && curUsr.isAdmin()}"
+                                                th:text="#{book.deleteAuthor}"
                                         >delete
                                         </button>
                                     </div>
@@ -173,7 +182,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}">Add authors</button>
+                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}" th:text="#{book.addAuthor}">Add authors</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-rating">
@@ -234,7 +243,7 @@ p.error-browser
                                     </span>
                             </div>
                             <div class="ProductCard-tags">
-                                <span class="ProductCard-titleProp">Жанры:</span><br>
+                                <span class="ProductCard-titleProp" th:text="#{book.genres}">Жанры:</span><br>
                                 <th:block th:each="genre : ${book.genreList}">
                                     <a href="/genres/" th:href="${'/genres/' + genre.slug}"
                                        th:text="${genre.name}">Современные</a>
@@ -257,7 +266,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}">Add genres</button>
+                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}" th:text="#{book.addGenre}">Add genres</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-tags">
@@ -284,7 +293,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}">Add tags</button>
+                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}" th:text="#{book.addTag}">Add tags</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
@@ -362,16 +371,18 @@ p.error-browser
                         <div><a th:href="@{/signup}" th:text="Signup"></a></div>
                     </th:block>
                     <th:block th:unless="${curUsr == null}">
-                        <strong class="Comments-title">Написать отзыв</strong>
+                        <strong class="Comments-title" th:text="#{book.writeReview}">Написать отзыв</strong>
                         <div class="Comments-addComment">
                             <form action="#" class="form" data-bookid="1111" method="post"
                                   th:attr="data-bookid=${book.id}">
                                 <div class="form-group">
                                     <textarea class="form-textarea Comments-review" data-validate="require" id="review"
-                                              name="review" placeholder="Текст отзыва"></textarea>
+                                              name="review" placeholder="Текст отзыва"
+                                              th:placeholder="#{book.textReview}"></textarea>
                                 </div>
                                 <div class="form-group Comments-sendReview">
-                                    <button class="btn btn_warning" type="submit">Отправить отзыв
+                                    <button class="btn btn_warning" th:text="#{book.sendReview}" type="submit">Отправить
+                                        отзыв
                                     </button>
                                 </div>
                             </form>
@@ -399,10 +410,10 @@ p.error-browser
                                                   th:text="${review.text}"></textarea>
                                     </div>
                                     <button class="btn btn_primary form-btn" id="updateReview"
-                                            th:attr="data-id=${review.id}">Update review
+                                            th:attr="data-id=${review.id}" th:text="#{book.updateReview}">Update review
                                     </button>
                                     <button class="btn btn_primary form-btn" id="deleteReview"
-                                            th:attr="data-id=${review.id}">Delete review
+                                            th:attr="data-id=${review.id}" th:text="#{book.deleteReview}">Delete review
                                     </button>
                                 </th:block>
                                 <th:block th:unless="${curUsr != null && curUsr.isAdmin()}">

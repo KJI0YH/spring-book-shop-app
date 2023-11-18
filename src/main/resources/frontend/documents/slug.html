@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="${document.title}">Тут название страницы написать</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -44,22 +44,22 @@
   <div class="Middle">
     <div class="Middle-top">
       <div class="wrap">
-        <h1 class="Middle-title">Документ
+        <h1 class="Middle-title" th:text="#{documents.documents}">Документ
         </h1>
       </div>
     </div>
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}">Главная</a>
+          <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
           </li>
-          <li class="breadcrumbs-item"><a href="/documents/index.html" th:href="@{'/documents'}" >Документы</a>
+          <li class="breadcrumbs-item"><a href="/documents/index.html" th:href="@{'/documents'}" th:text="#{footer.documents}">Документы</a>
           </li>
           <li class="breadcrumbs-item breadcrumbs-item_current">
             <span th:text="${document.title}">Политика обработки персональных данных</span>
           </li>
         </ul>
-        <h1 class="Middle-title" th:title="${document.title}">Политика обработки персональных данных
+        <h1 class="Middle-title" th:text="${document.title}">Политика обработки персональных данных
         </h1>
         <article class="Article">
           <div class="sdf">

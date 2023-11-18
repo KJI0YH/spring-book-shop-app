@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{header.search}">Тут название страницы написать</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -44,13 +44,13 @@
   <div class="Middle Middle_search">
     <div class="wrap">
       <main class="Middle-main">
-        <h1 class="Middle-title" th:text="#{topbar.search}">Поиск
+        <h1 class="Middle-title" th:text="#{header.search}">Поиск
         </h1>
         <div class="Section">
           <div class="search">
             <form class="form form_search" action="#" method="post" data-searchlimit="20">
               <input class="search-input" id="querypage" name="querypage" type="text" placeholder="Search over 30 million book titles" th:value="${searchWordDto.example}" value="Техника"/>
-              <button class="search-button" type="submit" name="searchpage" id="searchpage" th:text="#{topbar.search}">Поиск
+              <button class="search-button" type="submit" name="searchpage" id="searchpage" th:text="#{header.search}">Поиск
               </button>
             </form>
           </div>

@@ -272,6 +272,15 @@ public class BookService {
         return null != transactionRepository.findByBookIdAndUserId(bookId, userId);
     }
 
+    public boolean isUserBook(Integer bookId, Integer userId) {
+        Book2UserEntity book2User = book2UserRepository.findBook2UserEntityById(new Book2UserIdEntity(bookId, userId));
+        if (book2User != null) {
+            String book2UserName = book2User.getType().getName();
+            return book2UserName.equals("PAID") || book2UserName.equals("ARCHIVED");
+        }
+        return false;
+    }
+
     public void mergeCartBooks(Integer[] bookIds, Integer userId) {
         for (Integer bookId : bookIds) {
             try {

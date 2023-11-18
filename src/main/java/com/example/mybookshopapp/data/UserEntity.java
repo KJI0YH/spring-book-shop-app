@@ -69,6 +69,7 @@ public class UserEntity {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public boolean isAdmin() {
         if (!roleList.isEmpty()) {
             return getRoles().contains("ADMIN");

@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${tag.name}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -47,7 +47,7 @@ p.error-browser
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
-                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current"><span
                         th:text="${tag.name}">Психологическая проза</span>
@@ -58,17 +58,19 @@ p.error-browser
                       id="tagUpdateForm" onsubmit="return false;"
                       th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
                     <div class="form-group">
-                        <label class="form-label Login-title">Изменить тэг
+                        <label class="form-label Login-title" th:text="#{tag.update}">Изменить тэг
                         </label>
                     </div>
                     <div class="form-group form-group_row">
                         <div class="row">
                             <div class="row-block">
-                                <input id="tagName" name="name" placeholder="Name" required th:value="${tag.name}"
+                                <input id="tagName" name="name" placeholder="Name" required th:placeholder="#{tag.name}"
+                                       th:value="${tag.name}"
                                        type="text">
                             </div>
                             <div class="row-block">
-                                <input id="tagSlug" name="slug" placeholder="Slug" required th:value="${tag.slug}"
+                                <input id="tagSlug" name="slug" placeholder="Slug" required th:placeholder="#{tag.slug}"
+                                       th:value="${tag.slug}"
                                        type="text">
                             </div>
                         </div>
@@ -79,9 +81,13 @@ p.error-browser
                     </div>
 
                     <div class="form-group form-group_center">
-                        <button class="btn btn_primary form-btn" id="updateTag" name="updateTag" type="button" th:attr="data-id=${tag.id}">Update tag
+                        <button class="btn btn_primary form-btn" id="updateTag" name="updateTag" th:attr="data-id=${tag.id}"
+                                th:text="#{tag.update}"
+                                type="button">Update tag
                         </button>
-                        <button class="btn btn_primary form-btn" id="deleteTag" name="deleteTag" type="button" th:attr="data-id=${tag.id}">Delete tag
+                        <button class="btn btn_primary form-btn" id="deleteTag" name="deleteTag" th:attr="data-id=${tag.id}"
+                                th:text="#{tag.delete}"
+                                type="button">Delete tag
                         </button>
                     </div>
                 </form>

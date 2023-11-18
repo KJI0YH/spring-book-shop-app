@@ -18,8 +18,8 @@
                     <div class="Header-search">
                         <div class="search">
                             <form class="form form_search" action="#" method="post" data-searchlimit="20" th:object="${searchWordDto}">
-                                <input class="search-input" id="query" name="query" type="text" th:placeholder="#{topbar.searchPlaceholder}" th:field="*{example}" value=""/>
-                                <button class="search-button" type="submit" name="search" id="search" th:text="#{topbar.search}">Поиск
+                                <input class="search-input" id="query" name="query" type="text" th:placeholder="#{header.searchPlaceholder}" th:field="*{example}" value=""/>
+                                <button class="search-button" type="submit" name="search" id="search" th:text="#{header.search}">Поиск
                                 </button>
                             </form>
                         </div>
@@ -47,7 +47,7 @@
                             <span class="CartBlock-text" th:text="${curUsr.name}">Дмитрий Петров</span>
                             <span class="CartBlock-budget" th:text="#{my.account(${curUsr.getBalanceJson()})}">На счете 100 рублей</span>
                         </a>
-                        <a th:if="${curUsr}" th:href="@{/logout}">Выход</a>
+                        <a th:if="${curUsr}" th:href="@{/logout}" th:text="#{header.logout}">Выход</a>
                     </div>
                 </div>
                 <div class="row-block Header-trigger">
@@ -62,20 +62,20 @@
         <div class="wrap">
             <nav class="menuModal" id="navigate">
                 <ul class="menu menu_main">
-                    <li class="menu-item" th:classappend="${requestURI.equals('/') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/genres') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/genres/index.html" th:href="@{/genres}" th:text="#{topbar.genres}">Жанры</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/genres') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/genres/index.html" th:href="@{/genres}" th:text="#{header.genres}">Жанры</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/books/recent') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/books/recent.html" th:href="@{/books/recent}" th:text="#{topbar.news}">Новинки</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/books/recent') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/books/recent.html" th:href="@{/books/recent}" th:text="#{header.news}">Новинки</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/books/popular') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/books/popular.html" th:href="@{/books/popular}" th:text="#{topbar.popular}">Популярное</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/books/popular') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/books/popular.html" th:href="@{/books/popular}" th:text="#{header.popular}">Популярное</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/books/viewed') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/books/viewed}">Просмотренные</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/books/viewed') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/books/viewed}" th:text="#{header.viewed}">Просмотренные</a>
                     </li>
-                    <li class="menu-item" th:classappend="${requestURI.equals('/authors') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}" th:text="#{topbar.authors}">Авторы</a>
+                    <li class="menu-item" th:classappend="${requestURI.equals('/authors') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}" th:text="#{header.authors}">Авторы</a>
                     </li>
                     <th:block th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
-                        <li class="menu-item" th:classappend="${requestURI.equals('/cms') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/cms}">CMS</a>
+                        <li class="menu-item" th:classappend="${requestURI.equals('/cms') ? 'menu-item_ACTIVE' : ''}"><a class="menu-link" th:href="@{/cms}" th:text="#{header.cms}">CMS</a>
                         </li>
                     </th:block>
                 </ul>

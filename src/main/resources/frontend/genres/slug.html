@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${genre.name}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -46,10 +46,10 @@ p.error-browser
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
-                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item"><a href="/genres/index.html" th:href="@{/genres}"
-                                                th:text="#{topbar.genres}">Жанры</a>
+                                                th:text="#{header.genres}">Жанры</a>
                 </li>
                 <li class="breadcrumbs-item" th:each="genre : ${breadcrumbs}">
                     <a href="/genres/index.html" th:href="@{/genres}" th:text="${genre.name}">Легкое чтение</a>
@@ -61,17 +61,19 @@ p.error-browser
                 <form class="form Login Login_registration" id="genreForm" onsubmit="return false;"
                       th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
                     <div class="form-group">
-                        <label class="form-label Login-title">Изменить жанр
+                        <label class="form-label Login-title" th:text="#{genre.update}">Изменить жанр
                         </label>
                     </div>
                     <div class="form-group form-group_row">
                         <div class="row">
                             <div class="row-block">
-                                <input id="genreName" name="name" placeholder="Name" required th:value="${genre.name}"
+                                <input id="genreName" name="name" placeholder="Name" required
+                                       th:placeholder="#{genre.name}" th:value="${genre.name}"
                                        type="text">
                             </div>
                             <div class="row-block">
-                                <input id="genreSlug" name="slug" placeholder="Slug" required th:value="${genre.slug}"
+                                <input id="genreSlug" name="slug" placeholder="Slug" required
+                                       th:placeholder="#{genre.slug}" th:value="${genre.slug}"
                                        type="text">
                             </div>
                         </div>
@@ -80,10 +82,12 @@ p.error-browser
                     <div class="form-group">
                         <div class="form-group">
                             <select id="genreParent" name="genreParent" th:placeholder="Parent">
-                                <option value="-1">Select parent genre</option>
+                                <option th:text="#{genre.parent}" value="-1">Select parent genre</option>
                                 <th:block th:each="g : ${genres}">
-                                    <option th:if="${g.id == genre.parentId}" th:text="${g.name}" th:value="${g.id}" selected></option>
-                                    <option th:unless="${g.id == genre.parentId}" th:text="${g.name}" th:value="${g.id}"></option>
+                                    <option selected th:if="${g.id == genre.parentId}" th:text="${g.name}"
+                                            th:value="${g.id}"></option>
+                                    <option th:text="${g.name}" th:unless="${g.id == genre.parentId}"
+                                            th:value="${g.id}"></option>
                                 </th:block>
                             </select>
                         </div>
@@ -94,10 +98,14 @@ p.error-browser
                     </div>
 
                     <div class="form-group form-group_center">
-                        <button class="btn btn_primary form-btn" id="updateGenre" name="updateGenre" th:attr="data-id=${genre.id}"
+                        <button class="btn btn_primary form-btn" id="updateGenre" name="updateGenre"
+                                th:attr="data-id=${genre.id}"
+                                th:text="#{genre.update}"
                                 type="button">Update genre
                         </button>
-                        <button class="btn btn_primary form-btn" id="deleteGenre" name="deleteGenre" th:attr="data-id=${genre.id}"
+                        <button class="btn btn_primary form-btn" id="deleteGenre" name="deleteGenre"
+                                th:attr="data-id=${genre.id}"
+                                th:text="#{genre.delete}"
                                 type="button">Delete genre
                         </button>
                     </div>

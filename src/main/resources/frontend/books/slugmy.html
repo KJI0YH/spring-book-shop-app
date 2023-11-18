@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${book.title}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -49,10 +49,10 @@ p.error-browser
         <main class="Middle-main">
             <ul class="breadcrumbs">
                 <li class="breadcrumbs-item">
-                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                    <a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item">
-                    <a href="/genres/index.html" th:href="@{/genres}" th:text="#{topbar.books}">Книги</a>
+                    <a href="/genres/index.html" th:href="@{/genres}" th:text="#{header.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
                     <span th:text="${book.title}">Мара и морок</span>
@@ -61,46 +61,46 @@ p.error-browser
             <form class="form Login Login_registration" id="bookForm" onsubmit="return false;"
                   th:if="${curUsr != null && curUsr.isAdmin()}">
                 <div class="form-group">
-                    <label class="form-label Login-title">Изменить книгу
+                    <label class="form-label Login-title" th:text="#{book.update}">Изменить книгу
                     </label>
                 </div>
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookTitle" name="title" placeholder="Title" required th:value="${book.title}"
+                        <input id="bookTitle" name="title" th:placeholder="#{book.title}" placeholder="Title" required th:value="${book.title}"
                                type="text">
                     </div>
 
                     <div class="row-block">
-                        <input id="bookSlug" name="slug" placeholder="Slug" required th:value="${book.slug}"
+                        <input id="bookSlug" name="slug" placeholder="Slug" th:placeholder="#{book.slug}" required th:value="${book.slug}"
                                type="text">
                     </div>
                 </div>
 
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
+                        <input id="bookPrice" min="1" name="price" placeholder="Price" th:placeholder="#{book.price}" required step="0.01"
                                th:value="${book.price / 100 + '.' + book.price % 100}" type="number">
                     </div>
                     <div class="row-block">
-                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
+                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" th:placeholder="#{book.discount}" required
                                th:value="${book.discount}" type="number">
                     </div>
                 </div>
 
                 <div class="form-group form-group_row">
                     <div class="form-group row-block">
-                        <label for="bookBestseller">Бестселлер</label>
+                        <label for="bookBestseller" th:text="#{book.bestseller}">Бестселлер</label>
                         <input id="bookBestseller" name="bestseller" th:checked="${book.isBestseller}" type="checkbox">
                     </div>
 
                     <div class="form-group row-block">
-                        <label class="form-label" for="bookPubDate">Дата публикации</label>
+                        <label class="form-label" for="bookPubDate" th:text="#{book.pubDate}">Дата публикации</label>
                         <input id="bookPubDate" name="pubDate" th:value="${book.pubDate}" type="date"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-textarea" id="bookDescription" name="description"
+                    <textarea class="form-textarea" id="bookDescription" name="description" th:placeholder="#{book.description}"
                               placeholder="Description" th:text="${book.description}"></textarea>
                 </div>
 
@@ -111,11 +111,11 @@ p.error-browser
                 <div class="form-group form-group_center">
                     <button class="btn btn_primary form-btn" id="updateBook" name="updateBook"
                             th:attr="data-id=${book.id}"
-                            type="button">Update book
+                            type="button" th:text="#{book.update}">Update book
                     </button>
                     <button class="btn btn_primary form-btn" id="deleteBook" name="deleteBook"
                             th:attr="data-id=${book.id}"
-                            type="button">Delete book
+                            type="button" th:text="#{book.delete}">Delete book
                     </button>
                 </div>
             </form>
@@ -145,6 +145,7 @@ p.error-browser
                                            th:text="${b2a.author.toString()}">Борис Васильевич Бедный</a>
                                         <input min="0" placeholder="Sort index" step="1" th:if="${curUsr != null && curUsr.isAdmin()}"
                                                th:value="${b2a.sortIndex}"
+                                               th:placeholder="#{book.sortIndex}"
                                                type="number"
                                                th:id="${'sortIndex-' + b2a.author.id}">
                                         <br>
@@ -152,12 +153,14 @@ p.error-browser
                                                 id="updateBook2Author"
                                                 th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
                                                 th:if="${curUsr != null && curUsr.isAdmin()}"
+                                                th:text="#{book.updateAuthor}"
                                         >update
                                         </button>
                                         <button
                                                 id="deleteBook2Author"
                                                 th:attr="data-bookId=${book.id},data-authorId=${b2a.author.id}"
                                                 th:if="${curUsr != null && curUsr.isAdmin()}"
+                                                th:text="#{book.deleteAuthor}"
                                         >delete
                                         </button>
                                     </div>
@@ -173,7 +176,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}">Add authors</button>
+                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}" th:text="#{book.addAuthor}">Add authors</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-rating">
@@ -234,7 +237,7 @@ p.error-browser
                                     </span>
                             </div>
                             <div class="ProductCard-tags">
-                                <span class="ProductCard-titleProp">Жанры:</span><br>
+                                <span class="ProductCard-titleProp" th:text="#{book.genres}">Жанры:</span><br>
                                 <th:block th:each="genre : ${book.genreList}">
                                     <a href="/genres/" th:href="${'/genres/' + genre.slug}"
                                        th:text="${genre.name}">Современные</a>
@@ -257,7 +260,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}">Add genres</button>
+                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}" th:text="#{book.addGenre}">Add genres</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-tags">
@@ -284,7 +287,7 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}">Add tags</button>
+                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}" th:text="#{book.addTag}">Add tags</button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-cost">
@@ -328,7 +331,9 @@ p.error-browser
                                     <span class="btn-content" th:text="#{book.download}">Скачать</span></a>
                             </div>
                             <div class="ProductCard-cartElement">
+                                
                                 <button class="btn btn_primary btn_outline"
+                                        th:if="${book.status == 'PAID'}"
                                         data-alttext="Вернуть из архива"
                                         data-bookid="[1111]"
                                         data-btnradio="buyblock"
@@ -336,19 +341,34 @@ p.error-browser
                                         data-check="false"
                                         data-sendstatus="ARCHIVED"
                                         th:attr="data-bookid=${'[' + book.id + ']'},
-                                        data-sendstatus=${book.status == 'PAID' ? 'ARCHIVED' : 'PAID'},
-                                        data-alttext=${book.status == 'PAID' ? 'Return from archive' : 'Archive'}">
+                                        data-sendstatus='ARCHIVED',
+                                        data-alttext=#{book.returnFromArchive}">
                                     <span class="btn-icon">
                                         <img alt="archive.svg" src="/assets/img/icons/archive.svg"/>
                                     </span>
-                                    <span class="btn-content"
-                                          th:text="${book.status == 'PAID' ? 'Archive' : 'Return from archive'}">В архив</span>
+                                    <span class="btn-content" th:text="#{book.archive}">В архив</span>
+                                </button>
+                                <button class="btn btn_primary btn_outline"
+                                        th:unless="${book.status == 'PAID'}"
+                                        data-alttext="Вернуть из архива"
+                                        data-bookid="[1111]"
+                                        data-btnradio="buyblock"
+                                        data-btntype="check"
+                                        data-check="false"
+                                        data-sendstatus="PAID"
+                                        th:attr="data-bookid=${'[' + book.id + ']'},
+                                        data-sendstatus='PAID',
+                                        data-alttext=#{book.archive}">
+                                    <span class="btn-icon">
+                                        <img alt="archive.svg" src="/assets/img/icons/archive.svg"/>
+                                    </span>
+                                    <span class="btn-content" th:text="#{book.returnFromArchive}">Вернуть из архива</span>
                                 </button>
                             </div>
                         </div>
 
                         <div id="myPopup">
-                            <p>Ссылки для скачивания</p>
+                            <p th:text="#{book.downloadLinks}">Ссылки для скачивания</p>
                             <div th:each="bookFile : ${book.bookFileList}">
                                 <a href="#" th:href="${'/books/download/' + bookFile.hash}"
                                    th:text="${bookFile.getBookFileExtensionString()}"></a>
@@ -371,15 +391,15 @@ p.error-browser
                     </div>
                 </div>
                 <div class="Comments">
-                    <strong class="Comments-title">Написать отзыв</strong>
+                    <strong class="Comments-title" th:text="#{book.writeReview}">Написать отзыв</strong>
                     <div class="Comments-addComment">
                         <form action="#" class="form" data-bookid="1111" method="post" th:attr="data-bookid=${book.id}">
                             <div class="form-group">
                                 <textarea class="form-textarea Comments-review" data-validate="require" id="review"
-                                          name="review" placeholder="Текст отзыва"></textarea>
+                                          name="review" placeholder="Текст отзыва" th:placeholder="#{book.textReview}"></textarea>
                             </div>
                             <div class="form-group Comments-sendReview">
-                                <button class="btn btn_warning" type="submit">Отправить отзыв
+                                <button class="btn btn_warning" type="submit" th:text="#{book.sendReview}">Отправить отзыв
                                 </button>
                             </div>
                         </form>
@@ -400,78 +420,94 @@ p.error-browser
                                 </div>
                             </header>
                             <div class="Comment-content">
-                                <th:block th:if="${review.text.length() >= 400}">
-                                    <div class="Spoiler">
-                                        <div class="Spoiler-visible">
-                                            <p th:text="${review.text.substring(0, 400)}"></p>
-                                        </div>
-                                        <div class="Spoiler-hide">
-                                            <p th:text="${review.text.substring(400)}"></p>
-                                        </div>
-                                        <div class="Comment-footer">
-                                            <div class="Comment-appeal">
-                                                <button class="btn btn_white btn_like"
-                                                        data-btnradio="one1"
-                                                        data-btntype="check"
-                                                        data-check="false"
-                                                        data-likeid="333"
-                                                        th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getLikesCount()}">500</span>
-                                                </button>
-                                                <button class="btn btn_white btn_dislike"
-                                                        data-btnradio="one1"
-                                                        data-btntype="check"
-                                                        data-check="false"
-                                                        data-likeid="333"
-                                                        th:attr="data-likeid=${review.id}">
-                                                    <span class="btn-icon">
-                                                        <img alt="dislike.svg"
-                                                             src="/assets/img/icons/comment/dislike.svg"/>
-                                                    </span>
-                                                    <span class="btn-content"
-                                                          th:text="${review.getDislikesCount()}">50</span>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <div class="form-group">
+                                        <textarea class="form-textarea" th:id="${'reviewText-' + review.id}"
+                                                  th:text="${review.text}"></textarea>
+                                    </div>
+                                    <button class="btn btn_primary form-btn" id="updateReview"
+                                            th:attr="data-id=${review.id}" th:text="#{book.updateReview}">Update review
+                                    </button>
+                                    <button class="btn btn_primary form-btn" id="deleteReview"
+                                            th:attr="data-id=${review.id}" th:text="#{book.deleteReview}">Delete review
+                                    </button>
+                                </th:block>
+                                <th:block th:unless="${curUsr != null && curUsr.isAdmin()}">
+                                    <th:block th:if="${review.text.length() >= 400}">
+                                        <div class="Spoiler">
+                                            <div class="Spoiler-visible">
+                                                <p th:text="${review.text.substring(0, 400)}"></p>
+                                            </div>
+                                            <div class="Spoiler-hide">
+                                                <p th:text="${review.text.substring(400)}"></p>
+                                            </div>
+                                            <div class="Comment-footer">
+                                                <div class="Comment-appeal">
+                                                    <button class="btn btn_white btn_like"
+                                                            data-btnradio="one1"
+                                                            data-btntype="check"
+                                                            data-check="false"
+                                                            data-likeid="333"
+                                                            th:attr="data-likeid=${review.id}">
+                                                        <span class="btn-icon">
+                                                            <img alt="like.svg"
+                                                                 src="/assets/img/icons/comment/like.svg"/>
+                                                        </span>
+                                                        <span class="btn-content"
+                                                              th:text="${review.getLikesCount()}">500</span>
+                                                    </button>
+                                                    <button class="btn btn_white btn_dislike"
+                                                            data-btnradio="one1"
+                                                            data-btntype="check"
+                                                            data-check="false"
+                                                            data-likeid="333"
+                                                            th:attr="data-likeid=${review.id}">
+                                                        <span class="btn-icon">
+                                                            <img alt="dislike.svg"
+                                                                 src="/assets/img/icons/comment/dislike.svg"/>
+                                                        </span>
+                                                        <span class="btn-content"
+                                                              th:text="${review.getDislikesCount()}">50</span>
+                                                    </button>
+                                                </div>
+                                                <button class="Spoiler-trigger btn btn_primary btn_nr"
+                                                        data-hidetext="Показать отзыв полностью"
+                                                        data-showtext="Свернуть отзыв"
+                                                        th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
+                                                        type="button">
                                                 </button>
                                             </div>
-                                            <button class="Spoiler-trigger btn btn_primary btn_nr"
-                                                    data-hidetext="Показать отзыв полностью"
-                                                    data-showtext="Свернуть отзыв"
-                                                    th:attr="data-showtext=#{book.hideReview},data-hidetext=#{book.showReview}"
-                                                    type="button">
+                                        </div>
+                                    </th:block>
+                                    <p th:text="${review.text}" th:unless="${review.text.length() >= 400}"></p>
+                                    <div class="Comment-footer" th:unless="${review.text.length() >= 400}">
+                                        <div class="Comment-appeal">
+                                            <button class="btn btn_white btn_like"
+                                                    data-btnradio="two2"
+                                                    data-btntype="check"
+                                                    data-check="false"
+                                                    data-likeid="1111"
+                                                    th:attr="data-likeid=${review.id}">
+                                                <span class="btn-icon">
+                                                    <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
+                                                </span>
+                                                <span class="btn-content" th:text="${review.getLikesCount()}">200</span>
+                                            </button>
+                                            <button class="btn btn_white btn_dislike"
+                                                    data-btnradio="two2"
+                                                    data-btntype="check"
+                                                    data-check="false"
+                                                    data-likeid="1111"
+                                                    th:attr="data-likeid=${review.id}">
+                                                <span class="btn-icon">
+                                                    <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
+                                                </span>
+                                                <span class="btn-content"
+                                                      th:text="${review.getDislikesCount()}">100</span>
                                             </button>
                                         </div>
                                     </div>
                                 </th:block>
-                                <p th:text="${review.text}" th:unless="${review.text.length() >= 400}"></p>
-                                <div class="Comment-footer" th:unless="${review.text.length() >= 400}">
-                                    <div class="Comment-appeal">
-                                        <button class="btn btn_white btn_like"
-                                                data-btnradio="two2"
-                                                data-btntype="check"
-                                                data-check="false"
-                                                data-likeid="1111"
-                                                th:attr="data-likeid=${review.id}">
-                                            <span class="btn-icon">
-                                                <img alt="like.svg" src="/assets/img/icons/comment/like.svg"/>
-                                            </span>
-                                            <span class="btn-content" th:text="${review.getLikesCount()}">200</span>
-                                        </button>
-                                        <button class="btn btn_white btn_dislike"
-                                                data-btnradio="two2"
-                                                data-btntype="check"
-                                                data-check="false"
-                                                data-likeid="1111"
-                                                th:attr="data-likeid=${review.id}">
-                                            <span class="btn-icon">
-                                                <img alt="dislike.svg" src="/assets/img/icons/comment/dislike.svg"/>
-                                            </span>
-                                            <span class="btn-content" th:text="${review.getDislikesCount()}">100</span>
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

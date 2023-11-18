@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{viewed.name}">Тут название страницы написать</title>
     <meta name="description" content="Описание страницы">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -45,16 +45,16 @@ p.error-browser
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
-                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
-                <li class="breadcrumbs-item"><a href="/genres/index.html" th:href="@{/genres} "th:text="#{main.books}">Книги</a>
+                <li class="breadcrumbs-item"><a href="/genres/index.html" th:href="@{/genres} "th:text="#{header.books}">Книги</a>
                 </li>
-                <li class="breadcrumbs-item breadcrumbs-item_current"><span>Просмотренные</span>
+                <li class="breadcrumbs-item breadcrumbs-item_current" th:text="#{header.viewed}"><span>Просмотренные</span>
                 </li>
             </ul>
             <div class="Section">
                 <div class="Section-header">
-                    <h1 class="Section-title">Просмотренные
+                    <h1 class="Section-title" th:text="#{header.viewed}">Просмотренные
                     </h1>
                 </div>
                 <div th:replace="~{fragments/books_pool_fragment :: pool}"></div>

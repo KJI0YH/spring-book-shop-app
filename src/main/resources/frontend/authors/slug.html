@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${author}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -47,19 +47,19 @@ p.error-browser
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
-                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                <li class="breadcrumbs-item"><a href="/index.html" th:href="@{/}" th:text="#{header.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item"><a href="/authors/index.html" th:href="@{/authors}"
-                                                th:text="#{topbar.authors}">Авторы</a>
+                                                th:text="#{header.authors}">Авторы</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current"><span
-                        th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный</span>
+                        th:text="${author}">Борис Васильевич Бедный</span>
                 </li>
             </ul>
             <form class="form Login Login_registration" id="authorForm" onsubmit="return false;"
                   th:if="${curUsr != null && curUsr.getRoles.contains('ADMIN')}">
                 <div class="form-group">
-                    <label class="form-label Login-title">Изменить автора
+                    <label class="form-label Login-title" th:text="#{author.update}">Изменить автора
                     </label>
                 </div>
 
@@ -67,23 +67,26 @@ p.error-browser
                     <div class="row-block">
                         <input id="authorFirstName" name="firstName" placeholder="First Name" required
                                th:value="${author.firstName}"
+                               th:placeholder="#{author.firstName}"
                                type="text">
                     </div>
                     <div class="row-block">
                         <input id="authorLastName" name="lastName" placeholder="Last Name" required
                                th:value="${author.lastName}"
+                               th:placeholder="#{author.lastName}"
                                type="text">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <input id="authorSlug" name="slug" placeholder="Slug" required th:value="${author.slug}"
+                    <input id="authorSlug" name="slug" th:placeholder="#{author.slug}" placeholder="Slug" required th:value="${author.slug}"
                            type="text">
                 </div>
 
                 <div class="form-group">
                     <textarea class="form-textarea" id="authorDescription" name="description"
                               placeholder="Description"
+                              th:placeholder="#{author.description}"
                               th:text="${author.description}"></textarea>
                 </div>
 
@@ -94,15 +97,15 @@ p.error-browser
                 <div class="form-group form-group_center">
                     <button class="btn btn_primary form-btn" id="updateAuthor" name="updateAuthor"
                             th:attr="data-id=${author.id}"
-                            type="button">Update author
+                            type="button" th:text="#{author.update}">Update author
                     </button>
                     <button class="btn btn_primary form-btn" id="deleteAuthor" name="deleteAuthor"
                             th:attr="data-id=${author.id}"
-                            type="button">Delete author
+                            type="button" th:text="#{author.delete}">Delete author
                     </button>
                 </div>
             </form>
-            <h1 class="Middle-title" th:text="${author.firstName + ' ' + author.lastName}">Борис Васильевич Бедный
+            <h1 class="Middle-title" th:text="${author}">Борис Васильевич Бедный
             </h1>
             <article class="Article">
                 <div class="Spoiler">

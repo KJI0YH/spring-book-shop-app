@@ -11,7 +11,7 @@
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{cms.name}">Тут название страницы написать</title>
     <meta content="Описание страницы" name="description">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -53,38 +53,38 @@ p.error-browser
         <main class="Middle-main">
             <form class="form Login Login_registration" id="bookForm" onsubmit="return false;">
                 <div class="form-group">
-                    <label class="form-label Login-title">Добавить книгу
+                    <label class="form-label Login-title" th:text="#{cms.addBook}">Добавить книгу
                     </label>
                 </div>
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookTitle" name="title" placeholder="Title" required type="text">
+                        <input id="bookTitle" name="title" th:placeholder="#{book.title}" placeholder="Title" required type="text">
                     </div>
 
                     <div class="row-block">
-                        <input id="bookSlug" name="slug" placeholder="Slug" required type="text">
+                        <input id="bookSlug" name="slug" th:placeholder="#{book.slug}" placeholder="Slug" required type="text">
                     </div>
                 </div>
 
                 <div class="form-group form-group_row">
                     <div class="row-block">
-                        <input id="bookPrice" min="1" name="price" placeholder="Price" required step="0.01"
+                        <input id="bookPrice" min="1" name="price" th:placeholder="#{book.price}" placeholder="Price" required step="0.01"
                                type="number">
                     </div>
                     <div class="row-block">
-                        <input id="bookDiscount" max="99" min="0" name="discount" placeholder="Discount" required
+                        <input id="bookDiscount" max="99" min="0" th:placeholder="#{book.discount}" name="discount" placeholder="Discount" required
                                type="number">
                     </div>
                 </div>
                 
                 <div class="form-group form-group_row">
                     <div class="form-group row-block">
-                        <label for="bookBestseller">Бестселлер</label>
+                        <label for="bookBestseller" th:text="#{book.bestseller}">Бестселлер</label>
                         <input id="bookBestseller" name="bestseller" type="checkbox">
                     </div>
     
                     <div class="form-group row-block">
-                        <label class="form-label" for="bookPubDate">Дата публикации</label>
+                        <label class="form-label" for="bookPubDate" th:text="#{book.pubDate}">Дата публикации</label>
                         <input id="bookPubDate" name="pubDate" type="date"/>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ p.error-browser
 
                 <div class="form-group form-group_row">
                     <select id="bookAuthors" multiple multiselect-hide-x="true" multiselect-search="true" name="authors"
-                            th:placeholder="Authors">
+                            th:placeholder="#{book.author}">
                         <th:block th:each="author : ${authors}">
                             <option th:text="${author.toString()}" th:value="${author.id}"></option>
                         </th:block>
@@ -101,7 +101,7 @@ p.error-browser
 
                 <div class="form-group form-group_row">
                     <select id="bookGenres" multiple multiselect-hide-x="true" multiselect-search="true" name="genres"
-                            th:placeholder="Genres">
+                            th:placeholder="#{book.genres}">
                         <th:block th:each="genre : ${genres}">
                             <option th:text="${genre.name}" th:value="${genre.id}"></option>
                         </th:block>
@@ -110,7 +110,7 @@ p.error-browser
 
                 <div class="form-group form-group_row">
                     <select id="bookTags" multiple multiselect-hide-x="true" multiselect-search="true" name="tags"
-                            th:placeholder="Tags">
+                            th:placeholder="#{book.tags}">
                         <th:block th:each="tag : ${tags}">
                             <option th:text="${tag.name}" th:value="${tag.id}"></option>
                         </th:block>
@@ -118,7 +118,7 @@ p.error-browser
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-textarea" id="bookDescription" name="description"
+                    <textarea class="form-textarea" id="bookDescription" name="description" th:placeholder="#{book.description}"
                               placeholder="Description"></textarea>
                 </div>
 
@@ -127,30 +127,30 @@ p.error-browser
                 </div>
 
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addBook" name="addBook" type="button">Add book</button>
+                    <button class="btn btn_primary form-btn" id="addBook" name="addBook" type="button" th:text="#{cms.addBook}">Add book</button>
                 </div>
             </form>
             <form class="form Login Login_registration" id="authorForm" onsubmit="return false;">
                 <div class="form-group">
-                    <label class="form-label Login-title">Добавить автора
+                    <label class="form-label Login-title" th:text="#{cms.addAuthor}">Добавить автора
                     </label>
                 </div>
 
                 <div class="form-group_row">
                     <div class="row-block">
-                        <input id="authorFirstName" name="firstName" placeholder="First Name" required type="text">
+                        <input id="authorFirstName" name="firstName" th:placeholder="#{author.firstName}" placeholder="First Name" required type="text">
                     </div>
                     <div class="row-block">
-                        <input id="authorLastName" name="lastName" placeholder="Last Name" required type="text">
+                        <input id="authorLastName" name="lastName" th:placeholder="#{author.lastName}" placeholder="Last Name" required type="text">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <input id="authorSlug" name="slug" placeholder="Slug" required type="text">
+                    <input id="authorSlug" name="slug" placeholder="Slug" th:placeholder="#{author.slug}" required type="text">
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-textarea" id="authorDescription" name="description"
+                    <textarea class="form-textarea" id="authorDescription" name="description" th:placeholder="#{author.description}"
                               placeholder="Description"></textarea>
                 </div>
 
@@ -159,22 +159,22 @@ p.error-browser
                 </div>
 
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addAuthor" name="addAuthor" type="button">Add author
+                    <button class="btn btn_primary form-btn" id="addAuthor" name="addAuthor" type="button" th:text="#{cms.addAuthor}">Add author
                     </button>
                 </div>
             </form>
             <form class="form Login Login_registration" id="genreForm" onsubmit="return false;">
                 <div class="form-group">
-                    <label class="form-label Login-title">Добавить жанр
+                    <label class="form-label Login-title" th:text="#{cms.addGenre}">Добавить жанр
                     </label>
                 </div>
                 <div class="form-group form-group_row">
                     <div class="row">
                         <div class="row-block">
-                            <input id="genreName" name="name" placeholder="Name" required type="text">
+                            <input id="genreName" name="name" placeholder="Name"th:placeholder="#{genre.name}" required type="text">
                         </div>
                         <div class="row-block">
-                            <input id="genreSlug" name="slug" placeholder="Slug" required type="text">
+                            <input id="genreSlug" name="slug" placeholder="Slug" th:placeholder="#{genre.slug}" required type="text">
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ p.error-browser
                 <div class="form-group">
                     <div class="form-group">
                         <select id="genreParent" multiselect-search="true" name="genreParent" th:placeholder="Parent">
-                            <option value="-1">Select parent genre</option>
+                            <option value="-1" th:placeholder="#{genre.parent}">Select parent genre</option>
                             <th:block th:each="genre : ${genres}">
                                 <option th:text="${genre.name}" th:value="${genre.id}"></option>
                             </th:block>
@@ -195,22 +195,22 @@ p.error-browser
                 </div>
 
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addGenre" name="addGenre" type="button">Add genre
+                    <button class="btn btn_primary form-btn" id="addGenre" name="addGenre" type="button" th:text="#{cms.addGenre}">Add genre
                     </button>
                 </div>
             </form>
             <form class="form Login Login_registration" id="tagForm" onsubmit="return false;">
                 <div class="form-group">
-                    <label class="form-label Login-title">Добавить тэг
+                    <label class="form-label Login-title" th:text="#{cms.addTag}">Добавить тэг
                     </label>
                 </div>
                 <div class="form-group form-group_row">
                     <div class="row">
                         <div class="row-block">
-                            <input id="tagName" name="name" placeholder="Name" required type="text">
+                            <input id="tagName" name="name" placeholder="Name" th:placeholder="#{tag.name}" required type="text">
                         </div>
                         <div class="row-block">
-                            <input id="tagSlug" name="slug" placeholder="Slug" required type="text">
+                            <input id="tagSlug" name="slug" placeholder="Slug" th:placeholder="#{tag.slug}" required type="text">
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@ p.error-browser
                 </div>
 
                 <div class="form-group form-group_center">
-                    <button class="btn btn_primary form-btn" id="addTag" name="addTag" type="button">Add tag</button>
+                    <button class="btn btn_primary form-btn" id="addTag" name="addTag" type="button" th:text="#{cms.addTag}">Add tag</button>
                 </div>
             </form>
         </main>

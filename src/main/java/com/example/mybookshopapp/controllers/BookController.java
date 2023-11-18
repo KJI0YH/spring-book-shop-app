@@ -49,15 +49,17 @@ public class BookController extends AbstractHeaderFooterController {
             // Authorized user
             if (user != null) {
                 bookService.setViewedBook(user.getId(), book.getId());
-                if (bookService.isBookPaid(book.getId(), user.getId())) {
-                    return "books/slugmy";
-                }
-
+                
                 if (user.isAdmin()) {
                     model.addAttribute("tags", tagService.getAllTags());
                     model.addAttribute("genres", genreService.getAllGenres());
                     model.addAttribute("authors", authorService.getAllAuthors());
                 }
+                
+                if (bookService.isUserBook(book.getId(), user.getId())) {
+                    return "books/slugmy";
+                }
+
             }
 
             // Unauthorized user
