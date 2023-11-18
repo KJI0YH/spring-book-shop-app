@@ -149,9 +149,10 @@ p.error-browser
                                     <div>
                                         <a href="#" th:href="${'/authors/' + b2a.author.slug}"
                                            th:text="${b2a.author.toString()}">Борис Васильевич Бедный</a>
-                                        <input min="0" placeholder="Sort index" th:placeholder="#{book.sortIndex}" step="1"
+                                        <input min="0" placeholder="Sort index" step="1"
                                                th:id="${'sortIndex-' + b2a.author.id}"
                                                th:if="${curUsr != null && curUsr.isAdmin()}"
+                                               th:placeholder="#{book.sortIndex}"
                                                th:value="${b2a.sortIndex}"
                                                type="number">
                                         <br>
@@ -182,7 +183,9 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}" th:text="#{book.addAuthor}">Add authors</button>
+                                    <button id="addBook2Author" th:attr="data-bookId=${book.id}"
+                                            th:text="#{book.addAuthor}">Add authors
+                                    </button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-rating">
@@ -266,7 +269,9 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}" th:text="#{book.addGenre}">Add genres</button>
+                                    <button id="addBook2Genre" th:attr="data-bookId=${book.id}"
+                                            th:text="#{book.addGenre}">Add genres
+                                    </button>
                                 </th:block>
                             </div>
                             <div class="ProductCard-tags">
@@ -293,9 +298,29 @@ p.error-browser
                                         </th:block>
                                     </select>
                                     <br>
-                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}" th:text="#{book.addTag}">Add tags</button>
+                                    <button id="addBook2Tag" th:attr="data-bookId=${book.id}" th:text="#{book.addTag}">
+                                        Add tags
+                                    </button>
                                 </th:block>
                             </div>
+                            <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                <th:block th:each="file : ${files}">
+                                    <label th:text="${file.path}"></label>
+                                    <button
+                                            id="deleteBookFile"
+                                            th:attr="data-fileHash=${file.hash},data-bookSlug=${book.slug}"
+                                    >x
+                                    </button>
+                                    <br>
+                                </th:block>
+                                <br>
+                                <form enctype="multipart/form-data" method="POST"
+                                      th:action="${'/books/' + book.slug + '/upload'}">
+                                    <input accept="*.pdf,*.epub,*.fb2" id="bookFile" name="file" size="5000000"
+                                           type="file"/>
+                                    <button id="addBookFile" th:text="#{book.addFile}" type="submit">Add file</button>
+                                </form>
+                            </th:block>
                             <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
                                 <span class="ProductCard-priceOld" th:if="${book.discount != 0}"
                                       th:text="${'₽' + book.price / 100 + '.' + book.price % 100}">₽300</span>
@@ -335,7 +360,7 @@ p.error-browser
                                         data-btntype="check"
                                         data-check="false"
                                         data-sendstatus="KEPT"
-                                        th:attr="data-bookid=${'[' + book.id + ']'}">
+                                        th:attr="data-bookid=${'[' + book.id + ']'},data-alttext=#{book.inPostponed}">
                     <span class="btn-icon">
                       <img alt="heart.svg" src="/assets/img/icons/heart.svg"/>
                     </span><span class="btn-content" th:text="#{book.postpone}">Отложить</span>
@@ -348,7 +373,7 @@ p.error-browser
                                         data-btntype="check"
                                         data-check="false"
                                         data-sendstatus="CART"
-                                        th:attr="data-bookid=${'[' + book.id + ']'}">
+                                        th:attr="data-bookid=${'[' + book.id + ']'},data-alttext=#{book.inCart}">
                     <span class="btn-icon">
                       <img alt="shopping-basket.svg" src="/assets/img/icons/shopping-basket.svg"/>
                     </span>

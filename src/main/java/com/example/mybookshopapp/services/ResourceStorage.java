@@ -1,13 +1,12 @@
 package com.example.mybookshopapp.services;
 
-import com.example.mybookshopapp.data.BookFileEntity;
-import com.example.mybookshopapp.data.FileDownloadEntity;
-import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.data.*;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.FileDownloadException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
 import com.example.mybookshopapp.errors.UserUnauthorizedException;
 import com.example.mybookshopapp.repositories.BookFileRepository;
+import com.example.mybookshopapp.repositories.BookFileTypeRepository;
 import com.example.mybookshopapp.repositories.FileDownloadRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -20,9 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -30,6 +33,7 @@ public class ResourceStorage {
 
     private final BookFileRepository bookFileRepository;
     private final FileDownloadRepository fileDownloadRepository;
+    private final BookFileTypeRepository bookFileTypeRepository;
     private final UserService userService;
     private final BookService bookService;
     @Value("${upload.book-covers}")
@@ -54,8 +58,8 @@ public class ResourceStorage {
         }
         return resourceURI;
     }
-    
-    public String saveNewAuthorImage(MultipartFile file, String authorSlug) throws IOException{
+
+    public String saveNewAuthorImage(MultipartFile file, String authorSlug) throws IOException {
         String resourceURI = null;
 
         if (!file.isEmpty()) {
@@ -69,6 +73,61 @@ public class ResourceStorage {
             file.transferTo(path);
         }
         return resourceURI;
+    }
+
+    public void saveNewBookFile(MultipartFile file, String bookSlug) throws IOException, ApiWrongParameterException {
+        BookEntity book = bookService.getBookBySlug(bookSlug);
+        if (book == null)
+            throw new ApiWrongParameterException("Book with slug + " + bookSlug + " does not exists");
+
+        if (!file.isEmpty()) {
+            if (!new File(downloadBookFilesPath).exists()) {
+                Files.createDirectories(Paths.get(downloadBookFilesPath));
+            }
+
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            BookFileType fileType = bookFileTypeRepository.findBookFileTypeByNameIgnoreCase(extension);
+
+            if (fileType == null)
+                throw new ApiWrongParameterException("Extension " + extension + " does not exists");
+
+            String fileName = book.getSlug() + "." + extension;
+            Path path = Paths.get(downloadBookFilesPath, fileName);
+            file.transferTo(path);
+
+            BookFileEntity bookFile = new BookFileEntity();
+            bookFile.setBook(book);
+            bookFile.setPath(fileName);
+            bookFile.setTypeId(fileType.getId());
+            bookFile.setHash(generateHash(bookFile));
+            bookFileRepository.save(bookFile);
+        }
+    }
+
+    private String generateHash(BookFileEntity bookFile) {
+        String input = bookFile.getBook().getId() + ":" + bookFile.getPath() + ":" + bookFile.getBookFileExtensionString();
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            byte[] inputBytes = input.getBytes(StandardCharsets.UTF_8);
+            messageDigest.update(inputBytes);
+            byte[] digest = messageDigest.digest();
+            StringBuilder builder = new StringBuilder();
+            for (byte b : digest) {
+                builder.append(String.format("%02x", b));
+            }
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return bookFile.getPath();
+        }
+    }
+
+    public void deleteBookFile(String bookFileHash) throws ApiWrongParameterException, IOException {
+        BookFileEntity bookFile = bookFileRepository.findBookFileEntitiesByHash(bookFileHash);
+        if (bookFile == null)
+            throw new ApiWrongParameterException("Book file with hash " + bookFileHash + " does not exists");
+        Path filePath = Paths.get(downloadBookFilesPath, bookFile.getPath());
+        Files.delete(filePath);
+        bookFileRepository.delete(bookFile);
     }
 
     public Path getBookFilePath(String hash) throws ApiWrongParameterException {
@@ -124,5 +183,10 @@ public class ResourceStorage {
             fileDownloadStat.setCount(1);
         }
         fileDownloadRepository.save(fileDownloadStat);
+    }
+
+
+    public List<BookFileEntity> getAllBookFiles(Integer bookId) {
+        return bookFileRepository.findBookFileEntitiesByBookId(bookId); 
     }
 }

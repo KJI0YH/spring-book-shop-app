@@ -16,6 +16,10 @@ download:
   book-files: D:/Personal projects/JavaSpring/downloads/book-files
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
   datasource:
     url: jdbc:postgresql://127.0.0.1:54320/book_store
     username: postgres

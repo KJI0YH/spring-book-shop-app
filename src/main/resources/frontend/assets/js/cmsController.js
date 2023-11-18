@@ -597,3 +597,20 @@ if (document.getElementById("deleteReview")) {
         });
     });
 }
+
+if (document.getElementById("deleteBookFile")) {
+    let deleteButtons = document.querySelectorAll('#deleteBookFile');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const fileHash = button.getAttribute('data-fileHash');
+            const bookSlug = button.getAttribute('data-bookSlug');
+            axios.delete("/books/" + bookSlug + "/file/" + fileHash)
+                .then(function (response) {
+                    window.location.reload();
+                })
+                .catch(function (error) {
+                    window.location.reload();
+                })
+        });
+    })
+}

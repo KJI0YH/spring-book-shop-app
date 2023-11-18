@@ -49,13 +49,14 @@ public class BookController extends AbstractHeaderFooterController {
             // Authorized user
             if (user != null) {
                 bookService.setViewedBook(user.getId(), book.getId());
-                
+
                 if (user.isAdmin()) {
                     model.addAttribute("tags", tagService.getAllTags());
                     model.addAttribute("genres", genreService.getAllGenres());
                     model.addAttribute("authors", authorService.getAllAuthors());
+                    model.addAttribute("files", storage.getAllBookFiles(book.getId()));
                 }
-                
+
                 if (bookService.isUserBook(book.getId(), user.getId())) {
                     return "books/slugmy";
                 }
@@ -76,12 +77,28 @@ public class BookController extends AbstractHeaderFooterController {
 
         String filePath = storage.saveNewBookImage(file, bookSlug);
         bookService.updateImage(bookSlug, filePath);
+        return ("redirect:/books/" + bookSlug);
+    }
 
+    @PostMapping("/{bookSlug}/upload")
+    public String uploadBookFile(@PathVariable("bookSlug") String bookSlug,
+                                 @RequestParam("file") MultipartFile file) throws ApiWrongParameterException, IOException {
+        storage.saveNewBookFile(file, bookSlug);
+        return ("redirect:/books/" + bookSlug);
+    }
+
+    @DeleteMapping("/{bookSlug}/file/{bookFileHash}")
+    public String deleteBookFile(@PathVariable("bookSlug") String bookSlug,
+                                 @PathVariable("bookFileHash") String bookFileHash) throws ApiWrongParameterException, IOException {
+        storage.deleteBookFile(bookFileHash);
         return ("redirect:/books/" + bookSlug);
     }
 
     @GetMapping("/download/{bookFileHash}")
     public ResponseEntity<ByteArrayResource> handleDownloadBookFile(@PathVariable("bookFileHash") String hash) throws PaymentRequiredException, UserUnauthorizedException, ApiWrongParameterException, FileDownloadException {
+        UserEntity user = userService.getCurrentUser();
+        if (user == null)
+            throw new UserUnauthorizedException("Only authorized users can download books");
         Path path = storage.getBookFilePath(hash);
         MediaType mediaType = storage.getBookFileMime(hash);
         byte[] data = storage.getBookFileByteArray(hash);

@@ -289,6 +289,24 @@ p.error-browser
                                     <br>
                                     <button id="addBook2Tag" th:attr="data-bookId=${book.id}" th:text="#{book.addTag}">Add tags</button>
                                 </th:block>
+                                <th:block th:if="${curUsr != null && curUsr.isAdmin()}">
+                                    <th:block th:each="file : ${files}">
+                                        <label th:text="${file.path}"></label>
+                                        <button
+                                                id="deleteBookFile"
+                                                th:attr="data-fileHash=${file.hash},data-bookSlug=${book.slug}"
+                                        >x
+                                        </button>
+                                        <br>
+                                    </th:block>
+                                    <br>
+                                    <form enctype="multipart/form-data" method="POST"
+                                          th:action="${'/books/' + book.slug + '/upload'}">
+                                        <input accept="*.pdf,*.epub,*.fb2" id="bookFile" name="file" size="5000000"
+                                               type="file"/>
+                                        <button id="addBookFile" th:text="#{book.addFile}" type="submit">Add file</button>
+                                    </form>
+                                </th:block>
                             </div>
                             <div class="ProductCard-cost">
                                 <span class="ProductCard-titleProp" th:text="#{book.price}">Цена:</span>
@@ -371,7 +389,7 @@ p.error-browser
                             <p th:text="#{book.downloadLinks}">Ссылки для скачивания</p>
                             <div th:each="bookFile : ${book.bookFileList}">
                                 <a href="#" th:href="${'/books/download/' + bookFile.hash}"
-                                   th:text="${bookFile.getBookFileExtensionString()}"></a>
+                                   th:text="${bookFile.path}"></a>
                             </div>
                             <span class="close" id="myPopup__close">x</span>
                         </div>
