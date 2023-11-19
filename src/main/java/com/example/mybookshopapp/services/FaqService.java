@@ -13,7 +13,7 @@ import java.util.List;
 public class FaqService {
     private final FaqRepository faqRepository;
 
-    public List<FaqEntity> getFaqs(){
+    public List<FaqEntity> getFaqs() {
         return faqRepository.findAllByOrderBySortIndex();
     }
 }

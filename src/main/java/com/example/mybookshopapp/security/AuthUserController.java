@@ -1,12 +1,14 @@
 package com.example.mybookshopapp.security;
 
 import com.example.mybookshopapp.controllers.AbstractHeaderFooterController;
-import com.example.mybookshopapp.data.ContactChangeConfirmationEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.*;
 import com.example.mybookshopapp.errors.*;
 import com.example.mybookshopapp.security.jwt.JWTUtil;
-import com.example.mybookshopapp.services.*;
+import com.example.mybookshopapp.services.BookService;
+import com.example.mybookshopapp.services.CookieService;
+import com.example.mybookshopapp.services.TransactionService;
+import com.example.mybookshopapp.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +34,8 @@ public class AuthUserController extends AbstractHeaderFooterController {
     private final JWTUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
     private final CookieService cookieService;
+    
+    private static final String PROFILE_MESSAGE_KEY = "profileMessage";
 
     @GetMapping("/signin")
     public String handleSignin() {
@@ -85,19 +89,19 @@ public class AuthUserController extends AbstractHeaderFooterController {
 
     @GetMapping("/my")
     public String handleMy(Model model) throws UserUnauthorizedException {
-        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus( "PAID", 0, 20));
+        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus("PAID", 0, 20));
         return "my";
     }
 
     @GetMapping("/my/archive")
     public String handleMyArchive(Model model) throws UserUnauthorizedException {
-        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus( "ARCHIVED", 0, 20));
+        model.addAttribute("booksList", bookService.getPageOfBooksByUserStatus("ARCHIVED", 0, 20));
         return "myarchive";
     }
 
     @GetMapping("/profile")
     public String handleProfile(Model model) throws UserUnauthorizedException {
-        model.addAttribute("transactions", transactionService.getTransactionByUser( 0, 50, "desc"));
+        model.addAttribute("transactions", transactionService.getTransactionByUser(0, 50, "desc"));
         return "profile";
     }
 
@@ -129,7 +133,7 @@ public class AuthUserController extends AbstractHeaderFooterController {
             }
         }
 
-        redirectAttributes.addFlashAttribute("profileMessage", messages);
+        redirectAttributes.addFlashAttribute(PROFILE_MESSAGE_KEY, messages);
 
         return "redirect:/profile";
     }
@@ -147,12 +151,12 @@ public class AuthUserController extends AbstractHeaderFooterController {
                                                   HttpServletResponse httpServletResponse) {
         try {
             UserEntity newUser = userProfileService.confirmEmailChange(key);
-            redirectAttributes.addFlashAttribute("profileMessage", "Email changed successfully");
+            redirectAttributes.addFlashAttribute(PROFILE_MESSAGE_KEY, "Email changed successfully");
 
             // Update jwt token
             httpServletResponse.addCookie(cookieService.getJwtTokenCookie(newUser));
         } catch (ContactConfirmationException | UserAlreadyExistException e) {
-            redirectAttributes.addFlashAttribute("profileMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute(PROFILE_MESSAGE_KEY, e.getMessage());
         }
         return "redirect:/profile";
     }
@@ -170,12 +174,12 @@ public class AuthUserController extends AbstractHeaderFooterController {
                                                   HttpServletResponse httpServletResponse) {
         try {
             UserEntity newUser = userProfileService.confirmPhoneChange(key);
-            redirectAttributes.addFlashAttribute("profileMessage", "Phone changed successfully");
+            redirectAttributes.addFlashAttribute(PROFILE_MESSAGE_KEY, "Phone changed successfully");
 
             // Update jwt token
             httpServletResponse.addCookie(cookieService.getJwtTokenCookie(newUser));
         } catch (ContactConfirmationException | UserAlreadyExistException e) {
-            redirectAttributes.addFlashAttribute("profileMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute(PROFILE_MESSAGE_KEY, e.getMessage());
         }
         return "redirect:/profile";
     }

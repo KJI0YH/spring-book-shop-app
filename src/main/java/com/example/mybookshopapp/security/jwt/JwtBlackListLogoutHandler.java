@@ -25,7 +25,7 @@ public class JwtBlackListLogoutHandler implements LogoutHandler {
                     token = cookie.getValue();
                     JWTEntity jwtEntity = new JWTEntity();
                     jwtEntity.setToken(token);
-                    jwtBlackListService.AddJwtToBlackList(jwtEntity);
+                    jwtBlackListService.addJwtToBlackList(jwtEntity);
                 }
             }
         }

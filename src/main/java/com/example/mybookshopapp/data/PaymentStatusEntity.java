@@ -3,8 +3,6 @@ package com.example.mybookshopapp.data;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "payment_status")
 @Data

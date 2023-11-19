@@ -2,8 +2,6 @@ package com.example.mybookshopapp.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class BookDto {
     private String pubDate;
@@ -13,7 +11,7 @@ public class BookDto {
     private String image;
     private String description;
     private Integer price;
-    private Integer discount;    
+    private Integer discount;
     private Integer[] tagIds;
     private Integer[] genreIds;
     private AuthorSortIndexDto[] authorIds;

@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 public class MyBookShopAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MyBookShopAppApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MyBookShopAppApplication.class, args);
+    }
 
 }

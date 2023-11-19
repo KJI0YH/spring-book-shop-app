@@ -92,6 +92,6 @@ public class BookRecommendedService {
         return ids.stream()
                 .map(id -> books.stream().filter(book -> Objects.equals(book.getId(), id)).findFirst().orElse(null))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

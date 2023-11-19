@@ -2,9 +2,9 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.errors.BalanceNotEnoughException;
-import com.example.mybookshopapp.services.UserService;
 import com.example.mybookshopapp.services.PaymentService;
 import com.example.mybookshopapp.services.TransactionService;
+import com.example.mybookshopapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

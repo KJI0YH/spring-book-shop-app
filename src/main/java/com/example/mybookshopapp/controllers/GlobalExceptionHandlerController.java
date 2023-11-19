@@ -2,7 +2,6 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.errors.*;
-import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -43,13 +42,13 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler(PaymentRequiredException.class)
-    public ResponseEntity<ApiResponse> handlePaymentRequiredException(Exception e){
+    public ResponseEntity<ApiResponse> handlePaymentRequiredException(Exception e) {
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED)
                 .body(new ApiResponse(false, e.getMessage()));
     }
 
     @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<ApiResponse> handleUserUnauthorizedException(Exception e){
+    public ResponseEntity<ApiResponse> handleUserUnauthorizedException(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiResponse(false, e.getMessage()));
     }

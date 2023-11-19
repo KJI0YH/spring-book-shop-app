@@ -14,7 +14,7 @@ public class ContactChangeConfirmationService {
 
     private final ContactChangeConfirmationRepository contactChangeConfirmationRepository;
 
-    public ContactChangeConfirmationEntity createConfirmation(String key, UserEntity user, String contact){
+    public ContactChangeConfirmationEntity createConfirmation(String key, UserEntity user, String contact) {
         ContactChangeConfirmationEntity confirmation = new ContactChangeConfirmationEntity();
         confirmation.setId(key);
         confirmation.setUser(user);
@@ -23,7 +23,7 @@ public class ContactChangeConfirmationService {
         return confirmation;
     }
 
-    public void confirmContactChange(ContactChangeConfirmationEntity contact){
+    public void confirmContactChange(ContactChangeConfirmationEntity contact) {
         contact.setIsConfirmed(true);
         contactChangeConfirmationRepository.save(contact);
     }
@@ -31,7 +31,7 @@ public class ContactChangeConfirmationService {
     public ContactChangeConfirmationEntity getContactConfirmationByKey(String key) throws ContactConfirmationException {
         ContactChangeConfirmationEntity contact = contactChangeConfirmationRepository.findByIdAndIsConfirmedFalse(key);
 
-        if (contact == null){
+        if (contact == null) {
             throw new ContactConfirmationException("Contact already confirmed or does not exists");
         }
 

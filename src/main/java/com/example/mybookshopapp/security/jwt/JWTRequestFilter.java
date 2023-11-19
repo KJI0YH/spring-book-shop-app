@@ -32,47 +32,44 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, BadCredentialsException {
-        String token = null;
-        String username = null;
         Cookie[] cookies = request.getCookies();
+        Cookie tokenCookie = getTokenCookie(cookies);
+        String token = tokenCookie == null ? null : tokenCookie.getValue();
 
         try {
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("token")) {
-                        token = cookie.getValue();
+            if (jwtBlackListService.isInBlackList(token))
+                throw new BadCredentialsException("Token is blacklisted");
 
-                        if (jwtBlackListService.isInBlackList(token)){
-                            throw new BadCredentialsException("Token is blacklisted");
-                        }
+            String username = token == null ? null : jwtUtil.extractUsername(token);
 
-                        username = jwtUtil.extractUsername(token);
-                    }
-
-                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-                        if (jwtUtil.validateToken(token, userDetails)) {
-                            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities());
-                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                        }
-                    }
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
+
             filterChain.doFilter(request, response);
-        } catch (BadCredentialsException | ExpiredJwtException exception){
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("token".equals(cookie.getName())) {
-                        cookie.setMaxAge(0);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                        break;
-                    }
-                }
+        } catch (BadCredentialsException | ExpiredJwtException exception) {
+            if (tokenCookie != null) {
+                tokenCookie.setMaxAge(0);
+                tokenCookie.setPath("/");
+                response.addCookie(tokenCookie);
             }
             response.sendRedirect("/signin");
         }
+    }
+
+    private Cookie getTokenCookie(Cookie[] cookies) {
+        if (cookies == null) return null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("token")) {
+                return cookie;
+            }
+        }
+        return null;
     }
 }

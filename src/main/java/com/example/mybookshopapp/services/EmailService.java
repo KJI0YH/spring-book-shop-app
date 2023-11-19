@@ -20,11 +20,11 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final EmailValidator emailValidator = EmailValidator.getInstance();
     @Value("${appEmail.email}")
-    private String SENDER_EMAIL;
+    private String senderEmail;
 
     public void sendEmailMessage(String receiveEmail, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(SENDER_EMAIL);
+        message.setFrom(senderEmail);
         message.setTo(receiveEmail);
         message.setSubject(subject);
         message.setText(text);
@@ -36,7 +36,7 @@ public class EmailService {
     }
 
     public String generateEmailConfirmationKey(String email) {
-        String input = email + ":" + LocalDateTime.now().toString();
+        String input = email + ":" + LocalDateTime.now();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             byte[] inputBytes = input.getBytes(StandardCharsets.UTF_8);

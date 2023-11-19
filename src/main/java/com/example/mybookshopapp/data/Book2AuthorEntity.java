@@ -30,14 +30,14 @@ public class Book2AuthorEntity {
     @JoinColumn(name = "author_id")
     @JsonIgnore
     private AuthorEntity author;
-    
+
     @JsonGetter("bookId")
-    public Integer bookId(){
-        return book.getId() ;
+    public Integer bookId() {
+        return book.getId();
     }
-    
+
     @JsonGetter("authorId")
-    public Integer authorId(){
-        return author.getId()   ;
+    public Integer authorId() {
+        return author.getId();
     }
 }

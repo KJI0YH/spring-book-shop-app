@@ -1,14 +1,9 @@
 package com.example.mybookshopapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,21 +16,21 @@ public class ApiResponse {
     @JsonIgnore
     private String message;
 
-    public ApiResponse(Boolean result){
+    public ApiResponse(Boolean result) {
         this.result = result;
     }
 
-    public ApiResponse(Boolean result, String message){
+    public ApiResponse(Boolean result, String message) {
         this(result);
         this.message = message;
     }
 
     @JsonAnyGetter
-    public Map<String, Object> any(){
+    public Map<String, Object> any() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("result", result);
-        String key = result ? "message" : "error";
-        if (message != null && !message.isEmpty()){
+        String key = Boolean.TRUE.equals(result) ? "message" : "error";
+        if (message != null && !message.isEmpty()) {
             properties.put(key, message);
         }
         return properties;

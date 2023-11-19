@@ -14,8 +14,8 @@ public interface GenreRepository extends JpaRepository<GenreEntity, Integer> {
 
     @Query(value = "select id from genre where lower(name) like lower(concat('%', ?1, '%'))", nativeQuery = true)
     List<Integer> findGenreEntitiesIdByNameContainingIgnoreCase(String genreName);
-    
+
     GenreEntity findGenreEntityById(Integer id);
-    
+
     List<GenreEntity> findGenreEntitiesByIdIn(Collection<Integer> id);
 }

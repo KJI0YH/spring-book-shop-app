@@ -1,6 +1,5 @@
 package com.example.mybookshopapp.security;
 
-import com.example.mybookshopapp.data.Role2UserEntity;
 import com.example.mybookshopapp.data.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,13 +11,13 @@ import java.util.List;
 
 public class EmailUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final transient UserEntity userEntity;
 
     public EmailUserDetails(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 
-    public UserEntity getUserEntity(){
+    public UserEntity getUserEntity() {
         return userEntity;
     }
 

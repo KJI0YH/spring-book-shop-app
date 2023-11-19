@@ -9,7 +9,7 @@ public class PhoneUserDetails extends EmailUserDetails {
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return getUserEntity().getPhone();
     }
 }

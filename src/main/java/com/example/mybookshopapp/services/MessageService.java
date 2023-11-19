@@ -17,7 +17,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public void saveMessage(MessageDto messageDto){
+    public void saveMessage(MessageDto messageDto) {
         MessageEntity message = new MessageEntity();
         message.setName(messageDto.getName());
         message.setEmail(messageDto.getMail());

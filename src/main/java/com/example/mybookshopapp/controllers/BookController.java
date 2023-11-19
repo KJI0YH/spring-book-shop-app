@@ -2,6 +2,7 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.data.UserEntity;
+import com.example.mybookshopapp.dto.ApiResponse;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.errors.FileDownloadException;
 import com.example.mybookshopapp.errors.PaymentRequiredException;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -72,26 +74,25 @@ public class BookController extends AbstractHeaderFooterController {
     }
 
     @PostMapping("/{bookSlug}/img/save")
-    public String saveNewBookImage(@PathVariable("bookSlug") String bookSlug,
-                                   @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<ApiResponse> saveNewBookImage(@PathVariable("bookSlug") String bookSlug,
+                                                        @RequestParam("file") MultipartFile file) throws IOException {
 
         String filePath = storage.saveNewBookImage(file, bookSlug);
         bookService.updateImage(bookSlug, filePath);
-        return ("redirect:/books/" + bookSlug);
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
     @PostMapping("/{bookSlug}/upload")
-    public String uploadBookFile(@PathVariable("bookSlug") String bookSlug,
+    public ResponseEntity<ApiResponse> uploadBookFile(@PathVariable("bookSlug") String bookSlug,
                                  @RequestParam("file") MultipartFile file) throws ApiWrongParameterException, IOException {
         storage.saveNewBookFile(file, bookSlug);
-        return ("redirect:/books/" + bookSlug);
+        return ResponseEntity.ok(new ApiResponse(true));
     }
 
-    @DeleteMapping("/{bookSlug}/file/{bookFileHash}")
-    public String deleteBookFile(@PathVariable("bookSlug") String bookSlug,
-                                 @PathVariable("bookFileHash") String bookFileHash) throws ApiWrongParameterException, IOException {
+    @DeleteMapping("/file/{bookFileHash}")
+    public ResponseEntity<ApiResponse> deleteBookFile(@PathVariable("bookFileHash") String bookFileHash) throws ApiWrongParameterException, IOException {
         storage.deleteBookFile(bookFileHash);
-        return ("redirect:/books/" + bookSlug);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/download/{bookFileHash}")

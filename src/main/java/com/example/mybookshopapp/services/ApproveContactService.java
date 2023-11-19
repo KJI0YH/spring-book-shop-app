@@ -17,6 +17,7 @@ import java.util.Random;
 public class ApproveContactService {
 
     private final ApproveContactRepository approveContactRepository;
+    private final Random random = new Random();
     @Value("#{new Integer('${contact.confirmation.max-attempts}')}")
     private Integer maxAttempts;
     @Value("#{new Integer('${contact.confirmation.expiration-seconds}')}")
@@ -30,7 +31,7 @@ public class ApproveContactService {
 
     public void createApproveContact(String contact, String code) {
         ApproveContactEntity approveContact = approveContactRepository.findApproveContactEntityByContact(contact);
-        if (approveContact == null){
+        if (approveContact == null) {
             approveContact = new ApproveContactEntity();
             approveContact.setContact(contact);
         }
@@ -116,7 +117,6 @@ public class ApproveContactService {
     }
 
     private String generateCode() {
-        Random random = new Random();
         StringBuilder builder = new StringBuilder();
         while (builder.length() < 6) {
             builder.append(random.nextInt(9));
@@ -125,6 +125,6 @@ public class ApproveContactService {
     }
 
     private String simplifyCode(String code) {
-        return code.replaceAll("\\s|-", "");
+        return code.replaceAll("[\\s-]", "");
     }
 }

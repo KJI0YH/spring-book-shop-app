@@ -27,7 +27,7 @@ class MainPageSeleniumTest {
     }
 
     @Test
-    public void PagesAccessTest() throws InterruptedException {
+    void PagesAccessTest() throws InterruptedException {
 
         // Access main page
         MainPageSelenium mainPage = new MainPageSelenium(driver);

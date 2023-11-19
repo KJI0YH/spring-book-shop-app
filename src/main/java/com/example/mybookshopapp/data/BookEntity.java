@@ -78,7 +78,7 @@ public class BookEntity {
     @ToString.Exclude
     @JsonProperty("book2genre")
     private List<Book2GenreEntity> book2GenreList;
-    
+
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     @JsonProperty("book2files")
     @ToString.Exclude
@@ -109,12 +109,12 @@ public class BookEntity {
             return "";
 
         book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
-        String authors = book2AuthorList.get(0).getAuthor().toString();
+        String authorsLine = book2AuthorList.get(0).getAuthor().toString();
         if (book2AuthorList.size() > 1) {
-            authors += " and others";
+            authorsLine += " and others";
         }
 
-        return authors;
+        return authorsLine;
     }
 
     @JsonGetter("status")

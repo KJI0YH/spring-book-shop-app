@@ -13,7 +13,7 @@ import java.util.List;
 public class DocumentService {
     private final DocumentRepository documentRepository;
 
-    public List<DocumentEntity> getDocuments(){
+    public List<DocumentEntity> getDocuments() {
         return documentRepository.findAllByOrderBySortIndex();
     }
 

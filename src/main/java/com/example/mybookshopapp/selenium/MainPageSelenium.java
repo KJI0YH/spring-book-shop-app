@@ -5,15 +5,15 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class MainPageSelenium {
 
-    private final String url = "http://localhost:8085/";
+    private static final String URL = "http://localhost:8085/";
     private final FirefoxDriver driver;
 
-    public MainPageSelenium(FirefoxDriver driver){
+    public MainPageSelenium(FirefoxDriver driver) {
         this.driver = driver;
     }
 
-    public MainPageSelenium callMainPage(){
-        driver.get(url);
+    public MainPageSelenium callMainPage() {
+        driver.get(URL);
         return this;
     }
 
@@ -22,22 +22,22 @@ public class MainPageSelenium {
         return this;
     }
 
-    public MainPageSelenium goToGenresPage(){
+    public MainPageSelenium goToGenresPage() {
         driver.findElements(By.className("menu-link")).get(1).click();
         return this;
     }
 
-    public MainPageSelenium goToNewsPage(){
+    public MainPageSelenium goToNewsPage() {
         driver.findElements(By.className("menu-link")).get(2).click();
         return this;
     }
 
-    public MainPageSelenium goToPopularPage(){
+    public MainPageSelenium goToPopularPage() {
         driver.findElements(By.className("menu-link")).get(3).click();
         return this;
     }
 
-    public MainPageSelenium goToAuthorsPage(){
+    public MainPageSelenium goToAuthorsPage() {
         driver.findElements(By.className("menu-link")).get(4).click();
         return this;
     }

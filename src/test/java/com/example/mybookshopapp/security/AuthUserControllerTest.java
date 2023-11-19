@@ -26,7 +26,7 @@ class AuthUserControllerTest extends SpringBootApplicationTest {
     private final MockMvc mockMvc;
 
     @Test
-    public void loginByEmailTest() throws Exception {
+    void loginByEmailTest() throws Exception {
         mockMvc.perform(formLogin("/signin").user("email@email.com").password("password"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -34,7 +34,7 @@ class AuthUserControllerTest extends SpringBootApplicationTest {
     }
 
     @Test
-    public void loginByPhoneTest() throws Exception {
+    void loginByPhoneTest() throws Exception {
         mockMvc.perform(formLogin("/signin").user("+375336810213").password("password"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -42,7 +42,7 @@ class AuthUserControllerTest extends SpringBootApplicationTest {
     }
 
     @Test
-    public void logoutTest() throws Exception {
+    void logoutTest() throws Exception {
         mockMvc.perform(logout("/logout"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -51,7 +51,7 @@ class AuthUserControllerTest extends SpringBootApplicationTest {
 
     @Test
 //    @Sql(scripts = "classpath:/delete-users.sql")
-    public void registerNewUserTest() throws Exception {
+    void registerNewUserTest() throws Exception {
         mockMvc.perform(post("/reg")
                         .param("name", "potato")
                         .param("phone", "+375123456789")

@@ -10,11 +10,11 @@ public class JwtBlackListService {
 
     private final JwtRepository jwtRepository;
 
-    public void AddJwtToBlackList(JWTEntity jwtEntity){
+    public void addJwtToBlackList(JWTEntity jwtEntity) {
         jwtRepository.save(jwtEntity);
     }
 
-    public boolean isInBlackList(String token){
+    public boolean isInBlackList(String token) {
         JWTEntity jwtEntity = jwtRepository.findJWTEntityByToken(token);
         return jwtEntity != null;
     }

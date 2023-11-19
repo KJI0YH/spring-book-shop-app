@@ -2,7 +2,6 @@ package com.example.mybookshopapp.controllers;
 
 import com.example.mybookshopapp.data.UserEntity;
 import com.example.mybookshopapp.dto.MessageDto;
-import com.example.mybookshopapp.repositories.UserRepository;
 import com.example.mybookshopapp.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,9 @@ public class CommonPageController extends AbstractHeaderFooterController {
     private final DocumentService documentService;
     private final FaqService faqService;
     private final CookieService cookieService;
+    
+    private static final String BOOKS_LIST_KEY = "booksList";
+    private static final String GENRES_KEY = "genres";
 
     @Value("${upload.default-book-cover}")
     private String defaultBookImage;
@@ -65,13 +67,13 @@ public class CommonPageController extends AbstractHeaderFooterController {
 
     @GetMapping("/books/recent")
     public String recentBooksPage(Model model) {
-        model.addAttribute("booksList", bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20));
+        model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfRecentBooks(LocalDate.now().minusMonths(1), LocalDate.now(), 0, 20));
         return "books/recent";
     }
 
     @GetMapping("/books/popular")
     public String popularBooksPage(Model model) {
-        model.addAttribute("booksList", bookService.getPageOfPopularBooks(0, 20));
+        model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfPopularBooks(0, 20));
         return "books/popular";
     }
 
@@ -80,9 +82,9 @@ public class CommonPageController extends AbstractHeaderFooterController {
                                   Model model) {
         UserEntity user = userService.getCurrentUser();
         if (user != null) {
-            model.addAttribute("booksList", bookService.getPageOfViewedBooks(user.getId(), 0, 20));
+            model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfViewedBooks(user.getId(), 0, 20));
         } else {
-            model.addAttribute("booksList", bookService.getBooksByIds(cookieService.getIntegerIds(viewedContents)));
+            model.addAttribute(BOOKS_LIST_KEY, bookService.getBooksByIds(cookieService.getIntegerIds(viewedContents)));
         }
         return "books/viewed";
     }
@@ -103,26 +105,26 @@ public class CommonPageController extends AbstractHeaderFooterController {
     @GetMapping("/books/author/{authorSlug}")
     public String authorBooksPage(@PathVariable("authorSlug") String authorSlug,
                                   Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByAuthorSlug(authorSlug, 0, 20));
+        model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfBooksByAuthorSlug(authorSlug, 0, 20));
         model.addAttribute("author", authorService.getAuthorBySlug(authorSlug));
         return "books/author";
     }
 
     @GetMapping("/genres")
     public String genresPage(Model model) {
-        model.addAttribute("genres", genreService.getAllRootGenres());
+        model.addAttribute(GENRES_KEY, genreService.getAllRootGenres());
         return "genres/index";
     }
 
     @GetMapping("/genres/{genreSlug}")
     public String genrePage(@PathVariable("genreSlug") String genreSlug,
                             Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20));
+        model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfBooksByGenreSlug(genreSlug, 0, 20));
         model.addAttribute("genre", genreService.getGenreBySlug(genreSlug));
         model.addAttribute("breadcrumbs", genreService.getGenresBreadcrumbs(genreSlug));
         UserEntity user = userService.getCurrentUser();
         if (user != null && user.isAdmin()) {
-            model.addAttribute("genres", genreService.getAllGenres());
+            model.addAttribute(GENRES_KEY, genreService.getAllGenres());
         }
         return "genres/slug";
     }
@@ -130,7 +132,7 @@ public class CommonPageController extends AbstractHeaderFooterController {
     @GetMapping("/tags/{tagSlug}")
     public String tagPage(@PathVariable("tagSlug") String tagSlug,
                           Model model) {
-        model.addAttribute("booksList", bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20));
+        model.addAttribute(BOOKS_LIST_KEY, bookService.getPageOfBooksByTagSlug(tagSlug, 0, 20));
         model.addAttribute("tag", tagService.getTagBySlug(tagSlug));
         return "tags/index";
     }
@@ -138,7 +140,7 @@ public class CommonPageController extends AbstractHeaderFooterController {
     @GetMapping("/cms")
     public String cmsPage(Model model) {
         model.addAttribute("tags", tagService.getAllTags());
-        model.addAttribute("genres", genreService.getAllGenres());
+        model.addAttribute(GENRES_KEY, genreService.getAllGenres());
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("defaultBookImage", defaultBookImage);
         model.addAttribute("defaultAuthorImage", defaultAuthorImage);

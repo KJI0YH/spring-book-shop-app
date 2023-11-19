@@ -1,6 +1,5 @@
 package com.example.mybookshopapp.data;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,10 +18,10 @@ public class GenreEntity {
 
     @Column(name = "parent_id", insertable = false, updatable = false)
     private Integer parentId;
-    
+
     private String slug;
     private String name;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnore

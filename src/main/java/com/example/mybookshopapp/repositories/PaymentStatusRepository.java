@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface PaymentStatusRepository extends JpaRepository<PaymentStatusEntity, String> {
     List<PaymentStatusEntity> findAllByIsProcessedIsFalseAndStatus(String status);
+
     PaymentStatusEntity findPaymentStatusEntityById(String id);
 }

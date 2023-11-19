@@ -1,7 +1,6 @@
 package com.example.mybookshopapp.services;
 
 import com.example.mybookshopapp.data.AuthorEntity;
-import com.example.mybookshopapp.data.BookEntity;
 import com.example.mybookshopapp.dto.AuthorDto;
 import com.example.mybookshopapp.errors.ApiWrongParameterException;
 import com.example.mybookshopapp.repositories.AuthorRepository;

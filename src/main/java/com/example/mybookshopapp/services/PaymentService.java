@@ -41,8 +41,7 @@ public class PaymentService {
         UserEntity user = userRepository.findByHash(userHash);
         if (user == null)
             throw new ApiWrongParameterException("User with this hash does not exists");
-
-        // TODO create idempotence key
+        
         String idempotenceKey = String.valueOf(UUID.randomUUID());
         String returnUrl = "http://localhost:8085/payment/confirm?key=" + idempotenceKey;
         String description = "Account replenishment";
@@ -85,7 +84,7 @@ public class PaymentService {
     // Executes every 60,000 milliseconds (1 minute)
     @Scheduled(fixedRate = 60000)
     @Async
-    protected void processUnchargedPayments() {
+    public void processUnchargedPayments() {
         List<PaymentStatusEntity> unchargedPayments = getUnchargedPayments();
 
         for (PaymentStatusEntity payment : unchargedPayments) {

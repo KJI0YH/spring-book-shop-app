@@ -630,8 +630,7 @@ if (document.getElementById("deleteBookFile")) {
     deleteButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             const fileHash = button.getAttribute('data-fileHash');
-            const bookSlug = button.getAttribute('data-bookSlug');
-            axios.delete("/books/" + bookSlug + "/file/" + fileHash)
+            axios.delete("/books/file/" + fileHash)
                 .then(function (response) {
                     window.location.reload();
                 })

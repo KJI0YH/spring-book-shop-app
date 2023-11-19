@@ -187,6 +187,6 @@ public class ResourceStorage {
 
 
     public List<BookFileEntity> getAllBookFiles(Integer bookId) {
-        return bookFileRepository.findBookFileEntitiesByBookId(bookId); 
+        return bookFileRepository.findBookFileEntitiesByBookId(bookId);
     }
 }

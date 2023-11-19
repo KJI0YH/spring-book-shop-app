@@ -10,7 +10,7 @@ public class TransactionPageDto {
     private Integer count;
     private List<BalanceTransactionEntity> transactions;
 
-    public TransactionPageDto(List<BalanceTransactionEntity> transactions){
+    public TransactionPageDto(List<BalanceTransactionEntity> transactions) {
         this.count = transactions.size();
         this.transactions = transactions;
     }

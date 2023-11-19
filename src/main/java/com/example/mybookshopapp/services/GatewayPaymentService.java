@@ -23,7 +23,7 @@ import java.util.Base64;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GatewayPaymentService {
 
-    private final String apiUrl = "https://api.yookassa.ru/v3/payments";
+    private static final String API_URL = "https://api.yookassa.ru/v3/payments";
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Value("${yookassa.SECRET_KEY}")
     private String secretKey;
@@ -34,13 +34,13 @@ public class GatewayPaymentService {
         HttpResponse<String> response;
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(apiUrl + "/" + paymentId))
+                    .uri(new URI(API_URL + "/" + paymentId))
                     .header("Authorization", "Basic " + getAuthString())
                     .build();
             HttpClient httpClient = HttpClient.newBuilder().build();
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new PaymentStatusException(e.getMessage());
         }
 
         if (response.statusCode() == 200) {
@@ -76,7 +76,7 @@ public class GatewayPaymentService {
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(apiUrl))
+                    .uri(new URI(API_URL))
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .header("Authorization", "Basic " + getAuthString())
                     .header("Idempotence-Key", idempotenceKey)
@@ -86,11 +86,12 @@ public class GatewayPaymentService {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 return objectMapper.readTree(response.body());
+            } else {
+                throw new PaymentInitiateException("Can not initiate a payment");
             }
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new PaymentInitiateException("Can not initiate a payment");
         }
-        throw new PaymentInitiateException("Can not initiate a payment");
     }
 
     private String getAuthString() {

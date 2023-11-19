@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface BookFileRepository extends JpaRepository<BookFileEntity, Integer> {
     BookFileEntity findBookFileEntitiesByHash(String hash);
+
     List<BookFileEntity> findBookFileEntitiesByBookId(Integer bookId);
 }

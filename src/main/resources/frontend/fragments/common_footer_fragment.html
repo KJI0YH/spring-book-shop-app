@@ -4,7 +4,7 @@
 <footer class="Footer" th:fragment="footFragment">
     <div class="wrap">
         <div class="row Footer-main">
-            <div class="row-block"><a class="logo logo_footer Footer-logo" href="/" th:href="@{/}"><img class="logo-image" src="/assets/img/logo_footer.png" alt="logo_footer.png"/><span class="logo-text">BOOKSHOP</span></a>
+            <div class="row-block"><a class="logo logo_footer Footer-logo" href="/" th:href="@{/}"><img class="logo-image" src="/assets/img/logo_footer.png" alt="logo_footer.png"/><span class="logo-text" th:text="#{header.bookshop}">BOOKSHOP</span></a>
                 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincid  unt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
                 </p>
                 <ul class="menu menu_img menu_smallImg Footer-menuSoc">
@@ -56,7 +56,7 @@
             </div>
             <div class="row-block">
                 <ul class="menu menu_vt Footer-menu">
-                    <li class="menu-item"><a class="menu-link" href="/signin.html" th:href="@{/signin}" th:text="#{footer.signIn}">Войти</a>
+                    <li class="menu-item" th:if="${curUsr == null}"><a class="menu-link" href="/signin.html" th:href="@{/signin}" th:text="#{footer.signIn}">Войти</a>
                     </li>
                     <li class="menu-item"><a class="menu-link" href="/documents/index.html" th:href="@{/documents}" th:text="#{footer.documents}">Документы</a>
                     </li>

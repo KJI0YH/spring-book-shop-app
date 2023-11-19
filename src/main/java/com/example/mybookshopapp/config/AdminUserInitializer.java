@@ -40,7 +40,7 @@ public class AdminUserInitializer implements ApplicationListener<ApplicationRead
             } catch (Exception e) {
 
                 // Error creating admin user
-                SpringApplication.exit(applicationContext, (ExitCodeGenerator) () -> 1);
+                SpringApplication.exit(applicationContext, () -> 1);
             }
         }
     }

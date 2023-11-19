@@ -17,10 +17,10 @@ import java.io.IOException;
 @RequestMapping("/author")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthorController {
-    
+
     private final ResourceStorage storage;
     private final AuthorService authorService;
-    
+
     @PostMapping("/{authorSlug}/img/save")
     public String saveNewBookImage(@PathVariable("authorSlug") String authorSlug,
                                    @RequestParam("file") MultipartFile file) throws IOException {

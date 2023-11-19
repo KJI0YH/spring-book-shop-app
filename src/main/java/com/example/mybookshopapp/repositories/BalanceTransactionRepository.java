@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BalanceTransactionRepository extends JpaRepository<BalanceTransactionEntity, Integer> {
     Page<BalanceTransactionEntity> findAllByUserOrderByTimeAsc(UserEntity user, Pageable pageable);
+
     Page<BalanceTransactionEntity> findAllByUserOrderByTimeDesc(UserEntity user, Pageable pageable);
 
-    BalanceTransactionEntity findByBookIdAndUserId(Integer book_id, Integer user_id);
+    BalanceTransactionEntity findByBookIdAndUserId(Integer bookId, Integer userId);
 }
