@@ -99,7 +99,8 @@ public class BookEntity {
     }
 
     public List<Book2AuthorEntity> getBook2AuthorList() {
-        book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
+        if (book2AuthorList != null)
+            book2AuthorList.sort(Comparator.comparing(Book2AuthorEntity::getSortIndex));
         return book2AuthorList;
     }
 
