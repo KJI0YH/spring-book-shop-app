@@ -34,7 +34,7 @@ class MainPageSeleniumTest {
         mainPage
                 .callMainPage()
                 .pause();
-        assertTrue(driver.getPageSource().contains("BOOKSHOP"));
+        assertTrue(driver.getPageSource().contains("My bookshop"));
 
         // Access first book page on main page
         String bookTitle = driver.findElements(By.className("Card-title")).get(0).getText();
@@ -80,6 +80,19 @@ class MainPageSeleniumTest {
                 .goToPopularPage()
                 .pause();
         assertTrue(driver.getPageSource().contains("Popular"));
+
+        // Access first book page on popular page
+        bookTitle = driver.findElements(By.className("Card-title")).get(0).getText();
+        driver.findElements(By.className("Card-picture")).get(0).click();
+        mainPage.pause();
+        assertTrue(driver.getPageSource().contains(bookTitle));
+        driver.navigate().back();
+
+        // Access viewed page
+        mainPage
+                .goToViewedPage()
+                .pause();
+        assertTrue(driver.getPageSource().contains("Viewed"));
 
         // Access first book page on popular page
         bookTitle = driver.findElements(By.className("Card-title")).get(0).getText();

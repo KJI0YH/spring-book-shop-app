@@ -105,7 +105,7 @@ class BookServiceTest extends SpringBootApplicationTest {
     @Test
     void getPageOfViewedBooks() {
         Pageable nextPage = PageRequest.of(0, 3);
-        List<BookEntity> bookList = book2UserViewedRepository.findAllByUserIdOrderByTimeDesc(1, nextPage)
+        List<BookEntity> bookList = book2UserViewedRepository.findAllByUserIdOrderByTimeDesc(2, nextPage)
                 .getContent()
                 .stream().map(Book2UserViewedEntity::getBook)
                 .toList();
@@ -123,19 +123,19 @@ class BookServiceTest extends SpringBootApplicationTest {
 
     @Test
     void getAllBooksByUserStatus() {
-        List<BookEntity> keptBooks = bookRepository.findBooksByUserType(1, 1);
+        List<BookEntity> keptBooks = bookRepository.findBooksByUserType(2, 1);
         Assertions.assertNotNull(keptBooks);
         Assertions.assertFalse(keptBooks.isEmpty());
 
-        List<BookEntity> cartBooks = bookRepository.findBooksByUserType(1, 2);
+        List<BookEntity> cartBooks = bookRepository.findBooksByUserType(2, 2);
         Assertions.assertNotNull(cartBooks);
         Assertions.assertFalse(cartBooks.isEmpty());
 
-        List<BookEntity> paidBooks = bookRepository.findBooksByUserType(1, 3);
+        List<BookEntity> paidBooks = bookRepository.findBooksByUserType(2, 3);
         Assertions.assertNotNull(paidBooks);
         Assertions.assertFalse(paidBooks.isEmpty());
 
-        List<BookEntity> archivedBooks = bookRepository.findBooksByUserType(1, 3);
+        List<BookEntity> archivedBooks = bookRepository.findBooksByUserType(2, 3);
         Assertions.assertNotNull(archivedBooks);
         Assertions.assertFalse(archivedBooks.isEmpty());
     }

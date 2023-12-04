@@ -36,9 +36,14 @@ public class MainPageSelenium {
         driver.findElements(By.className("menu-link")).get(3).click();
         return this;
     }
+    
+    public MainPageSelenium goToViewedPage(){
+        driver.findElements(By.className("menu-link")).get(4).click();
+        return this;
+    }
 
     public MainPageSelenium goToAuthorsPage() {
-        driver.findElements(By.className("menu-link")).get(4).click();
+        driver.findElements(By.className("menu-link")).get(5).click();
         return this;
     }
 }
